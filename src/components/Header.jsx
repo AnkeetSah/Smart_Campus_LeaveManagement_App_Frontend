@@ -149,7 +149,7 @@ function Header({ footerRef, setDarkMode, darkMode }) {
                   <FaUserCircle className="text-blue-600 dark:text-blue-400 text-base sm:text-xl" />
                 </div>
                 <span className="text-gray-700 dark:text-gray-200 font-medium hidden sm:inline-block text-sm sm:text-base">
-                  {user?.name || "Guest"}
+                  {user?.name }
                 </span>
                 <MdArrowDropDown
                   className={`text-gray-500 dark:text-gray-400 transition-transform ${
@@ -169,7 +169,7 @@ function Header({ footerRef, setDarkMode, darkMode }) {
                   >
                     <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        {user?.name || "Guest"}
+                        {user?.name }
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         {user?.email || "No email"}

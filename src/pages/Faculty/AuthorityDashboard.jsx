@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-
+import api from "../../services/api";
 import {
   FaCalendarAlt,
   FaCheck,
@@ -43,33 +43,31 @@ function AuthorityDashboard() {
     );
   });
 
-  const handleDecisionSubmit = async () => {
-    const decidedAt = new Date().toISOString();
 
-    const payload = {
-      appId: selectedAppId,
-      status: decisionType,
-      comment,
-      decidedAt,
-      role,
-    };
+const handleDecisionSubmit = async () => {
+  const decidedAt = new Date().toISOString();
 
-    try {
-      const response = await axios.post(
-        `${API_BASE}/api/leaves/actionOnLeave`,
-        payload,
-        { withCredentials: true }
-      );
-      alert("✅ Action on leave successful");
-    } catch (error) {
-      console.error("❌ Error taking action on leave:", error);
-      alert("❌ Failed to take action on leave");
-    }
-
-    setShowModal(false);
-    setComment("");
-    setSelectedAppId(null);
+  const payload = {
+    appId: selectedAppId,
+    status: decisionType,
+    comment,
+    decidedAt,
+    role,
   };
+
+  try {
+    const response = await api.post("/api/leaves/actionOnLeave", payload);
+    alert("✅ Action on leave successful");
+  } catch (error) {
+    console.error("❌ Error taking action on leave:", error);
+    alert("❌ Failed to take action on leave");
+  }
+
+  setShowModal(false);
+  setComment("");
+  setSelectedAppId(null);
+};
+
 
   if (isLoading) {
     return (

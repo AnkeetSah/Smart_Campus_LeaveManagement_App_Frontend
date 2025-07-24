@@ -7,10 +7,13 @@ import LeaveHistory from "../../components/LeaveHistory";
 import useLeaveFormStore from "../../store/useLeaveFormStore";
 import { useMyLeaves } from "../../hooks/useMyLeaves";
 import ActionCards from "./ActionCards";
+import LeaveStatusTracker from "../../components/LeaveStatusTracker";
 function StudentDashboard() {
   const { showForm, openForm } = useLeaveFormStore();
-  const { showLeaveFormHistory, openLeaveHistoryForm } = useLeaveFormStore();
+  const { showLeaveFormHistory, openLeaveHistoryForm,openLeaveStatus,showLeavestatus} = useLeaveFormStore();
   const { data: leaves, isLoading, isError } = useMyLeaves();
+  const { showLeaveStatus } = useLeaveFormStore();
+
 
   if (isLoading) {
     return (
@@ -51,6 +54,8 @@ function StudentDashboard() {
 
   if (showForm) return <CreateLeaveApplication />;
   if (showLeaveFormHistory) return <LeaveHistory />;
+  {showLeaveStatus && <LeaveStatusTracker />}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans relative overflow-hidden pb-14 transition-colors duration-300">
@@ -109,7 +114,7 @@ function StudentDashboard() {
               title: "Leave Status",
               description: "Track your active leave requests and responses.",
               gradient: "from-indigo-500 to-blue-600",
-              action: () => {}, // Add your status view function
+              action: openLeaveStatus, // Add your status view function
               buttonText: "View Status"
             },
             {

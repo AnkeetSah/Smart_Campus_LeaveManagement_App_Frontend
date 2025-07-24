@@ -115,7 +115,7 @@ function App() {
             </Route> */}
 
             <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route path="/leave" element={<UserAdd />} />
+            <Route path="/leave" element={<LeaveStatusTracker/>} />
           </Routes>
         </main>
 
