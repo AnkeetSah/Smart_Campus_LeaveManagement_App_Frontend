@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+
 import {
   FaCalendarAlt,
   FaCheck,
@@ -12,7 +13,7 @@ import {
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useAllStudentLeaves } from "../../hooks/useMyLeaves";
 import useAuthStore from "../../store/useAuthStore";
-
+const API_BASE = import.meta.env.VITE_API_URL;
 function AuthorityDashboard() {
   const [selectedTab, setSelectedTab] = useState("pending");
   const [expandedAppIndex, setExpandedAppIndex] = useState(null);
@@ -55,7 +56,7 @@ function AuthorityDashboard() {
 
     try {
       const response = await axios.post(
-        "/api/leaves/actionOnLeave",
+        `${API_BASE}/api/leaves/actionOnLeave`,
         payload,
         { withCredentials: true }
       );

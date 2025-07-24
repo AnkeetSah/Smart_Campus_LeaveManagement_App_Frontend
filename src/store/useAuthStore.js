@@ -10,7 +10,7 @@ const useAuthStore = create((set) => ({
 
   fetchUser: async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/me", {
+      const res = await axios.get(`${API_BASE}/api/me`, {
         withCredentials: true,
       });
       set({ user: res.data, loading: false });
@@ -21,7 +21,7 @@ const useAuthStore = create((set) => ({
 
   logoutUser: async () => {
     try {
-      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+      await axios.post(`${API_BASE}/api/auth/logout`, {}, { withCredentials: true });
       set({ user: null, loading: false });
     } catch (err) {
       console.error("Logout failed:", err);

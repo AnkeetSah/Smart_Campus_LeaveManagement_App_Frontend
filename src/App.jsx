@@ -29,7 +29,7 @@ const HodDashboard = () => {
 const WardenDashboard = () => (
   <h1 className="text-xl font-bold text-center">Hello Warden</h1>
 );
-
+const API_BASE = import.meta.env.VITE_API_URL;
 function App() {
   const footerRef = useRef(null);
 
@@ -40,7 +40,7 @@ function App() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("/api/me", { withCredentials: true });
+        const res = await axios.get(`${API_BASE}/api/me`, { withCredentials: true });
         // console.log("✅ Authenticated user:", res.data);
         // console.log(res.data)
         setUser(res.data);
