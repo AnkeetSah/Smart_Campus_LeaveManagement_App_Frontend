@@ -1,5 +1,6 @@
+// src/store/useAuthStore.js
 import { create } from "zustand";
-import axios from "axios";
+import api from "./api"; // Ensure this has baseURL and withCredentials configured
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -10,24 +11,22 @@ const useAuthStore = create((set) => ({
 
   fetchUser: async () => {
     try {
-      const res = await axios.get(`${API_BASE}/api/me`, {
-        withCredentials: true,
-      });
+      const res = await api.get("/api/me");
       set({ user: res.data, loading: false });
     } catch (err) {
+      console.error("Fetch user failed:", err);
       set({ user: null, loading: false });
     }
   },
 
   logoutUser: async () => {
     try {
-      await axios.post(`${API_BASE}/api/auth/logout`, {}, { withCredentials: true });
+      await api.post("/api/auth/logout");
       set({ user: null, loading: false });
     } catch (err) {
       console.error("Logout failed:", err);
     }
   },
 }));
-
 
 export default useAuthStore;

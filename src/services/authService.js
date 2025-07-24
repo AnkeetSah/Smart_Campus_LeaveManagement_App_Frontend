@@ -1,15 +1,11 @@
 // src/services/authService.js
-import axios from "axios";
-
-const API_BASE = import.meta.env.VITE_API_URL;
+import api from "./api"; // ✅ Import centralized Axios instance
 
 export const loginUser = async ({ email, password, role }) => {
-  const res = await axios.post(`${API_BASE}/api/auth/login`, {
+  const res = await api.post("/api/auth/login", {
     email,
     password,
     role,
-  }, {
-    withCredentials: true,
   });
 
   return res.data;

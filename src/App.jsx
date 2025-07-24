@@ -20,6 +20,8 @@ import AdminDashboard from "./components/AdminDashboard";
 // Dummy dashboard components for now
 import AuthorityDashboard from "./pages/Faculty/AuthorityDashboard";
 import UserAdd from "./pages/Admin/UserAdd";
+import api from "./services/api";
+
 
 const HodDashboard = () => {
   const name = useAuthStore((state) => state.user?.name);
@@ -37,21 +39,19 @@ function App() {
   const clearUser = useAuthStore((state) => state.clearUser);
   const loading = useAuthStore((state) => state.loading);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/api/me`, { withCredentials: true });
-        // console.log("✅ Authenticated user:", res.data);
-        // console.log(res.data)
-        setUser(res.data);
-      } catch (err) {
-        console.log("⚠️ User not authenticated");
-        clearUser();
-      }
-    };
+ useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const res = await api.get("/api/me"); 
+      setUser(res.data);
+    } catch (err) {
+      console.log("⚠️ User not authenticated");
+      clearUser();
+    }
+  };
 
-    fetchUser();
-  }, [setUser, clearUser]);
+  fetchUser();
+}, [setUser, clearUser]);
 
   //dark mode feature
   const [darkMode, setDarkMode] = useState(false);
