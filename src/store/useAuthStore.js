@@ -1,6 +1,6 @@
 // src/store/useAuthStore.js
 import { create } from "zustand";
-import api from "./api"; // Ensure this has baseURL and withCredentials configured
+import api from "../services/api"; // Ensure this has baseURL and withCredentials configured
 
 const useAuthStore = create((set) => ({
   user: null,
