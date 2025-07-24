@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+/* Force override everything */
+html, body, #root, .app, .main {
+  margin: 0 !important;
+  padding: 0 !important;
+}
