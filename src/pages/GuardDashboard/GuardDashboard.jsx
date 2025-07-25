@@ -2,46 +2,45 @@ import React, { useRef, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { motion } from "framer-motion";
 import { FaQrcode, FaStopCircle } from "react-icons/fa";
-
+import api from "../../services/api";
 const GuardDashboard = () => {
   const [scannedText, setScannedText] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
   const [leaveDetails, setLeaveDetails] = useState(null);
   const scannerRef = useRef(null);
 
-  const startScan = async () => {
-    const scanner = new Html5Qrcode("reader");
+ const startScan = async () => {
+  const scanner = new Html5Qrcode("reader");
 
-    try {
-      await scanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        async (decodedText) => {
-          setScannedText(decodedText);
-          scanner.stop();
-          setIsScanning(false);
+  try {
+    await scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      async (decodedText) => {
+        setScannedText(decodedText);
+        await scanner.stop();
+        setIsScanning(false);
 
-          try {
-            const res = await fetch(`/api/leaves/${decodedText}`);
-            if (!res.ok) throw new Error("Leave not found");
-            const data = await res.json();
-            setLeaveDetails(data);
-          } catch (err) {
-            setLeaveDetails(null);
-            console.error("Fetch error:", err);
-          }
-        },
-        (errorMessage) => {
-          console.warn("QR Error", errorMessage);
+        try {
+          const response = await api.get(`/api/leaves/${decodedText}`);
+          setLeaveDetails(response.data);
+        } catch (err) {
+          setLeaveDetails(null);
+          console.error("Fetch error:", err);
         }
-      );
+      },
+      (errorMessage) => {
+        console.warn("QR Error", errorMessage);
+      }
+    );
 
-      scannerRef.current = scanner;
-      setIsScanning(true);
-    } catch (err) {
-      console.error("Camera start error", err);
-    }
-  };
+    scannerRef.current = scanner;
+    setIsScanning(true);
+  } catch (err) {
+    console.error("Camera start error", err);
+  }
+};
+
 
   const stopScan = () => {
     scannerRef.current?.stop().then(() => {
