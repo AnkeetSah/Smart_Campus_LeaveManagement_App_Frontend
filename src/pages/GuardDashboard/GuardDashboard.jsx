@@ -23,6 +23,7 @@ const GuardDashboard = () => {
 
         try {
           const response = await api.get(`/api/leaves/${decodedText}`);
+          console.log(response)
           setLeaveDetails(response.data);
         } catch (err) {
           setLeaveDetails(null);
