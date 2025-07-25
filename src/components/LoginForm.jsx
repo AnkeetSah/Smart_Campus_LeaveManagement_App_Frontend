@@ -8,8 +8,18 @@ const LoginForm = ({ role }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { mutate, isLoading, isError, error, isSuccess } = useLogin(role);
-  
+ // ✅ use only one mutation instance
+const { mutate, isError, error, status } = useLogin(role);
+const isLoading = status === "pending"; // ✅ instead of "loading"
+
+
+console.log("status:", status);
+console.log("isLoading:", isLoading);
+
+
+
+
+  console.log("isLoading:", isLoading);
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({ email, password });
@@ -45,14 +55,16 @@ const LoginForm = ({ role }) => {
   return (
     <div className="relative">
       {/* Loading overlay */}
+      {console.log(`isLoading: ${isLoading}`)}
       {isLoading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 rounded-xl backdrop-blur-sm">
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-3 text-white font-medium">Authenticating...</p>
-          </div>
-        </div>
-      )}
+  <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 rounded-xl backdrop-blur-sm">
+    <div className="flex flex-col items-center">
+      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="mt-3 text-white font-medium">Authenticating...</p>
+    </div>
+  </div>
+)}
+
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -146,7 +158,7 @@ const LoginForm = ({ role }) => {
             </motion.div>
           )}
 
-          {isSuccess && (
+          {/* {isSuccess && (
             <motion.div 
               className="p-3 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm"
               initial={{ opacity: 0, y: -10 }}
@@ -154,7 +166,7 @@ const LoginForm = ({ role }) => {
             >
               Welcome back! Redirecting...
             </motion.div>
-          )}
+          )} */}
         </form>
       </motion.div>
     </div>

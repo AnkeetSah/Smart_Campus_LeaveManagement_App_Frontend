@@ -17,8 +17,9 @@ function StudentDashboard() {
   const { data: leaves, isLoading, isError,refetch } = useMyLeaves();
   const { showLeaveStatus } = useLeaveFormStore();
   const { user } = useAuthStore();
+  console.log(user)
 
-      const roomId = `${user?.department}-${user?.section}-${user?._id}`;
+      const roomId = `${user?.department}-${user?.section}-${user?.id}`;
       console.log('student id',roomId)
       socket.emit('joinRoom', roomId);
       
