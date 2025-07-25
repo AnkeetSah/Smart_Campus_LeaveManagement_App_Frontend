@@ -19,20 +19,17 @@ function Header({ footerRef, setDarkMode, darkMode }) {
   const location = useLocation();
   const profileRef = useRef(null);
   const [profileView, setProfileView] = useState(false);
-  const [hasNotifications, setHasNotifications] = useState(true);
- 
+
   const [notificationCount, setNotificationCount] = useState(0);
 
-// Example socket listener
-useEffect(() => {
-  socket.on("leaveStatusUpdated", () => {
-    setNotificationCount((prev) => prev + 1);
-  });
+  // Example socket listener
+  useEffect(() => {
+    socket.on("leaveStatusUpdated", () => {
+      setNotificationCount((prev) => prev + 1);
+    });
 
-  return () => socket.off("leaveStatusUpdated");
-}, []);
-
-
+    return () => socket.off("leaveStatusUpdated");
+  }, []);
 
   const handleSupportClick = () => {
     footerRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -45,7 +42,7 @@ useEffect(() => {
 
   const handleLogout = () => {
     logoutUser();
-    
+
     window.location.href = "/";
   };
 
@@ -71,7 +68,8 @@ useEffect(() => {
   };
 
   const getDashboardSubtitle = () => {
-    if (location.pathname.includes("student")) return "Welcome to your leave portal";
+    if (location.pathname.includes("student"))
+      return "Welcome to your leave portal";
     if (["faculty", "hod", "warden"].includes(user?.role)) {
       return "Leave Application Management";
     }
@@ -88,9 +86,7 @@ useEffect(() => {
           transition={{ duration: 0.5 }}
           className="flex items-center space-x-2 sm:space-x-3"
         >
-          <motion.div
-            className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg"
-          >
+          <motion.div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
             <RiLeafLine className="text-white text-lg sm:text-xl" />
           </motion.div>
           <div className="max-w-[180px] sm:max-w-none">
@@ -104,7 +100,7 @@ useEffect(() => {
         </motion.div>
 
         {/* Navigation Icons */}
-        <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-6">
+        <div className="flex justify-center items-center space-x-2 sm:space-x-4 md:space-x-6">
           {/* Dark Mode Toggle - Always visible */}
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -113,11 +109,15 @@ useEffect(() => {
             onClick={() => setDarkMode(!darkMode)}
             aria-label="Toggle dark mode"
           >
+             <div className="relative inline-block ">
             {darkMode ? (
-              <MdLightMode className="text-lg sm:text-xl text-yellow-300" />
+            
+               <MdLightMode className="text-lg sm:text-xl text-yellow-300" />
+           
             ) : (
               <MdDarkMode className="text-lg sm:text-xl" />
             )}
+            </div>
           </motion.button>
 
           {/* Notification Bell - Only when shouldHideSupport */}
@@ -127,23 +127,17 @@ useEffect(() => {
               whileTap={{ scale: 0.95 }}
               className="relative p-1 sm:p-2 text-gray-600 hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
-             <div className="relative inline-block">
-  <FaBell className="text-lg sm:text-xl dark:text-gray-300" />
+              <div className="relative inline-block">
+                <FaBell className="text-lg sm:text-xl dark:text-gray-300" />
 
-  {notificationCount > 0 && (
-    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-      {notificationCount}
-    </span>
-  )}
-</div>
+                {notificationCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                    {notificationCount}
+                  </span>
+                )}
+              </div>
 
-              {/* {hasNotifications && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"
-                />
-              )} */}
+             
             </motion.button>
           )}
 
@@ -156,7 +150,9 @@ useEffect(() => {
               className="hidden md:flex items-center space-x-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1 sm:px-4 sm:py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm transition-all"
             >
               <FaHeadset className="text-blue-600 dark:text-blue-400 text-sm sm:text-base" />
-              <span className="dark:text-gray-200 text-sm sm:text-base">Help</span>
+              <span className="dark:text-gray-200 text-sm sm:text-base">
+                Help
+              </span>
             </motion.button>
           )}
 
@@ -172,7 +168,7 @@ useEffect(() => {
                   <FaUserCircle className="text-blue-600 dark:text-blue-400 text-base sm:text-xl" />
                 </div>
                 <span className="text-gray-700 dark:text-gray-200 font-medium hidden sm:inline-block text-sm sm:text-base">
-                  {user?.name }
+                  {user?.name}
                 </span>
                 <MdArrowDropDown
                   className={`text-gray-500 dark:text-gray-400 transition-transform ${
@@ -192,7 +188,7 @@ useEffect(() => {
                   >
                     <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        {user?.name }
+                        {user?.name}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         {user?.email || "No email"}
@@ -200,21 +196,27 @@ useEffect(() => {
                     </div>
                     <ul className="py-1">
                       <motion.li
-                        whileHover={{ backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF" }}
+                        whileHover={{
+                          backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
+                        }}
                         className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer flex items-center"
                       >
                         <FaUserCircle className="mr-2 text-blue-500" />
                         My Profile
                       </motion.li>
                       <motion.li
-                        whileHover={{ backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF" }}
+                        whileHover={{
+                          backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
+                        }}
                         className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer flex items-center"
                       >
                         <FaCog className="mr-2 text-blue-500" />
                         Settings
                       </motion.li>
                       <motion.li
-                        whileHover={{ backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF" }}
+                        whileHover={{
+                          backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
+                        }}
                         className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer flex items-center"
                         onClick={handleLogout}
                       >

@@ -19,7 +19,7 @@ function StudentDashboard() {
   const { user } = useAuthStore();
   console.log(user)
 
-      const roomId = `${user?.department}-${user?.section}-${user?.id}`;
+      const roomId = `${user?.department}-${user?.section}-${user?.id||user?._id}`;
       console.log('student id',roomId)
       socket.emit('joinRoom', roomId);
       
