@@ -15,15 +15,7 @@ const useLogin = (role) => {
   console.log("Login success:", data);
   console.log(data)
   const userRole = data.user.role;
-  if(userRole!="student"){
-    const room = `${data.user?.department}-${data.user?.section}`;
-    if (socket.connected) {
-    console.log("🟢 Emitting joinRoom to server:", room);
-    socket.emit("joinRoom", room);
-  } else {
-    console.warn("⚠️ Socket not connected when trying to emit joinRoom.");
-  }
-  }
+  
 
   
 
