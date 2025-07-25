@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import api from "../../services/api";
 import {
@@ -14,6 +16,9 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useAllStudentLeaves } from "../../hooks/useMyLeaves";
 import useAuthStore from "../../store/useAuthStore";
 const API_BASE = import.meta.env.VITE_API_URL;
+
+import socket from "../../socket"; // ✅ import the shared socket
+
 function AuthorityDashboard() {
   const [selectedTab, setSelectedTab] = useState("pending");
   const [expandedAppIndex, setExpandedAppIndex] = useState(null);
@@ -23,14 +28,62 @@ function AuthorityDashboard() {
   const [decisionType, setDecisionType] = useState("");
   const [selectedAppId, setSelectedAppId] = useState(null);
   const [comment, setComment] = useState("");
-
-  const role = user?.role;
-
   const {
     data: leaveApplications = {},
     isLoading,
     isError,
+    refetch,
   } = useAllStudentLeaves();
+
+  const notify = () => toast("Wow so easy!");
+  useEffect(() => {
+    let roomId;
+    console.log(user);
+    if (user.role === "faculty") {
+      roomId = `${user.department}-${user.section}`;
+    } else if (user.role === "hod") {
+      roomId = `hod-${user.department}`;
+    } else if (user.role === "student") {
+      roomId = `${user.department}-${user.section}-${user._id}`;
+    } else if (user.role === "warden") {
+      roomId = `warden-${user.hostel}`;
+      console.log(roomId);
+    }
+
+    if (roomId) {
+      socket.emit("joinRoom", roomId);
+      console.log(`🟢 Joined room: ${roomId}`);
+    }
+    // ✅ 1. For student: update status
+    socket.on("leaveSubmitted", (data) => {
+      console.log("📬 New leave received:", data);
+      toast.success("New leave application submitted!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      refetch();
+    });
+
+    // ✅ 2. For HOD: faculty has approved leave
+    socket.on("facultyApprovedLeave", (leaveData) => {
+      toast.success("Faculty approved a leave!", { position: "top-right" });
+      refetch();
+    });
+
+    // ✅ 2. For Warden: hod has approved leave
+    socket.on("hodApprovedLeave", (leaveData) => {
+      toast.success("HOD approved a leave!", { position: "top-right" });
+      refetch();
+    });
+
+    return () => {
+      socket.off("leaveSubmitted");
+      socket.off("hodApprovedLeave");
+      socket.off("facultyApprovedLeave");
+    };
+  }, [user?.department, user?.section, user?.role, refetch]);
+
+  const role = user?.role;
 
   const currentLeaves = leaveApplications[selectedTab] || [];
 
@@ -43,31 +96,29 @@ function AuthorityDashboard() {
     );
   });
 
+  const handleDecisionSubmit = async () => {
+    const decidedAt = new Date().toISOString();
 
-const handleDecisionSubmit = async () => {
-  const decidedAt = new Date().toISOString();
+    const payload = {
+      appId: selectedAppId,
+      status: decisionType,
+      comment,
+      decidedAt,
+      role,
+    };
 
-  const payload = {
-    appId: selectedAppId,
-    status: decisionType,
-    comment,
-    decidedAt,
-    role,
+    try {
+      const response = await api.post("/api/leaves/actionOnLeave", payload);
+      refetch();
+    } catch (error) {
+      console.error("❌ Error taking action on leave:", error);
+      alert("❌ Failed to take action on leave");
+    }
+
+    setShowModal(false);
+    setComment("");
+    setSelectedAppId(null);
   };
-
-  try {
-    const response = await api.post("/api/leaves/actionOnLeave", payload);
-    alert("✅ Action on leave successful");
-  } catch (error) {
-    console.error("❌ Error taking action on leave:", error);
-    alert("❌ Failed to take action on leave");
-  }
-
-  setShowModal(false);
-  setComment("");
-  setSelectedAppId(null);
-};
-
 
   if (isLoading) {
     return (
@@ -92,7 +143,7 @@ const handleDecisionSubmit = async () => {
         <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
         <div className="absolute top-1/3 right-20 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
       </div>
-
+      <ToastContainer />
       <main className="relative z-10 container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <motion.div
@@ -115,25 +166,25 @@ const handleDecisionSubmit = async () => {
             </div>
             <div className="flex gap-3">
               <div className="relative">
-                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+                <FaSearch className="absolute  left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   placeholder="Search applications..."
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-gray-200"
+                  className="pl-10  pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-gray-200"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200">
+              {/* <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200">
                 <FaFilter className="dark:text-gray-400" />
                 Filters
-              </button>
+              </button> */}
             </div>
           </div>
         </motion.div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+        <div className="flex  border-b border-gray-200 dark:border-gray-700 mb-6">
           {["pending", "approved", "rejected"].map((status) => (
             <button
               key={status}
@@ -184,13 +235,18 @@ const handleDecisionSubmit = async () => {
           {filteredApplications.length === 0 ? (
             <div className="min-h-96 flex flex-col items-center justify-center p-12 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm dark:bg-gray-700/50">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-white dark:bg-gray-800 rounded-full mb-6 shadow-lg">
-                <svg 
-                  className="w-10 h-10 text-blue-500 dark:text-blue-400" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-10 h-10 text-blue-500 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
                 </svg>
               </div>
               <div className="text-center max-w-sm">
@@ -198,7 +254,8 @@ const handleDecisionSubmit = async () => {
                   No {selectedTab} Applications
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
-                  All caught up! There are no leave applications in this category at the moment.
+                  All caught up! There are no leave applications in this
+                  category at the moment.
                 </p>
                 <div className="flex justify-center space-x-2">
                   <div className="w-2 h-2 bg-indigo-300 dark:bg-indigo-500 rounded-full"></div>
@@ -221,7 +278,7 @@ const handleDecisionSubmit = async () => {
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
+                        <div className="flex flex-wrap items-center gap-3 mb-2">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${
                               app.type === "Medical"
@@ -376,10 +433,14 @@ const handleDecisionSubmit = async () => {
                             <p className="text-gray-500 dark:text-gray-400 mb-1">
                               Reason for Leave
                             </p>
-                            <p className="font-medium dark:text-gray-200">{app.reason}</p>
+                            <p className="font-medium dark:text-gray-200">
+                              {app.reason}
+                            </p>
                           </div>
                           <div>
-                            <p className="text-gray-500 dark:text-gray-400 mb-1">Submitted</p>
+                            <p className="text-gray-500 dark:text-gray-400 mb-1">
+                              Submitted
+                            </p>
                             <p className="font-medium dark:text-gray-200">
                               {new Date(app.createdAt).toLocaleDateString(
                                 "en-IN"
@@ -390,16 +451,21 @@ const handleDecisionSubmit = async () => {
 
                         {app.documents?.length > 0 && (
                           <div>
-                            <p className="text-gray-500 dark:text-gray-400 mb-2">Attachments</p>
+                            <p className="text-gray-500 dark:text-gray-400 mb-2">
+                              Attachments
+                            </p>
                             <div className="flex flex-wrap gap-2">
                               {app.documents.map((doc) => (
-                                <button
+                                <a
                                   key={doc}
+                                  href={doc} // This is already a full Cloudinary URL
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                   className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800"
                                 >
                                   <FaRegFileAlt className="mr-1.5" />
-                                  {doc}
-                                </button>
+                                  Preview Document
+                                </a>
                               ))}
                             </div>
                           </div>
@@ -411,6 +477,7 @@ const handleDecisionSubmit = async () => {
                           </p>
                         )}
                         {app.decisionBy?.[role]?.status === "approved" && (
+                          
                           <p className="text-sm italic text-green-600 dark:text-green-400 mt-2">
                             Comment: {app.decisionBy?.[role]?.comment}
                           </p>
@@ -430,7 +497,8 @@ const handleDecisionSubmit = async () => {
         <div className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 transition-all duration-300 ease-in-out">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-lg space-y-5 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-2">
-              {decisionType === "approved" ? "✅ Approve" : "❌ Reject"} Application
+              {decisionType === "approved" ? "✅ Approve" : "❌ Reject"}{" "}
+              Application
             </h3>
 
             <textarea

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { RiLeafLine } from "react-icons/ri";
+import socket from "../socket";
 import {
   FaChevronLeft,
   FaCalendarAlt,
@@ -30,7 +31,20 @@ function LeaveHistory() {
     data: leaves = [],
     isLoading,
     isError,
+    refetch
   } = useMyLeaves(leaveHistoryStatus);
+
+  useEffect(()=>{
+    // Listen for leave status updates
+        socket.on("leaveStatusUpdated", () => {
+          console.log("🔄 Leave status updated, refetching...");
+          refetch(); 
+        });
+        // Cleanup on unmount
+            return () => {
+              socket.off("leaveStatusUpdated");
+            };
+  },[refetch])
 
   const renderStatusIcon = (status) => {
     switch (status) {

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { RiLeafLine } from "react-icons/ri";
+import socket from "../socket";
 import {
   FaHeadset,
   FaBell,
@@ -19,6 +20,19 @@ function Header({ footerRef, setDarkMode, darkMode }) {
   const profileRef = useRef(null);
   const [profileView, setProfileView] = useState(false);
   const [hasNotifications, setHasNotifications] = useState(true);
+ 
+  const [notificationCount, setNotificationCount] = useState(0);
+
+// Example socket listener
+useEffect(() => {
+  socket.on("leaveStatusUpdated", () => {
+    setNotificationCount((prev) => prev + 1);
+  });
+
+  return () => socket.off("leaveStatusUpdated");
+}, []);
+
+
 
   const handleSupportClick = () => {
     footerRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -113,14 +127,23 @@ function Header({ footerRef, setDarkMode, darkMode }) {
               whileTap={{ scale: 0.95 }}
               className="relative p-1 sm:p-2 text-gray-600 hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
-              <FaBell className="text-lg sm:text-xl dark:text-gray-300" />
-              {hasNotifications && (
+             <div className="relative inline-block">
+  <FaBell className="text-lg sm:text-xl dark:text-gray-300" />
+
+  {notificationCount > 0 && (
+    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+      {notificationCount}
+    </span>
+  )}
+</div>
+
+              {/* {hasNotifications && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"
                 />
-              )}
+              )} */}
             </motion.button>
           )}
 

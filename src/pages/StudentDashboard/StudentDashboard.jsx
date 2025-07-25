@@ -1,19 +1,54 @@
 import { motion } from "framer-motion";
 import { FaPlusCircle, FaClipboardList, FaHistory } from "react-icons/fa";
 import LeaveCountCard from "./LeaveCountCard";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import CreateLeaveApplication from "../../components/CreateLeaveApplication";
 import LeaveHistory from "../../components/LeaveHistory";
 import useLeaveFormStore from "../../store/useLeaveFormStore";
 import { useMyLeaves } from "../../hooks/useMyLeaves";
 import ActionCards from "./ActionCards";
+import useAuthStore from "../../store/useAuthStore";
 import LeaveStatusTracker from "../../components/LeaveStatusTracker";
+import socket from "../../socket"; // ✅ import the shared socket
+import { toast } from "react-toastify";
 function StudentDashboard() {
   const { showForm, openForm } = useLeaveFormStore();
   const { showLeaveFormHistory, openLeaveHistoryForm,openLeaveStatus,showLeavestatus} = useLeaveFormStore();
-  const { data: leaves, isLoading, isError } = useMyLeaves();
+  const { data: leaves, isLoading, isError,refetch } = useMyLeaves();
   const { showLeaveStatus } = useLeaveFormStore();
+  const { user } = useAuthStore();
 
+      const roomId = `${user?.department}-${user?.section}-${user?._id}`;
+      console.log('student id',roomId)
+      socket.emit('joinRoom', roomId);
+      
+      useEffect(() => {
+    // Join the student's room
+    socket.emit('joinRoom', roomId);
+
+    // Listen for leave status updates
+    socket.on("leaveStatusUpdated", () => {
+      console.log("🔄 Leave status updated, refetching...");
+      refetch(); 
+    });
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("leaveStatusUpdated");
+    };
+  }, [roomId, refetch]);
+
+  useEffect(() => {
+  if (
+    !showForm &&
+    !showLeaveFormHistory &&
+    !showLeaveStatus
+  ) {
+    // Only scroll when dashboard is shown
+    console.log("🌀 Scrolling to top");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}, [showForm, showLeaveFormHistory, showLeaveStatus]);
 
   if (isLoading) {
     return (
@@ -175,7 +210,7 @@ function StudentDashboard() {
         </motion.div>
 
         {/* Recent Activity Section */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -248,7 +283,7 @@ function StudentDashboard() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
       </main>
     </div>
   );

@@ -15,17 +15,19 @@ import AttendanceInput from "./StudentLeaveForm/AttendanceInput";
 
 function CreateLeaveApplication() {
   
-  const { closeForm } = useLeaveFormStore();
+ 
   const { formData, resetForm, setErrors, isSubmitting, setIsSubmitting } =
     useLeaveApplicationStore();
   const queryClient = useQueryClient();
-   
+    const { closeForm } = useLeaveFormStore(); // ✅ Access the hook
+
   const mutation = useMutation({
     mutationFn: submitLeave,
     onSuccess: (data) => {
       console.log("Leave Submitted", data);
       alert("Leave submitted successfully!");
       queryClient.invalidateQueries(["myApplications"]);
+      closeForm(); 
       resetForm();
       setIsSubmitting(false);
     },
@@ -62,6 +64,7 @@ function CreateLeaveApplication() {
       }
 
       mutation.mutate(data);
+     
     } else {
       setErrors(errors);
     }
