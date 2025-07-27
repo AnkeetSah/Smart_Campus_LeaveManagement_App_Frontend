@@ -5,6 +5,7 @@ import { FaUserTie, FaShieldAlt, FaUniversity, FaClock, FaCheck } from "react-ic
 import { IoMdTime } from "react-icons/io";
 
 const LeaveTrackerCard = ({ leaveData }) => {
+  console.log(leaveData)
   const getStageIcon = (stage) => {
     switch (stage.id) {
       case "faculty": return <FaUserTie className="text-lg" />;
@@ -33,7 +34,7 @@ const LeaveTrackerCard = ({ leaveData }) => {
       <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-xl font-bold">Application #{leaveData.id}</h2>
+            <h2 className="text-xl font-bold">Application #{leaveData._id}</h2>
             <p className="text-sm opacity-90">{leaveData.type}</p>
           </div>
           <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium capitalize">
@@ -47,7 +48,7 @@ const LeaveTrackerCard = ({ leaveData }) => {
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           <div>
             <h3 className="text-sm font-medium text-gray-500 mb-1">Leave Period</h3>
-            <p className="font-medium">{leaveData.from} to {leaveData.to}</p>
+            <p className="font-medium">{leaveData.fromDate} to {leaveData.toDate}</p>
           </div>
           <div>
             <h3 className="text-sm font-medium text-gray-500 mb-1">Reason</h3>

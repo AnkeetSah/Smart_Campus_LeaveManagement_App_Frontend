@@ -13,9 +13,9 @@ import socket from "../../socket"; // ✅ import the shared socket
 import { toast } from "react-toastify";
 function StudentDashboard() {
   const { showForm, openForm } = useLeaveFormStore();
-  const { showLeaveFormHistory, openLeaveHistoryForm,openLeaveStatus,showLeavestatus} = useLeaveFormStore();
+  const { showLeaveFormHistory, openLeaveHistoryForm,showLeaveStatus,openLeaveStatus} = useLeaveFormStore();
   const { data: leaves, isLoading, isError,refetch } = useMyLeaves();
-  const { showLeaveStatus } = useLeaveFormStore();
+   console.log(showLeaveStatus)
   const { user } = useAuthStore();
   console.log(user)
 
@@ -90,7 +90,8 @@ function StudentDashboard() {
 
   if (showForm) return <CreateLeaveApplication />;
   if (showLeaveFormHistory) return <LeaveHistory />;
-  {showLeaveStatus && <LeaveStatusTracker />}
+  if (showLeaveStatus) return <LeaveStatusTracker />;
+
 
 
   return (

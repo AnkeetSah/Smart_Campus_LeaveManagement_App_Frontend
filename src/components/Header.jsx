@@ -38,7 +38,10 @@ function Header({ footerRef, setDarkMode, darkMode }) {
   // Check if current path should hide the support button
   let shouldHideSupport =
     location.pathname.includes("/authority/dashboard") ||
-    location.pathname.includes("/dashboard/student");
+    location.pathname.includes("/dashboard/student")||
+    location.pathname.includes("/dashboard/guard")||
+    location.pathname.includes("/admin")
+
 
   const handleLogout = () => {
     logoutUser();

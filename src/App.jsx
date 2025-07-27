@@ -16,12 +16,14 @@ import FacultyDashboard from "./pages/Faculty/FacultyDashboard";
 import ScrollToTop from "./components/ScrollToTop";
 import StudentLeaveForm from "./components/StudentLeaveForm";
 import GuardDashboard from "./pages/GuardDashboard/GuardDashboard";
-import AdminDashboard from "./components/AdminDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 // Dummy dashboard components for now
 import AuthorityDashboard from "./pages/Faculty/AuthorityDashboard";
 import UserAdd from "./pages/Admin/UserAdd";
 import api from "./services/api";
-
+import UserLayout from "./layouts/UserLayout";
+import AdminLayout from "./layouts/AdminLayout";
+import UserManagement from "./pages/Admin/UserManagement";
 
 const HodDashboard = () => {
   const name = useAuthStore((state) => state.user?.name);
@@ -39,19 +41,19 @@ function App() {
   const clearUser = useAuthStore((state) => state.clearUser);
   const loading = useAuthStore((state) => state.loading);
 
- useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const res = await api.get("/api/me"); 
-      setUser(res.data);
-    } catch (err) {
-      console.log("⚠️ User not authenticated");
-      clearUser();
-    }
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/api/me");
+        setUser(res.data);
+      } catch (err) {
+        console.log("⚠️ User not authenticated");
+        clearUser();
+      }
+    };
 
-  fetchUser();
-}, [setUser, clearUser]);
+    fetchUser();
+  }, [setUser, clearUser]);
 
   //dark mode feature
   const [darkMode, setDarkMode] = useState(false);
@@ -64,64 +66,33 @@ function App() {
   });
 
   return (
-    <Router>
+   <Router>
       <ScrollToTop />
-      <div
-        className={`min-h-screen  w-full font-sans transition-all duration-500 ${
-          darkMode == "dark" ? "dark" : "light"
-        }`}
-      >
-        <Header
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          footerRef={footerRef}
-        />
-        <main className="flex-grow">
-          <Routes>
+      <div className={`min-h-screen w-full transition-all duration-500 ${darkMode ? "dark" : "light"}`}>
+        <Routes>
+          {/* 🔹 User Layout */}
+          <Route element={<UserLayout darkMode={darkMode} setDarkMode={setDarkMode} footerRef={footerRef} />}>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login/:userType" element={<LoginPage />} />
-
-            {/* Protected Role-Based Dashboards */}
-
-            {/* <Route element={<ProtectedRoute allowedRoles={["faculty"]} />}>
-              <Route path="/dashboard/faculty" element={<FacultyDashboard />} />
-            </Route> */}
-
             <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
               <Route path="/dashboard/student" element={<StudentDashboard />} />
             </Route>
-
-            <Route
-              element={
-                <ProtectedRoute allowedRoles={["faculty", "hod", "warden"]} />
-              }
-            >
-              <Route
-                path="/authority/dashboard"
-                element={<AuthorityDashboard />}
-              />
+            <Route element={<ProtectedRoute allowedRoles={["faculty", "hod", "warden"]} />}>
+              <Route path="/authority/dashboard" element={<AuthorityDashboard />} />
             </Route>
-           <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
-  <Route path="/dashboard/guard" element={<GuardDashboard />} />
-</Route>
-
-
-            {/* <Route element={<ProtectedRoute allowedRoles={["warden"]} />}>
-              <Route path="/dashboard/warden" element={<WardenDashboard />} />
+            <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
+              <Route path="/dashboard/guard" element={<GuardDashboard />} />
             </Route>
-
-            <Route element={<ProtectedRoute allowedRoles={["hod"]} />}>
-              <Route path="/dashboard/hod" element={<HodDashboard />} />
-            </Route> */}
-
             <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route path="/leave" element={<LeaveStatusTracker/>} />
-          </Routes>
-        </main>
+          </Route>
 
-        <div ref={footerRef}>
-          <Footer />
-        </div>
+          {/* 🔸 Admin Layout */}
+          <Route element={<AdminLayout />}>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<UserManagement />} />
+           
+          </Route>
+        </Routes>
       </div>
     </Router>
   );
