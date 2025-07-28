@@ -18,8 +18,8 @@ function StudentDashboard() {
    console.log(showLeaveStatus)
   const { user } = useAuthStore();
   console.log(user)
-
-      const roomId = `${user?.department}-${user?.section}-${user?.id||user?._id}`;
+    
+      const roomId = `${user?.branch}-${user?.section}-${user?.id||user?._id}`;
       console.log('student id',roomId)
       socket.emit('joinRoom', roomId);
       

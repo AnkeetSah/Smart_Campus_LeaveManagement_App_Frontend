@@ -1,15 +1,39 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { TbUpload } from "react-icons/tb";
 import { motion } from "framer-motion";
 import { extractExcelData } from "../../utils/excelUtils"; // adjust the path as needed
 import ExtractedUserData from "./ExtractedUserData";
-
+import useAdmin from "../../hooks/useAdmin.js";
+import { ToastContainer, toast } from "react-toastify";
 const UserAdd = () => {
+  const [selectedRole, setSelectedRole] = useState("student");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [extractedData, setExtractedData] = useState(null);
   const fileInputRef = useRef(null);
+  
+  const handleRoleChange = (e) => {
+    setSelectedRole(e.target.value);
+  };
+
+  const { mutate, status, isError } = useAdmin();
+
+  const isLoading = status === "pending";
+  const isSuccess = status === "success";
+
+  const handleUpload = () => {
+    console.log("Uploading users:", extractedData,selectedRole);
+    mutate({extractedData,selectedRole});
+  };
+
+  useEffect(() => {
+    if (status === "success") {
+      toast.success("✅ Users added successfully!");
+    } else if (status === "error") {
+      toast.error("❌ Failed to add users.");
+    }
+  }, [status]);
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -27,7 +51,6 @@ const UserAdd = () => {
     try {
       const data = await extractExcelData(file);
       setExtractedData(data);
-      console.log("Extracted data:", data);
     } catch (err) {
       setError(err.message);
       console.error("Error extracting Excel data:", err);
@@ -40,15 +63,6 @@ const UserAdd = () => {
     fileInputRef.current?.click();
   };
 
-  const handleUpload = () => {
-    // Now we already have the data, just need to submit it
-    if (!extractedData) return;
-    
-    console.log("Submitting data:", extractedData);
-    // Here you would typically send the data to your API
-    alert(`Ready to submit ${extractedData.length} records!`);
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -56,17 +70,34 @@ const UserAdd = () => {
       transition={{ duration: 0.3 }}
       className="bg-blue-50 shadow-md  p-6 rounded-lg border border-blue-100"
     >
-      <div className="flex gap-3 items-center mb-1">
-        <TbUpload className="text-2xl text-blue-600" />
-        <h1 className="text-xl font-bold text-gray-800">Bulk User Upload</h1>
-      </div>
+      <ToastContainer />
+      <div className="flex flex-wrap items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+  <TbUpload className="text-3xl text-blue-600" />
+  
+  <div className="flex flex-col">
+    <h1 className="text-2xl font-bold text-gray-800">Bulk User Upload</h1>
+    <h2 className="text-sm text-gray-600">Select the user role you want to add</h2>
+  </div>
 
-      <p className="text-gray-600 text-sm mb-4">
+  <select
+    value={selectedRole}
+    onChange={handleRoleChange}
+    className="px-4 py-2  font-bold rounded-md border border-gray-300 text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out hover:border-blue-400"
+  >
+    <option value="student">Student</option>
+    <option value="faculty">Faculty</option>
+    <option value="hod">HOD</option>
+    <option value="warden">Warden</option>
+  </select>
+</div>
+
+
+      <p className="text-gray-600 text-sm my-4">
         Upload users in bulk using Excel file (.xlsx format)
       </p>
 
       {error && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="mb-4 p-3 bg-red-100 text-red-700 rounded-md"
@@ -92,11 +123,13 @@ const UserAdd = () => {
         </span>
         <input
           type="file"
-          className="hidden"
+          className={`hidden ${
+            status === "pending" ? "pointer-events-none opacity-50" : ""
+          }`}
           ref={fileInputRef}
           accept=".xlsx"
           onChange={handleFileChange}
-          disabled={isProcessing}
+          disabled={isProcessing || status === "pending"}
         />
 
         <p className="text-xs text-gray-500 mt-3">
@@ -104,25 +137,26 @@ const UserAdd = () => {
         </p>
       </motion.div>
 
-      <div className="mt-4 flex justify-between items-center">
+      <div className="flex justify-between items-center my-4">
         {extractedData && (
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             whileHover={{ scale: 1.05 }}
             onClick={handleUpload}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            disabled={status === "pending"}
+            className={`px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors`}
           >
-            Upload {extractedData.length} Users
+            {isLoading ? "Uploading..." : "Upload Users"}
           </motion.button>
         )}
       </div>
 
       {/* Display extracted data for debugging */}
       {extractedData && (
-       <div>
-         <ExtractedUserData data={extractedData}/>
-       </div>
+        <div>
+          <ExtractedUserData data={extractedData} />
+        </div>
       )}
     </motion.div>
   );
