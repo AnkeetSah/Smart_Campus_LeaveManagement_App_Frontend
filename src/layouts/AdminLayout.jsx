@@ -1,43 +1,46 @@
-// src/layouts/AdminLayout.jsx
+import React, { useState, useCallback, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../pages/Admin/Sidebar";
 import Topbar from "../pages/Admin/Topbar";
-import React, { useState } from "react";
 
 export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-    console.log(isSidebarOpen)
-  };
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarOpen((prev) => !prev);
+  }, []);
+
+  // Disable body scroll when sidebar is open (on mobile)
+  useEffect(() => {
+    if (window.innerWidth < 768) { // only on mobile/tablet
+      document.body.style.overflow = isSidebarOpen ? "hidden" : "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto"; // reset on unmount
+    };
+  }, [isSidebarOpen]);
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar for desktop and toggled state on mobile */}
-      <div
-        className={`fixed md:relative z-20 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 md:translate-x-0`}
-      >
-        <Sidebar isSidebarOpen={isSidebarOpen} />
-      </div>
+    <div className="flex flex-col min-h-screen w-full bg-gray-100 overflow-hidden relative">
+      {/* Top Navigation Bar */}
+      <Topbar onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
 
-      {/* Overlay for mobile */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 z-10 md:hidden bg-black/20 backdrop-blur-sm"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+      <div className="flex flex-1 pt-18 overflow-hidden">
+        <Sidebar isSidebarOpen={isSidebarOpen} onMenuClick={toggleSidebar} />
 
-      {/* Main content */}
-      <div className="flex flex-col flex-1 min-w-0">
-        <Topbar onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
-        <main className="flex-grow bg-gray-100 p-4">
-          <div className="w-full">
-            <Outlet />
-          </div>
+        {/* Glassmorphism Overlay (mobile only) */}
+        {isSidebarOpen && (
+          <div
+            onClick={toggleSidebar}
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
+          ></div>
+        )}
+
+        <main
+          className={`flex-grow max-w-full transition-all duration-300 ease-in-out 
+          ${isSidebarOpen ? "md:ml-64" : "md:ml-20"} p-4 overflow-x-hidden`}
+        >
+          <Outlet />
         </main>
       </div>
     </div>

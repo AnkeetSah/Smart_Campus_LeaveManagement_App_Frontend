@@ -6,6 +6,8 @@ import LeaveTrackerCard from "../components/LeaveTrackerCard";
 import useLeaveFormStore from "../store/useLeaveFormStore";
 import { useMyLeaves } from "../hooks/useMyLeaves";
 import socket from "../socket";
+import dayjs from "dayjs";
+
 
 const LeaveStatusTracker = () => {
   const { closeLeaveStatus } = useLeaveFormStore();
@@ -72,13 +74,14 @@ const LeaveStatusTracker = () => {
       // Create stages array (faculty → hod → warden)
       const createStages = (decisionBy) => {
         const stages = [];
-        
+          {console.log('hghjgjg',decisionBy.faculty?.decidedAt )}
         // Faculty stage
         stages.push({
           id: "faculty",
           name: "Faculty Approval",
           status: decisionBy.faculty?.status || 'pending',
-          approvedOn: decisionBy.faculty?.status === 'approved' && decisionBy.faculty?.date ? formatDate(decisionBy.faculty.date) : undefined,
+         
+          approvedOn: decisionBy.faculty?.status === 'approved' && decisionBy.faculty?.decidedAt ?  dayjs(decisionBy.faculty?.decidedAt).format("DD MMMM YYYY, hh:mm A") : undefined,
           approvedBy: decisionBy.faculty?.status === 'approved' ? decisionBy.faculty?.name : undefined,
           expectedTime: decisionBy.faculty?.status === 'pending' ? "Within 12 hours" : undefined
         });

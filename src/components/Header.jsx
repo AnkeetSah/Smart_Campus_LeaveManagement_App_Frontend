@@ -46,7 +46,7 @@ function Header({ footerRef, setDarkMode, darkMode }) {
   const handleLogout = () => {
     logoutUser();
 
-    window.location.href = "/";
+    // window.location.href = "/";
   };
 
   // Close profile dropdown when clicking outside

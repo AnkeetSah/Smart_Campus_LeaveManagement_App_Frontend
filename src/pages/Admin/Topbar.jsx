@@ -9,13 +9,13 @@ const Topbar = ({ onMenuClick,isSidebarOpen }) => {
   const [notificationCount, setNotificationCount] = useState(3);
 
   return (
-    <header className="w-full h-16   bg-gradient-to-b from-white via-gray-50 to-white  border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 shadow-sm py-9">
+    <header className="w-full fixed h-16 z-1000   bg-gradient-to-b from-white via-gray-50 to-white  border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 shadow-sm py-9">
       
       {/* Left side: Logo & Menu */}
       <div className="flex items-center gap-4">
         {/* Hamburger Menu */}
         <button
-          className="group relative text-gray-600 hover:text-indigo-600 transition p-2 rounded-lg hover:bg-indigo-50"
+          className="group relative hidden md:block text-gray-600 hover:text-indigo-600 transition p-2 rounded-lg hover:bg-indigo-50"
           onClick={onMenuClick}   
         >
           {isSidebarOpen?<TbLayoutSidebarLeftCollapse className="text-2xl" />:<TbLayoutSidebarRightCollapse className="text-2xl" />}
@@ -34,8 +34,10 @@ const Topbar = ({ onMenuClick,isSidebarOpen }) => {
             <RiLeafLine className="text-white text-lg sm:text-xl" />
           </motion.div>
           <h1 className="text-lg sm:text-xl font-bold text-gray-800">
-            Smart Campus Admin Dashboard
-          </h1>
+  <span className="hidden md:inline">Smart Campus </span>
+  Admin Dashboard
+</h1>
+
         </div>
       </div>
 
@@ -48,7 +50,7 @@ const Topbar = ({ onMenuClick,isSidebarOpen }) => {
         </button>
 
         {/* Notification Bell */}
-        <div className="relative group">
+        {/* <div className="relative group">
           <button
             onClick={() => setNotificationCount(Math.max(0, notificationCount - 1))}
             className="relative text-gray-500 hover:text-red-500 p-2 rounded-lg transition hover:bg-red-50"
@@ -61,10 +63,10 @@ const Topbar = ({ onMenuClick,isSidebarOpen }) => {
               {notificationCount}
             </span>
           )}
-        </div>
+        </div> */}
 
         {/* User Info */}
-        <div className="flex items-center gap-3 pl-4 border-l border-gray-200 group cursor-pointer hover:bg-indigo-50 rounded-lg px-3 py-2 transition">
+        <div className="md:flex items-center gap-3 pl-4 border-l hidden border-gray-200 group cursor-pointer hover:bg-indigo-50 rounded-lg px-3 py-2 transition">
           <div className="relative">
             <FaUserCircle className="text-gray-500 group-hover:text-indigo-600 text-2xl transition" />
             <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-sm"></div>
@@ -78,7 +80,16 @@ const Topbar = ({ onMenuClick,isSidebarOpen }) => {
             </span>
           </div>
         </div>
+        <button
+          className="group relative block md:hidden text-gray-600 hover:text-indigo-600 transition p-2 rounded-lg hover:bg-indigo-50"
+          onClick={onMenuClick}   
+        >
+          {isSidebarOpen?<TbLayoutSidebarLeftCollapse className="text-2xl" />:<TbLayoutSidebarRightCollapse className="text-2xl" />}
+          
+          <div className="absolute inset-0 bg-indigo-500/20 rounded-lg scale-0 group-hover:scale-100 transition duration-300 -z-10"></div>
+        </button>
       </div>
+      
     </header>
   );
 };

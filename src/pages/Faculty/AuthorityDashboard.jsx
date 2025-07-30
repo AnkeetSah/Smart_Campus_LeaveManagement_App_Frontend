@@ -38,9 +38,9 @@ function AuthorityDashboard() {
   const notify = () => toast("Wow so easy!");
   useEffect(() => {
     let roomId;
-    console.log(user);
+    // console.log(user);
     if (user.role === "faculty") {
-      roomId = `${user.department}-${user.section}`;
+      roomId = `${user.branch}-${user.section}`;
     } else if (user.role === "hod") {
       roomId = `hod-${user.department}`;
     } else if (user.role === "student") {

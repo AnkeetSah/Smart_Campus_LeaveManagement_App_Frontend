@@ -88,6 +88,7 @@ const UserAdd = () => {
     <option value="faculty">Faculty</option>
     <option value="hod">HOD</option>
     <option value="warden">Warden</option>
+    <option value="guard">Guard</option>
   </select>
 </div>
 

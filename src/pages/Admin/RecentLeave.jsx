@@ -171,7 +171,7 @@ const RecentLeaveApplications = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 p-8"
+      className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 p-3 md:p-8"
     >
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-8">
@@ -220,14 +220,14 @@ const RecentLeaveApplications = () => {
             className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {['All', 'Pending', 'Approved', 'Rejected'].map((status) => (
             <motion.button
               key={status}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleFilterChange(status)}
-              className={`px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+              className={`md:px-4 px-2 py-1 md:py-3 rounded-md md:rounded-xl font-medium transition-all duration-200 ${
                 filter === status
                   ? 'bg-blue-500 text-white shadow-md'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
