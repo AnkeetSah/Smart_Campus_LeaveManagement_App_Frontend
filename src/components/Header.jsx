@@ -80,7 +80,7 @@ function Header({ footerRef, setDarkMode, darkMode }) {
   };
 
   return (
-    <header className="relative dark:bg-gray-900 bg-white shadow-sm dark:shadow-gray-800/50 w-full px-4 py-3 sm:py-4 z-50">
+    <header className=" dark:bg-gray-900 bg-white shadow-sm dark:shadow-gray-800/50 w-full px-4 py-3 fixed sm:py-4 z-50">
       <div className="w-full flex items-center justify-between">
         {/* Logo and Title */}
         <motion.div

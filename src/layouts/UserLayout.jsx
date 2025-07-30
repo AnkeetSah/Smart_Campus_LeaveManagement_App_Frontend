@@ -7,7 +7,7 @@ export default function UserLayout({ darkMode, setDarkMode, footerRef }) {
   return (
     <>
       <Header darkMode={darkMode} setDarkMode={setDarkMode} footerRef={footerRef} />
-      <main className="flex-grow">
+      <main className="flex-grow pt-16 sm:pt-20">
         <Outlet />
       </main>
       <div ref={footerRef}>
