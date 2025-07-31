@@ -18,6 +18,11 @@ const useLogin = (role) => {
   console.log(data)
   const userRole = data.user.role;
   
+  if(data.user.firstLogin=="true"){
+    navigate("/change-password");
+    return;
+  }
+  
 
   
 

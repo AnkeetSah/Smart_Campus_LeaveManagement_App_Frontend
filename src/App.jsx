@@ -24,7 +24,7 @@ import api from "./services/api";
 import UserLayout from "./layouts/UserLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import UserManagement from "./pages/Admin/UserManagement";
-
+import ChangePassword from "./pages/changepassword/ChangePassword";
 const HodDashboard = () => {
   const name = useAuthStore((state) => state.user?.name);
   return <h1 className="text-xl font-bold text-center">Hello HOD, {name}</h1>;
@@ -83,7 +83,9 @@ function App() {
             <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
               <Route path="/dashboard/guard" element={<GuardDashboard />} />
             </Route>
+          <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+
           </Route>
 
           {/* 🔸 Admin Layout */}
