@@ -21,12 +21,16 @@ const InputField = () => {
           value={formData.reason}
           onChange={(e) => setField("reason", e.target.value)}
           className={`block w-full rounded-lg border ${
-            errors.reason ? "border-red-400" : "border-gray-300 dark:border-gray-600"
+            errors.reason
+              ? "border-red-400"
+              : "border-gray-300 dark:border-gray-600"
           } p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 resize-none bg-white/70 dark:bg-gray-700/50 dark:text-white`}
           placeholder="Please describe the reason for your leave in detail..."
         />
         {errors.reason && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.reason}</p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.reason}
+          </p>
         )}
       </div>
 
@@ -45,7 +49,9 @@ const InputField = () => {
           value={formData.emergencyContact}
           onChange={(e) => setField("emergencyContact", e.target.value)}
           className={`block w-full rounded-lg border ${
-            errors.emergencyContact ? "border-red-400" : "border-gray-300 dark:border-gray-600"
+            errors.emergencyContact
+              ? "border-red-400"
+              : "border-gray-300 dark:border-gray-600"
           } p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white/70 dark:bg-gray-700/50 dark:text-white`}
           placeholder="+91 9876543210"
         />

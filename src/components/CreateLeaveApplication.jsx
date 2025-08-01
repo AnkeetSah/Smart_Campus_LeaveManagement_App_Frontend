@@ -10,16 +10,24 @@ import AttachmentField from "./StudentLeaveForm/AttachmentField";
 import validateLeaveForm from "../utils/validateLeaveForm";
 import { submitLeave } from "../services/leaveService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FaChevronLeft, FaCalendarAlt, FaCheck, FaTimes, FaRegFileAlt, FaDownload, FaUserGraduate, FaUserTie, FaUserShield } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaCalendarAlt,
+  FaCheck,
+  FaTimes,
+  FaRegFileAlt,
+  FaDownload,
+  FaUserGraduate,
+  FaUserTie,
+  FaUserShield,
+} from "react-icons/fa";
 import AttendanceInput from "./StudentLeaveForm/AttendanceInput";
 
 function CreateLeaveApplication() {
-  
- 
   const { formData, resetForm, setErrors, isSubmitting, setIsSubmitting } =
     useLeaveApplicationStore();
   const queryClient = useQueryClient();
-    const { closeForm } = useLeaveFormStore(); // ✅ Access the hook
+  const { closeForm } = useLeaveFormStore(); // ✅ Access the hook
 
   const mutation = useMutation({
     mutationFn: submitLeave,
@@ -27,7 +35,7 @@ function CreateLeaveApplication() {
       console.log("Leave Submitted", data);
       alert("Leave submitted successfully!");
       queryClient.invalidateQueries(["myApplications"]);
-      closeForm(); 
+      closeForm();
       resetForm();
       setIsSubmitting(false);
     },
@@ -42,7 +50,7 @@ function CreateLeaveApplication() {
       setIsSubmitting(false);
     },
   });
- useEffect(() => {
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
   const handleSubmit = (e) => {
@@ -64,7 +72,6 @@ function CreateLeaveApplication() {
       }
 
       mutation.mutate(data);
-     
     } else {
       setErrors(errors);
     }
@@ -93,7 +100,9 @@ function CreateLeaveApplication() {
             <RiLeafLine className="text-white text-xl" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Apply for Leave</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+              Apply for Leave
+            </h1>
           </div>
         </div>
       </header>
@@ -129,10 +138,10 @@ function CreateLeaveApplication() {
 
             {/* Leave Type */}
             <LeaveTypeSelector />
-            
+
             {/* Date Range */}
             <DateRangePicker />
-            <AttendanceInput/>
+            <AttendanceInput />
 
             <InputField />
 
@@ -151,7 +160,10 @@ function CreateLeaveApplication() {
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="terms" className="font-medium text-gray-700 dark:text-gray-200">
+                <label
+                  htmlFor="terms"
+                  className="font-medium text-gray-700 dark:text-gray-200"
+                >
                   I confirm all information is accurate
                 </label>
                 <p className="text-gray-500 dark:text-gray-400">

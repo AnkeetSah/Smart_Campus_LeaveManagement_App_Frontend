@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { FaPlusCircle, FaClipboardList, FaHistory } from "react-icons/fa";
 import LeaveCountCard from "./LeaveCountCard";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import CreateLeaveApplication from "../../components/CreateLeaveApplication";
 import LeaveHistory from "../../components/LeaveHistory";
 import useLeaveFormStore from "../../store/useLeaveFormStore";
@@ -13,24 +13,29 @@ import socket from "../../socket"; // ✅ import the shared socket
 import { toast } from "react-toastify";
 function StudentDashboard() {
   const { showForm, openForm } = useLeaveFormStore();
-  const { showLeaveFormHistory, openLeaveHistoryForm,showLeaveStatus,openLeaveStatus} = useLeaveFormStore();
-  const { data: leaves, isLoading, isError,refetch } = useMyLeaves();
-   console.log(showLeaveStatus)
+  const {
+    showLeaveFormHistory,
+    openLeaveHistoryForm,
+    showLeaveStatus,
+    openLeaveStatus,
+  } = useLeaveFormStore();
+  const { data: leaves, isLoading, isError, refetch } = useMyLeaves();
+  console.log(showLeaveStatus);
   const { user } = useAuthStore();
-  console.log(user)
-    
-      const roomId = `${user?.branch}-${user?.section}-${user?.id||user?._id}`;
-      console.log('student id',roomId)
-      socket.emit('joinRoom', roomId);
-      
-      useEffect(() => {
+  console.log(user);
+
+  const roomId = `${user?.branch}-${user?.section}-${user?.id || user?._id}`;
+  console.log("student id", roomId);
+  socket.emit("joinRoom", roomId);
+
+  useEffect(() => {
     // Join the student's room
-    socket.emit('joinRoom', roomId);
+    socket.emit("joinRoom", roomId);
 
     // Listen for leave status updates
     socket.on("leaveStatusUpdated", () => {
       console.log("🔄 Leave status updated, refetching...");
-      refetch(); 
+      refetch();
     });
 
     // Cleanup on unmount
@@ -40,23 +45,21 @@ function StudentDashboard() {
   }, [roomId, refetch]);
 
   useEffect(() => {
-  if (
-    !showForm &&
-    !showLeaveFormHistory &&
-    !showLeaveStatus
-  ) {
-    // Only scroll when dashboard is shown
-    console.log("🌀 Scrolling to top");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-}, [showForm, showLeaveFormHistory, showLeaveStatus]);
+    if (!showForm && !showLeaveFormHistory && !showLeaveStatus) {
+      // Only scroll when dashboard is shown
+      console.log("🌀 Scrolling to top");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [showForm, showLeaveFormHistory, showLeaveStatus]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">Loading leave data...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">
+            Loading leave data...
+          </p>
         </div>
       </div>
     );
@@ -67,11 +70,23 @@ function StudentDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-8 h-8 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <svg
+              className="w-8 h-8 text-red-500 dark:text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
             </svg>
           </div>
-          <p className="mt-4 text-red-500 dark:text-red-400">Failed to load leave data. Please try again later.</p>
+          <p className="mt-4 text-red-500 dark:text-red-400">
+            Failed to load leave data. Please try again later.
+          </p>
         </div>
       </div>
     );
@@ -85,14 +100,12 @@ function StudentDashboard() {
   const finalCounts = {
     pending: statusCount.pending || 0,
     approved: statusCount.approved || 0,
-    rejected: statusCount.rejected || 0
+    rejected: statusCount.rejected || 0,
   };
 
   if (showForm) return <CreateLeaveApplication />;
   if (showLeaveFormHistory) return <LeaveHistory />;
   if (showLeaveStatus) return <LeaveStatusTracker />;
-
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans relative overflow-hidden pb-14 transition-colors duration-300">
@@ -109,11 +122,15 @@ function StudentDashboard() {
               duration: 15 + index * 5,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: index * 2
+              delay: index * 2,
             }}
-            className={`absolute ${index === 0 ? 'top-20 left-10 w-64 h-64 bg-blue-100' : 
-                        index === 1 ? 'top-1/3 right-20 w-72 h-72 bg-purple-100' : 
-                        'bottom-20 left-1/3 w-80 h-80 bg-indigo-100'} rounded-full mix-blend-multiply filter blur-3xl opacity-20`}
+            className={`absolute ${
+              index === 0
+                ? "top-20 left-10 w-64 h-64 bg-blue-100"
+                : index === 1
+                ? "top-1/3 right-20 w-72 h-72 bg-purple-100"
+                : "bottom-20 left-1/3 w-80 h-80 bg-indigo-100"
+            } rounded-full mix-blend-multiply filter blur-3xl opacity-20`}
           />
         ))}
       </div>
@@ -141,10 +158,11 @@ function StudentDashboard() {
             {
               icon: FaPlusCircle,
               title: "Apply for Leave",
-              description: "Submit a new leave application with required details.",
+              description:
+                "Submit a new leave application with required details.",
               gradient: "from-blue-500 to-indigo-600",
               action: openForm,
-              buttonText: "Create Leave"
+              buttonText: "Create Leave",
             },
             {
               icon: FaClipboardList,
@@ -152,7 +170,7 @@ function StudentDashboard() {
               description: "Track your active leave requests and responses.",
               gradient: "from-indigo-500 to-blue-600",
               action: openLeaveStatus, // Add your status view function
-              buttonText: "View Status"
+              buttonText: "View Status",
             },
             {
               icon: FaHistory,
@@ -160,50 +178,81 @@ function StudentDashboard() {
               description: "View your previously applied and approved leaves.",
               gradient: "from-purple-500 to-indigo-500",
               action: openLeaveHistoryForm,
-              buttonText: "Check History"
-            }
+              buttonText: "Check History",
+            },
           ].map((card, index) => (
             <motion.div
               key={index}
-              
               className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-md border border-white/30 dark:border-gray-700/50 rounded-2xl shadow-lg dark:shadow-gray-900/30 p-6 text-center hover:shadow-xl dark:hover:shadow-gray-900/40 transition-all duration-300 relative overflow-hidden"
             >
-              <div className={`absolute -top-10 -right-10 w-32 h-32 ${
-                index === 0 ? 'bg-blue-100 dark:bg-blue-900/20' :
-                index === 1 ? 'bg-indigo-100 dark:bg-indigo-900/20' :
-                'bg-purple-100 dark:bg-purple-900/20'
-              } rounded-full opacity-20 dark:opacity-30`}></div>
+              <div
+                className={`absolute -top-10 -right-10 w-32 h-32 ${
+                  index === 0
+                    ? "bg-blue-100 dark:bg-blue-900/20"
+                    : index === 1
+                    ? "bg-indigo-100 dark:bg-indigo-900/20"
+                    : "bg-purple-100 dark:bg-purple-900/20"
+                } rounded-full opacity-20 dark:opacity-30`}
+              ></div>
               <div className="relative z-10">
-                <div className={`w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r ${card.gradient} dark:${
-                  index === 0 ? 'from-blue-400 to-indigo-500' :
-                  index === 1 ? 'from-indigo-400 to-blue-500' :
-                  'from-purple-400 to-indigo-400'
-                } flex items-center justify-center shadow-md dark:shadow-lg`}>
+                <div
+                  className={`w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r ${
+                    card.gradient
+                  } dark:${
+                    index === 0
+                      ? "from-blue-400 to-indigo-500"
+                      : index === 1
+                      ? "from-indigo-400 to-blue-500"
+                      : "from-purple-400 to-indigo-400"
+                  } flex items-center justify-center shadow-md dark:shadow-lg`}
+                >
                   <card.icon className="text-white text-3xl" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">{card.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">{card.description}</p>
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                  {card.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  {card.description}
+                </p>
                 <motion.button
-                   whileHover={{ scale: 1.03 }}
-                   whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={card.action}
-                  className={`w-full cursor-pointer py-3 rounded-xl text-white bg-gradient-to-r ${card.gradient} hover:${
-                    index === 0 ? 'from-blue-600 to-indigo-700' :
-                    index === 1 ? 'from-indigo-600 to-blue-700' :
-                    'from-purple-600 to-indigo-600'
+                  className={`w-full cursor-pointer py-3 rounded-xl text-white bg-gradient-to-r ${
+                    card.gradient
+                  } hover:${
+                    index === 0
+                      ? "from-blue-600 to-indigo-700"
+                      : index === 1
+                      ? "from-indigo-600 to-blue-700"
+                      : "from-purple-600 to-indigo-600"
                   } dark:${
-                    index === 0 ? 'from-blue-400 to-indigo-500' :
-                    index === 1 ? 'from-indigo-400 to-blue-500' :
-                    'from-purple-400 to-indigo-400'
+                    index === 0
+                      ? "from-blue-400 to-indigo-500"
+                      : index === 1
+                      ? "from-indigo-400 to-blue-500"
+                      : "from-purple-400 to-indigo-400"
                   } dark:hover:${
-                    index === 0 ? 'from-blue-500 to-indigo-600' :
-                    index === 1 ? 'from-indigo-500 to-blue-600' :
-                    'from-purple-500 to-indigo-500'
+                    index === 0
+                      ? "from-blue-500 to-indigo-600"
+                      : index === 1
+                      ? "from-indigo-500 to-blue-600"
+                      : "from-purple-500 to-indigo-500"
                   } font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-md dark:shadow-lg`}
                 >
                   <span>{card.buttonText}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    ></path>
                   </svg>
                 </motion.button>
               </div>

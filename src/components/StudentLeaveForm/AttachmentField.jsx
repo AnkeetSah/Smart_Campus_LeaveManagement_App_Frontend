@@ -58,11 +58,16 @@ const AttachmentField = () => {
         </svg>
 
         <div className="text-sm text-gray-600 dark:text-gray-300">
-          <span className="text-indigo-600 dark:text-indigo-400 font-medium">Click to upload</span> or drag and drop
+          <span className="text-indigo-600 dark:text-indigo-400 font-medium">
+            Click to upload
+          </span>{" "}
+          or drag and drop
         </div>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
           Accepted: PDF, JPG, PNG up to 5MB{" "}
-          <span className="text-red-500 dark:text-red-400 font-semibold">(Required for medical leave)</span>
+          <span className="text-red-500 dark:text-red-400 font-semibold">
+            (Required for medical leave)
+          </span>
         </p>
 
         <input
@@ -92,7 +97,9 @@ const AttachmentField = () => {
                 />
               ) : (
                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200">
-                  <span className="text-indigo-600 dark:text-indigo-400 text-xl">📄</span>
+                  <span className="text-indigo-600 dark:text-indigo-400 text-xl">
+                    📄
+                  </span>
                   <span className="truncate">{file.name}</span>
                 </div>
               )}

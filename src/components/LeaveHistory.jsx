@@ -20,9 +20,9 @@ import LeaveExpandedDetails from "./LeaveHistory/LeaveExpandedDetails";
 import LeaveListItem from "./LeaveHistory/LeaveListItem";
 
 function LeaveHistory() {
-   useEffect(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, []);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
   const [expandedLeave, setExpandedLeave] = useState(null);
   const [leaveHistoryStatus, setLeaveHistoryStatus] = useState("approved");
   const [selectedLeave, setSelectedLeave] = useState(null);
@@ -31,40 +31,56 @@ function LeaveHistory() {
     data: leaves = [],
     isLoading,
     isError,
-    refetch
+    refetch,
   } = useMyLeaves(leaveHistoryStatus);
 
-  useEffect(()=>{
+  useEffect(() => {
     // Listen for leave status updates
-        socket.on("leaveStatusUpdated", () => {
-          console.log("🔄 Leave status updated, refetching...");
-          refetch(); 
-        });
-        // Cleanup on unmount
-            return () => {
-              socket.off("leaveStatusUpdated");
-            };
-  },[refetch])
+    socket.on("leaveStatusUpdated", () => {
+      console.log("🔄 Leave status updated, refetching...");
+      refetch();
+    });
+    // Cleanup on unmount
+    return () => {
+      socket.off("leaveStatusUpdated");
+    };
+  }, [refetch]);
 
   const renderStatusIcon = (status) => {
     switch (status) {
       case "approved":
-        return <FaCheck className="text-green-500 dark:text-green-400 mr-1.5" />;
+        return (
+          <FaCheck className="text-green-500 dark:text-green-400 mr-1.5" />
+        );
       case "rejected":
         return <FaTimes className="text-red-500 dark:text-red-400 mr-1.5" />;
       default:
-        return <IoMdTime className="text-yellow-500 dark:text-yellow-400 mr-1.5" />;
+        return (
+          <IoMdTime className="text-yellow-500 dark:text-yellow-400 mr-1.5" />
+        );
     }
   };
 
   const renderStatusText = (status) => {
     switch (status) {
       case "approved":
-        return <span className="font-medium text-green-600 dark:text-green-400">Approved</span>;
+        return (
+          <span className="font-medium text-green-600 dark:text-green-400">
+            Approved
+          </span>
+        );
       case "rejected":
-        return <span className="font-medium text-red-600 dark:text-red-400">Rejected</span>;
+        return (
+          <span className="font-medium text-red-600 dark:text-red-400">
+            Rejected
+          </span>
+        );
       default:
-        return <span className="font-medium text-yellow-600 dark:text-yellow-400">Pending</span>;
+        return (
+          <span className="font-medium text-yellow-600 dark:text-yellow-400">
+            Pending
+          </span>
+        );
     }
   };
 
@@ -101,7 +117,9 @@ function LeaveHistory() {
             <RiLeafLine className="text-white text-xl" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Leave History</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+              Leave History
+            </h1>
             <p className="text-xs text-gray-600 dark:text-gray-400">
               Track your past leave applications
             </p>

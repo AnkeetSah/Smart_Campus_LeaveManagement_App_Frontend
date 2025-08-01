@@ -21,13 +21,17 @@ const DateRangePicker = () => {
               value={formData.fromDate}
               onChange={(e) => setField("fromDate", e.target.value)}
               className={`block w-full rounded-lg border ${
-                errors.fromDate ? "border-red-400" : "border-gray-300 dark:border-gray-600"
+                errors.fromDate
+                  ? "border-red-400"
+                  : "border-gray-300 dark:border-gray-600"
               } p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white/70 dark:bg-gray-700/50 cursor-pointer dark:text-white`}
               onFocus={(e) => e.target.showPicker?.()}
             />
           </div>
           {errors.fromDate && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.fromDate}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.fromDate}
+            </p>
           )}
         </div>
 
@@ -46,13 +50,17 @@ const DateRangePicker = () => {
               value={formData.toDate}
               onChange={(e) => setField("toDate", e.target.value)}
               className={`block w-full rounded-lg border ${
-                errors.toDate ? "border-red-400" : "border-gray-300 dark:border-gray-600"
+                errors.toDate
+                  ? "border-red-400"
+                  : "border-gray-300 dark:border-gray-600"
               } p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white/70 dark:bg-gray-700/50 cursor-pointer dark:text-white`}
               onFocus={(e) => e.target.showPicker?.()}
             />
           </div>
           {errors.toDate && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.toDate}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.toDate}
+            </p>
           )}
         </div>
       </div>

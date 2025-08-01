@@ -92,7 +92,8 @@ function AttendanceInput() {
         {predictedAttendance ? (
           <>
             <p className="leading-relaxed">
-              📉 After <strong>{leaveDays}</strong> day(s) of leave, your attendance may drop to{" "}
+              📉 After <strong>{leaveDays}</strong> day(s) of leave, your
+              attendance may drop to{" "}
               <span
                 className={`font-semibold ${
                   parseFloat(predictedAttendance) < 75

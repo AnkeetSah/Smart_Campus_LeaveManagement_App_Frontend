@@ -7,7 +7,7 @@ import SecurityTips from "./SecurityTips";
 import StrengthGuide from "./StrengthGuide";
 import api from "../../services/api";
 import useAuthStore from "../../store/useAuthStore";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   oldPassword: "",
@@ -15,8 +15,6 @@ const initialState = {
   showOldPassword: false,
   showNewPassword: false,
 };
-
-
 
 function reducer(state, action) {
   switch (action.type) {
@@ -32,11 +30,10 @@ function reducer(state, action) {
 }
 
 function ChangePassword({ onSuccess }) {
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const {user}=useAuthStore()
-console.log(user)
-
+  const { user } = useAuthStore();
+  console.log(user);
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const [validationErrors, setValidationErrors] = useState({});
@@ -99,22 +96,22 @@ console.log(user)
     if (strength <= 4) return "Good";
     return "Strong";
   };
-console.log({
-  isPending: mutation.isPending,
-  isLoading: mutation.isLoading,
-  isSuccess: mutation.isSuccess,
-  isError: mutation.isError,
-  data: mutation.data,
-  error: mutation.error,
-});
+  console.log({
+    isPending: mutation.isPending,
+    isLoading: mutation.isLoading,
+    isSuccess: mutation.isSuccess,
+    isError: mutation.isError,
+    data: mutation.data,
+    error: mutation.error,
+  });
 
   if (mutation.isSuccess) {
-    if(user.role=="student"){
-           navigate('/dashboard/student');
-    }else if(user.role=="guard"){
-      navigate('/dashboard/guard');
-    }else{
-       navigate('/authority/dashboard');
+    if (user.role == "student") {
+      navigate("/dashboard/student");
+    } else if (user.role == "guard") {
+      navigate("/dashboard/guard");
+    } else {
+      navigate("/authority/dashboard");
     }
   }
 
@@ -125,15 +122,21 @@ console.log({
           <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <Key className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">Change Password</h1>
-          <p className="text-gray-500 dark:text-gray-400">Keep your account secure with a strong password</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+            Change Password
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Keep your account secure with a strong password
+          </p>
         </div>
 
         {(mutation.error || validationErrors.general) && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl p-4 mb-6 flex items-start gap-3 animate-shake">
             <AlertTriangle className="w-5 h-5 text-red-500 dark:text-red-400 mt-0.5" />
             <p className="text-red-700 dark:text-red-300 text-sm">
-              {validationErrors.general || mutation.error?.response?.data?.message || "Something went wrong."}
+              {validationErrors.general ||
+                mutation.error?.response?.data?.message ||
+                "Something went wrong."}
             </p>
           </div>
         )}
@@ -142,20 +145,42 @@ console.log({
           <PasswordField
             label="Current Password"
             value={state.oldPassword}
-            onChange={(e) => dispatch({ type: "SET_FIELD", field: "oldPassword", value: e.target.value })}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_FIELD",
+                field: "oldPassword",
+                value: e.target.value,
+              })
+            }
             error={validationErrors.oldPassword}
             showPassword={state.showOldPassword}
-            setShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_VISIBILITY", field: "showOldPassword" })}
+            setShowPassword={() =>
+              dispatch({
+                type: "TOGGLE_PASSWORD_VISIBILITY",
+                field: "showOldPassword",
+              })
+            }
             placeholder="Enter your current password"
           />
 
           <PasswordField
             label="New Password"
             value={state.newPassword}
-            onChange={(e) => dispatch({ type: "SET_FIELD", field: "newPassword", value: e.target.value })}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_FIELD",
+                field: "newPassword",
+                value: e.target.value,
+              })
+            }
             error={validationErrors.newPassword}
             showPassword={state.showNewPassword}
-            setShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_VISIBILITY", field: "showNewPassword" })}
+            setShowPassword={() =>
+              dispatch({
+                type: "TOGGLE_PASSWORD_VISIBILITY",
+                field: "showNewPassword",
+              })
+            }
             placeholder="Create a new password"
           />
 
@@ -163,27 +188,37 @@ console.log({
             <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
               <div className="flex justify-between text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <span>Password Strength</span>
-                <span className={
-                  strength <= 2 ? 'text-red-600' :
-                  strength <= 3 ? 'text-yellow-600' :
-                  strength <= 4 ? 'text-blue-600' : 'text-emerald-600'
-                }>{getStrengthText()}</span>
+                <span
+                  className={
+                    strength <= 2
+                      ? "text-red-600"
+                      : strength <= 3
+                      ? "text-yellow-600"
+                      : strength <= 4
+                      ? "text-blue-600"
+                      : "text-emerald-600"
+                  }
+                >
+                  {getStrengthText()}
+                </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                <div className={`h-2 rounded-full ${getStrengthColor()} transition-all duration-300`} style={{ width: `${(strength / 5) * 100}%` }} />
+                <div
+                  className={`h-2 rounded-full ${getStrengthColor()} transition-all duration-300`}
+                  style={{ width: `${(strength / 5) * 100}%` }}
+                />
               </div>
               <StrengthGuide checks={checks} />
             </div>
           )}
- {console.log(mutation.isPending )}
+          {console.log(mutation.isPending)}
           <button
             onClick={handlePasswordChange}
             disabled={mutation.isPending || strength < 3}
-           
             className={`w-full py-3.5 rounded-xl font-semibold text-white transition-all ${
               mutation.isLoading || strength < 3
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700'
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
             }`}
           >
             {mutation.isPending ? "Updating..." : "Update Password"}

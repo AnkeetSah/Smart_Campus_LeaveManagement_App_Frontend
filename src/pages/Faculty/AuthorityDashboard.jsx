@@ -120,7 +120,7 @@ function AuthorityDashboard() {
 
   if (isLoading) {
     return (
-      <div className="text-center mt-12 text-gray-500 dark:text-gray-400">
+      <div className="text-center min-h-dvh mt-12 text-gray-500 dark:text-gray-400">
         Loading applications...
       </div>
     );
@@ -135,7 +135,7 @@ function AuthorityDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-300">
+    <div className="min-h-dvh bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-300">
       {/* Floating background blobs */}
       <div className="fixed dark:hidden inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
@@ -475,7 +475,6 @@ function AuthorityDashboard() {
                           </p>
                         )}
                         {app.decisionBy?.[role]?.status === "approved" && (
-                          
                           <p className="text-sm italic text-green-600 dark:text-green-400 mt-2">
                             Comment: {app.decisionBy?.[role]?.comment}
                           </p>
