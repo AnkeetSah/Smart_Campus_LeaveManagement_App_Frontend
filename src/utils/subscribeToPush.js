@@ -2,16 +2,16 @@
 
 export async function subscribeToPush(registration, user) {
   const publicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
-   console.log('hello',publicKey)
+  //  console.log('hello',publicKey)
   if (!publicKey) {
     throw new Error('🚨 VAPID public key missing in .env');
   }
 
   // Step 1: Ask for permission
   const permission = await Notification.requestPermission();
-  console.log("Notification.permission:", Notification.permission);
+  // console.log("Notification.permission:", Notification.permission);
 
-  console.log(permission)
+  // console.log(permission)
   if (permission !== 'granted') {
     alert('Notification permission denied.');
     return null;

@@ -18,19 +18,22 @@ const ROLE_CONFIG = {
   student: {
     title: "Student Dashboard",
     subtitle: "Welcome to your leave portal",
-    profileRoute: "/myProfile",
+    profileRoute: "/dashboard/student/profile",
   },
   faculty: {
     title: "Faculty Portal",
     subtitle: "Leave Application Management",
+    profileRoute: "/authority/dashboard/profile",
   },
   hod: {
     title: "HOD Dashboard",
     subtitle: "Leave Application Management",
+    profileRoute:"/authority/dashboard/profile"
   },
   warden: {
     title: "Warden Dashboard",
     subtitle: "Leave Application Management",
+     profileRoute:"/authority/dashboard/profile"
   },
   default: {
     title: "University Leave Portal",
@@ -76,7 +79,7 @@ function Header({ footerRef, setDarkMode, darkMode }) {
     [location.pathname]
   );
 
-  const { title, subtitle } = useMemo(() => {
+  const { title, subtitle,profileRoute } = useMemo(() => {
     const userRole = user?.role;
     if (location.pathname.includes("student")) {
       return ROLE_CONFIG.student;
@@ -233,7 +236,7 @@ function Header({ footerRef, setDarkMode, darkMode }) {
 
                 <nav className="py-1" role="none">
                   <Link
-                    to="/myProfile"
+                    to={profileRoute}
                     className="block"
                     onClick={closeProfileView}
                     role="menuitem"

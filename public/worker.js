@@ -10,8 +10,8 @@ self.addEventListener('push', (event) => {
     data: {
       url: url,
     },
-    icon: '/icons/icon-192x192.png', // optional
-    badge: '/icons/badge-72x72.png', // optional
+    icon: '/dismissal.png', 
+    badge: '/dismissal.png', 
   };
 
   event.waitUntil(
