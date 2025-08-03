@@ -146,29 +146,35 @@ function LeaveHistory() {
             </h2>
           </div>
 
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
-            {leaves.map((leave, index) => (
-              <div
-                key={leave._id}
-                className="p-6 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-200"
-              >
-                <LeaveListItem
-                  leave={leave}
-                  index={index}
-                  expandedLeave={expandedLeave}
-                  setExpandedLeave={setExpandedLeave}
-                />
-                {expandedLeave === index && (
-                  <LeaveExpandedDetails
+          {isLoading ? (
+            <div className="p-6 flex justify-center items-center">
+              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {leaves.map((leave, index) => (
+                <div
+                  key={leave._id}
+                  className="p-6 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-200"
+                >
+                  <LeaveListItem
                     leave={leave}
-                    setSelectedLeave={setSelectedLeave}
-                    renderStatusIcon={renderStatusIcon}
+                    index={index}
+                    expandedLeave={expandedLeave}
                     setExpandedLeave={setExpandedLeave}
                   />
-                )}
-              </div>
-            ))}
-          </div>
+                  {expandedLeave === index && (
+                    <LeaveExpandedDetails
+                      leave={leave}
+                      setSelectedLeave={setSelectedLeave}
+                      renderStatusIcon={renderStatusIcon}
+                      setExpandedLeave={setExpandedLeave}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </motion.div>
       </main>
     </div>

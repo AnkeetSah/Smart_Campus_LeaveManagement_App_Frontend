@@ -20,11 +20,11 @@ import UserLayout from "./layouts/UserLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import UserManagement from "./pages/Admin/UserManagement";
 import ChangePassword from "./pages/changepassword/ChangePassword";
-import MyProfile from "./pages/profile/MyProfile";
+import MyProfile from "./pages/profile/studentProfile/MyProfile";
 import { registerServiceWorker } from "./utils/registerServiceWorker";
 import { subscribeToPush } from "./utils/subscribeToPush";
 import useAddSubscription from "./hooks/useAddSubscription";
-import FacultyProfile from "./pages/profile/FacultyProfile";
+import FacultyProfile from "./pages/profile/faculty/FacultyProfile";
 const API_BASE = import.meta.env.VITE_API_URL;
 function App() {
   const footerRef = useRef(null);
@@ -102,7 +102,10 @@ function App() {
             <Route path="/login/:userType" element={<LoginPage />} />
             <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
               <Route path="/dashboard/student" element={<StudentDashboard />} />
-              <Route path="/dashboard/student/profile" element={<MyProfile />} />
+              <Route
+                path="/dashboard/student/profile"
+                element={<MyProfile />}
+              />
             </Route>
             <Route
               element={
@@ -113,15 +116,16 @@ function App() {
                 path="/authority/dashboard"
                 element={<AuthorityDashboard />}
               />
-              <Route path="/authority/dashboard/profile" element={<FacultyProfile/>} />
+              <Route
+                path="/authority/dashboard/profile"
+                element={<FacultyProfile />}
+              />
             </Route>
             <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
               <Route path="/dashboard/guard" element={<GuardDashboard />} />
             </Route>
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
-            
-            
           </Route>
 
           {/* 🔸 Admin Layout */}

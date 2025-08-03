@@ -34,7 +34,7 @@ function AuthorityDashboard() {
     isError,
     refetch,
   } = useAllStudentLeaves();
-
+   console.log('isloading value:',isLoading)
   const notify = () => toast("Wow so easy!");
   useEffect(() => {
     let roomId;

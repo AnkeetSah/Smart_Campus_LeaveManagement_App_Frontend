@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import useAuthStore from "../../store/useAuthStore";
+import useAuthStore from "../../../store/useAuthStore";
 import ProfileHeader from "./ProfileHeader";
 import ProfileHero from "./ProfileHero";
 import PersonalInfoCard from "./PersonalInfoCard";
@@ -50,7 +50,7 @@ const FacultyProfile = () => {
           className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {/* Account Information */}
-           <AccountInformation user={user}/>
+          <AccountInformation user={user} />
         </motion.div>
 
         {/* Specializations */}
