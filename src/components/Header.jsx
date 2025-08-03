@@ -69,6 +69,8 @@ function Header({ footerRef, setDarkMode, darkMode }) {
   const { user, logoutUser } = useAuthStore();
   const location = useLocation();
   const profileRef = useRef(null);
+  const [loggingOut, setLoggingOut] = useState(false);
+
 
   const [profileView, setProfileView] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
@@ -92,10 +94,12 @@ function Header({ footerRef, setDarkMode, darkMode }) {
     footerRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [footerRef]);
 
-  const handleLogout = useCallback(() => {
-    logoutUser();
-    setProfileView(false);
-  }, [logoutUser]);
+ const handleLogout = useCallback(() => {
+    setLoggingOut(true); // trigger animation
+    logoutUser();     // perform logout
+    setProfileView(false); // hide dropdown
+    setLoggingOut(false); // reset after action (optional)
+}, [logoutUser]);
 
   const toggleDarkMode = useCallback(() => {
     setDarkMode(!darkMode);
@@ -321,6 +325,32 @@ function Header({ footerRef, setDarkMode, darkMode }) {
           {ProfileDropdown}
         </div>
       </div>
+     <AnimatePresence>
+  {loggingOut && (
+    <motion.div
+      key="logout-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/10 dark:bg-black/40 backdrop-blur-sm"
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white/100 dark:bg-gray-900/60 backdrop-blur-md px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 border border-white/30 dark:border-gray-700"
+      >
+        <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <span className="text-gray-800 dark:text-gray-200 font-medium">
+          Logging out...
+        </span>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
+
     </header>
   );
 }

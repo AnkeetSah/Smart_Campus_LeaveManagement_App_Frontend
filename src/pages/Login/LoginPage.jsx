@@ -1,13 +1,14 @@
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import LoginForm from "../../components/LoginForm";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function LoginPage() {
   const { userType } = useParams(); // 'student', 'faculty', 'warden'
 
   // Get user-friendly title
   const getUserTitle = () => {
+  
     switch(userType) {
       case 'student':
         return 'Student';
