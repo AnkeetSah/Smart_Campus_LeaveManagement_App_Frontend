@@ -25,6 +25,8 @@ import { registerServiceWorker } from "./utils/registerServiceWorker";
 import { subscribeToPush } from "./utils/subscribeToPush";
 import useAddSubscription from "./hooks/useAddSubscription";
 import FacultyProfile from "./pages/profile/faculty/FacultyProfile";
+import ApplicationMethodSelector from "./components/StudentLeaveForm/ApplicationMethodSelector";
+import VoiceAgent from "./components/voiceAgent/VoiceAgent";
 const API_BASE = import.meta.env.VITE_API_URL;
 function App() {
   const footerRef = useRef(null);
@@ -107,6 +109,7 @@ function App() {
                 element={<MyProfile />}
               />
             </Route>
+               <Route path="/admin" element={<VoiceAgent/>} />
             <Route
               element={
                 <ProtectedRoute allowedRoles={["faculty", "hod", "warden"]} />
@@ -132,7 +135,9 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<UserManagement />} />
+
           </Route>
+                   
         </Routes>
       </div>
     </Router>

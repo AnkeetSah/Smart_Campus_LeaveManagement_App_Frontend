@@ -6,7 +6,8 @@ import {
   FaShieldAlt,
   FaChevronRight,
   FaUserCog,
-  FaQrcode
+  FaQrcode,
+  FaUserShield
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -62,14 +63,25 @@ const Users = () => {
       bgLight: "bg-yellow-50 dark:bg-gray-800/20",
       borderColor: "border-gray-200 dark:border-gray-700",
     },
+    {
+  id: "admin",
+  title: "Admin Portal",
+  description: "Supervise and manage all users and leave workflows",
+  icon: <FaUserShield className="text-white text-3xl" />,
+  color: "from-red-500 to-red-600",
+  hoverColor: "hover:from-red-600 hover:to-red-700",
+  bgLight: "bg-red-50 dark:bg-red-900/20",
+  borderColor: "border-red-200 dark:border-red-800",
+}
+
   ];
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-3 mb-16">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
       {userTypes.map((user) => (
         <div
           key={user.id}
-          className={`relative ${user.bgLight} backdrop-blur-sm border ${user.borderColor} shadow-sm rounded-2xl overflow-hidden transition-colors duration-300`}
+          className={`relative ${user.bgLight}  backdrop-blur-sm border ${user.borderColor} shadow-sm rounded-2xl overflow-hidden transition-colors duration-300`}
         >
           <div className="p-8 pt-10">
             <div

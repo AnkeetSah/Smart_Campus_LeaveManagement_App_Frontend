@@ -7,9 +7,9 @@ const DepartmentInfoCard = ({ user }) => (
     initial={{ opacity: 0, y: 40 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8, delay: 0.4 }}
-    className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-2xl shadow-xl p-6"
+    className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-2xl shadow-xl p-4 sm:p-6 w-full max-w-md mx-auto"
   >
-    <div className="flex items-center space-x-3 mb-6">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 mb-6 space-y-3 sm:space-y-0">
       <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
         <Building className="w-5 h-5 text-white" />
       </div>

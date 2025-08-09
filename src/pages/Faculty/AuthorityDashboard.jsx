@@ -272,7 +272,12 @@ function AuthorityDashboard() {
                 return (
                   <div
                     key={app._id}
-                    className="p-6 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-200"
+                     onClick={() =>
+                              setExpandedAppIndex(
+                                expandedAppIndex === index ? null : index
+                              )
+                            }
+                    className="p-6 cursor-pointer hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-200"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex-1">
@@ -338,11 +343,7 @@ function AuthorityDashboard() {
                             <FaTimes /> Reject
                           </motion.button>
                           <button
-                            onClick={() =>
-                              setExpandedAppIndex(
-                                expandedAppIndex === index ? null : index
-                              )
-                            }
+                          //  jmmegfjlgkrjerjgklr
                             className="p-2 text-gray-500 dark:text-gray-400 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
                           >
                             {expandedAppIndex === index ? (

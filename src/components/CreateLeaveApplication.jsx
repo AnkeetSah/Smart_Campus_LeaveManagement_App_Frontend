@@ -10,75 +10,58 @@ import AttachmentField from "./StudentLeaveForm/AttachmentField";
 import validateLeaveForm from "../utils/validateLeaveForm";
 import { submitLeave } from "../services/leaveService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { RiRobot2Line } from "react-icons/ri";
+import { FaMicrophone } from "react-icons/fa";
+
 import {
   FaChevronLeft,
-  FaCalendarAlt,
-  FaCheck,
-  FaTimes,
-  FaRegFileAlt,
-  FaDownload,
-  FaUserGraduate,
-  FaUserTie,
-  FaUserShield,
+  
 } from "react-icons/fa";
 import AttendanceInput from "./StudentLeaveForm/AttendanceInput";
-
+import useSubmitLeave from "../hooks/useSubmitLeave";
+import ApplyLeaveHeader from "./StudentLeaveForm/ApplyLeaveHeader";
 function CreateLeaveApplication() {
-  const { formData, resetForm, setErrors, isSubmitting, setIsSubmitting } =
+  const { formData, resetForm, setErrors,  setIsSubmitting,setFormData} =
     useLeaveApplicationStore();
   const queryClient = useQueryClient();
   const { closeForm } = useLeaveFormStore(); // ✅ Access the hook
+  const { handleLeaveSubmit, isSubmitting } = useSubmitLeave();
 
-  const mutation = useMutation({
-    mutationFn: submitLeave,
-    onSuccess: (data) => {
-      console.log("Leave Submitted", data);
-      alert("Leave submitted successfully!");
-      queryClient.invalidateQueries(["myApplications"]);
-      closeForm();
-      resetForm();
-      setIsSubmitting(false);
-    },
-    onError: (error) => {
-      console.error(
-        "Error submitting leave:",
-        error.response?.data || error.message
-      );
-      setErrors({
-        api: error.response?.data?.message || "Something went wrong!",
-      });
-      setIsSubmitting(false);
-    },
-  });
+  // Test data to populate the form
+  const testData = {
+    leaveType: "medical",
+    fromDate: "2025-08-01",
+    toDate: "2025-08-06",
+    reason: "Viral Fever doctor told me to take rest.",
+    emergencyContact: "+911234567890",
+    addressDuringLeave: "Home",
+    attachments: null,
+    currentAttendance: "99.9",
+    attendanceAfterLeave: "96.55"
+  };
+
+  // Populate form with test data on component mount
+  useEffect(() => {
+    setFormData(testData);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [setFormData]);
+ 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const errors = validateLeaveForm(formData);
+  e.preventDefault();
+  const errors = validateLeaveForm(formData);
 
-    if (Object.keys(errors).length === 0) {
-      setIsSubmitting(true);
-      const data = new FormData();
-
-      for (let key in formData) {
-        if (key === "documents") {
-          formData.documents?.forEach((file) => {
-            data.append("documents", file);
-          });
-        } else {
-          data.append(key, formData[key]);
-        }
-      }
-
-      mutation.mutate(data);
-    } else {
-      setErrors(errors);
-    }
-  };
+  if (Object.keys(errors).length === 0) {
+    handleLeaveSubmit();
+  } else {
+    setErrors(errors);
+  }
+};
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 pb-20 dark:to-gray-900 font-sans relative overflow-hidden transition-colors duration-300">
       {/* Floating Blobs Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 dark:hidden">
         <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -86,26 +69,10 @@ function CreateLeaveApplication() {
       </div>
 
       {/* Header */}
-      <header className="relative py-4 px-6 flex items-center">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={closeForm}
-          className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-        >
-          <FaChevronLeft className="text-gray-600 dark:text-gray-300" />
-        </motion.button>
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-lg flex items-center justify-center shadow">
-            <RiLeafLine className="text-white text-xl" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-              Apply for Leave
-            </h1>
-          </div>
-        </div>
-      </header>
+     <ApplyLeaveHeader closeForm={closeForm} />
+  
+
+      
 
       {/* Main Form */}
       <main className="relative z-10 mx-auto px-4 py-8 max-w-3xl">
@@ -178,17 +145,17 @@ function CreateLeaveApplication() {
                 type="submit"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                disabled={isSubmitting || mutation.isPending}
+               disabled={isSubmitting}
+
                 className={`w-full py-3 px-4 rounded-xl text-white font-bold shadow-md ${
-                  isSubmitting || mutation.isPending
+                  isSubmitting
                     ? "bg-indigo-400 dark:bg-indigo-500"
                     : "bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 dark:from-blue-700 dark:to-indigo-800 dark:hover:from-blue-800 dark:hover:to-indigo-900"
                 } transition-all duration-300`}
               >
-                {isSubmitting || mutation.isPending
-                  ? "Submitting..."
-                  : "Submit Leave Application"}
-              </motion.button>
+               {isSubmitting ? "Submitting..." : "Submit Leave Application"}
+
+              </motion.button>  
             </div>
           </form>
         </motion.div>

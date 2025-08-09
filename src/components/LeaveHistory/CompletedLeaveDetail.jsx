@@ -410,7 +410,7 @@ const CompletedLeaveDetail = ({
   if (!leave) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans px-6 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans px-6 pb-20 transition-colors duration-300">
       {/* Floating Blobs - Light Mode Only */}
       <div className="fixed dark:hidden inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>

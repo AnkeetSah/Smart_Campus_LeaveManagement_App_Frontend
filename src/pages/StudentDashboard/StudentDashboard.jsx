@@ -11,6 +11,7 @@ import useAuthStore from "../../store/useAuthStore";
 import LeaveStatusTracker from "../../components/LeaveStatusTracker";
 import socket from "../../socket"; // ✅ import the shared socket
 import { toast } from "react-toastify";
+import ApplicationMethodSelector from "../../components/StudentLeaveForm/ApplicationMethodSelector";
 function StudentDashboard() {
   const { showForm, openForm } = useLeaveFormStore();
   const {
@@ -67,7 +68,7 @@ function StudentDashboard() {
 
   if (isError) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center  justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto">
             <svg
@@ -103,7 +104,7 @@ function StudentDashboard() {
     rejected: statusCount.rejected || 0,
   };
 
-  if (showForm) return <CreateLeaveApplication />;
+  if (showForm) return <ApplicationMethodSelector/>;
   if (showLeaveFormHistory) return <LeaveHistory />;
   if (showLeaveStatus) return <LeaveStatusTracker />;
 
