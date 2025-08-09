@@ -10,7 +10,7 @@ const ApplyLeaveHeader = ({closeForm}) => {
           onClick={closeForm}
           className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
         >
-          <FaChevronLeft onClick={closeForm} className="text-gray-600 dark:text-gray-300" />
+          <FaChevronLeft onClick={closeForm} className="text-gray-600 cursor-pointer dark:text-gray-300" />
         </motion.button>
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-lg flex items-center justify-center shadow">

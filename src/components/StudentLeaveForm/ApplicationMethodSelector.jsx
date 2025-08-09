@@ -44,7 +44,7 @@ const ApplicationMethodSelector = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br  from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
+    <div className="min-h-screen bg-gradient-to-br px-2  from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
       {/* Animated background elements */}
       <ApplyLeaveHeader closeForm={closeForm} />
       
@@ -60,9 +60,7 @@ const ApplicationMethodSelector = () => {
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Choose Your Preferred Method</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent mb-4">
-              Apply for Leave
-            </h1>
+           
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
               Select your preferred application method below. Both options ensure your request is processed efficiently and securely.
             </p>
@@ -80,8 +78,8 @@ const ApplicationMethodSelector = () => {
               return (
                 <div
                   key={method.id}
-                  className={`relative group cursor-pointer transition-all duration-500 transform ${
-                    isHovered ? 'scale-105' : 'hover:scale-[1.02]'
+                  className={`relative group  cursor-pointer transition-all duration-500 transform ${
+                    isHovered ? 'scale-[1.02]' : 'hover:scale-[1.02]'
                   }`}
                   onMouseEnter={() => setHoveredCard(method.id)}
                   onMouseLeave={() => setHoveredCard(null)}
