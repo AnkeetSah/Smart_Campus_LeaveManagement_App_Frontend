@@ -27,24 +27,7 @@ function CreateLeaveApplication({onClose}) {
   const { closeForm } = useLeaveFormStore(); // ✅ Access the hook
   const { handleLeaveSubmit, isSubmitting } = useSubmitLeave();
 
-  // Test data to populate the form
-  const testData = {
-    leaveType: "medical",
-    fromDate: "2025-08-01",
-    toDate: "2025-08-06",
-    reason: "Viral Fever doctor told me to take rest.",
-    emergencyContact: "+911234567890",
-    addressDuringLeave: "Home",
-    attachments: null,
-    currentAttendance: "99.9",
-    attendanceAfterLeave: "96.55"
-  };
-
-  // Populate form with test data on component mount
-  useEffect(() => {
-    setFormData(testData);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [setFormData]);
+  
  
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
