@@ -96,8 +96,8 @@ function LeaveHistory() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans relative overflow-hidden pb-14 transition-colors duration-300">
-      {/* Floating Blobs - Light Mode Only */}
+   <div className="min-h-screen bg-gradient-to-br   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden pb-14 transition-all duration-500">
+        {/* Floating Blobs - Light Mode Only */}
       <div className="fixed dark:hidden inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
         <div className="absolute top-1/3 right-20 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>

@@ -109,7 +109,8 @@ function StudentDashboard() {
   if (showLeaveStatus) return <LeaveStatusTracker />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans relative overflow-hidden pb-14 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
+  
       {/* Floating Blobs - Light Mode Only */}
       <div className="fixed dark:hidden inset-0 pointer-events-none overflow-hidden z-0">
         {[0, 20, 40].map((delay, index) => (

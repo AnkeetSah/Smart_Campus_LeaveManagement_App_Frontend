@@ -2,13 +2,28 @@ import React, { useEffect, useState } from 'react'
 import { Mic, FileText, ArrowRight, Clock, User, CheckCircle, Sparkles } from 'lucide-react'
 import ApplyLeaveHeader from './ApplyLeaveHeader';
 import useLeaveFormStore from '../../store/useLeaveFormStore';
-
-
+import CreateLeaveApplication from '../CreateLeaveApplication';
 
 const ApplicationMethodSelector = () => {
   const closeForm = useLeaveFormStore((state) => state.closeForm);
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
+  
+  //handle selecting a method
+  const handleMethodSelect = (method) => {
+  setSelectedMethod(method);
+  if (method === 'voice') {
+    console.log('Starting voice assistant');
+  } else if (method === 'manual') {
+    console.log('Opening manual form');
+  } else {
+    setSelectedMethod(null);
+    console.error('Unknown method selected:', method);
+  }
+};
+
+
+ 
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,7 +41,7 @@ const ApplicationMethodSelector = () => {
       features: ['Natural conversation', 'Real-time guidance', 'Voice recognition'],
       estimatedTime: '2-3 minutes',
       recommended: true,
-      action: () => console.log('Starting voice agent')
+      action: () => handleMethodSelect('voice')
     },
     {
       id: 'manual',
@@ -39,14 +54,24 @@ const ApplicationMethodSelector = () => {
       features: ['Step-by-step form', 'Save progress', 'Detailed options'],
       estimatedTime: '5-7 minutes',
       recommended: false,
-      action: () => console.log('Opening manual form')
+      action: () => handleMethodSelect('manual')
     }
   ];
 
+ if (selectedMethod === 'manual') {
   return (
-    <div className="min-h-screen bg-gradient-to-br px-2  from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
+    <>
+      {/* Here the header's back button just resets selectedMethod */}
+      
+      <CreateLeaveApplication onClose={() => setSelectedMethod(null)} />
+    </>
+  );
+}
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
       {/* Animated background elements */}
-      <ApplyLeaveHeader closeForm={closeForm} />
+      <ApplyLeaveHeader onClose={closeForm} />
       
 
      

@@ -20,7 +20,7 @@ import {
 import AttendanceInput from "./StudentLeaveForm/AttendanceInput";
 import useSubmitLeave from "../hooks/useSubmitLeave";
 import ApplyLeaveHeader from "./StudentLeaveForm/ApplyLeaveHeader";
-function CreateLeaveApplication() {
+function CreateLeaveApplication({onClose}) {
   const { formData, resetForm, setErrors,  setIsSubmitting,setFormData} =
     useLeaveApplicationStore();
   const queryClient = useQueryClient();
@@ -61,7 +61,8 @@ function CreateLeaveApplication() {
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 pb-20 dark:to-gray-900 font-sans relative overflow-hidden transition-colors duration-300">
+ <div className="min-h-screen bg-gradient-to-br   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
+  
       {/* Floating Blobs Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 dark:hidden">
         <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -69,7 +70,7 @@ function CreateLeaveApplication() {
       </div>
 
       {/* Header */}
-     <ApplyLeaveHeader closeForm={closeForm} />
+     <ApplyLeaveHeader onClose={onClose} />
   
 
       
