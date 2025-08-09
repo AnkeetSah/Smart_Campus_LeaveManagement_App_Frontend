@@ -5,3 +5,12 @@ html, body, #root, .app, .main {
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* global.css or index.css */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none; /* Firefox */
+}
