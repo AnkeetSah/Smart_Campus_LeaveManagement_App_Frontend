@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { RiLeafLine } from "react-icons/ri";
 import { FaChevronLeft } from "react-icons/fa";
-const ApplyLeaveHeader = ({onClose}) => {
+const ApplyLeaveHeader = ({content,onClose}) => {
   return (
        <header className="relative py-4 px-6 flex items-center">
         <motion.button
@@ -18,7 +18,7 @@ const ApplyLeaveHeader = ({onClose}) => {
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-              Apply for Leave
+              {content}
             </h1>
           </div>
         </div>

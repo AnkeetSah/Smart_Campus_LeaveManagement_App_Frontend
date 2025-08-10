@@ -10,7 +10,7 @@ function LeaveTypeSelector() {
         Leave Type*
       </label>
       <div className="grid grid-cols-2 gap-4">
-        {["personal", "medical", "emergency"].map((type) => (
+        {["personal", "medical", "emergency","other"].map((type) => (
           <label
             key={type}
             htmlFor={type}
@@ -32,7 +32,7 @@ function LeaveTypeSelector() {
               className="h-4 w-4 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400"
             />
             <span className="text-sm text-gray-700 dark:text-gray-200 capitalize">
-              {type} Leave
+              {type} 
             </span>
           </label>
         ))}

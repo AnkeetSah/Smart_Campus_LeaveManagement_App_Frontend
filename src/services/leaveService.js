@@ -23,6 +23,28 @@ export const submitLeave = async (leaveData) => {
   });
   return res.data;
 };
+export const submitLeaveWithAttachments = async (formData) => {
+  const data = new FormData();
+  console.log(formData)
+  for (let key in formData) {
+    if (key === "documents" && formData.documents) {
+      formData.documents.forEach((file) => {
+        data.append("documents", file);
+      });
+    } else {
+      data.append(key, formData[key]);
+    }
+  }
+  console.log(data)
+
+  const res = await api.post("/api/leaves", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return res.data;
+};
 
 export const actionOnLeave = async ({
   selectedAppId,

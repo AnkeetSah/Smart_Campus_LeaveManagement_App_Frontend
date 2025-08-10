@@ -53,7 +53,7 @@ function CreateLeaveApplication({onClose}) {
       </div>
 
       {/* Header */}
-     <ApplyLeaveHeader onClose={onClose} />
+     <ApplyLeaveHeader content={'Apply For Leave'} onClose={onClose} />
   
 
       

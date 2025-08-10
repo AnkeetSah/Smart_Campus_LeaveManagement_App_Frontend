@@ -90,7 +90,7 @@ const ApplicationMethodSelector = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
       {/* Animated background elements */}
-      <ApplyLeaveHeader onClose={closeForm} />
+      <ApplyLeaveHeader content={"Apply for Leave"} onClose={closeForm} />
 
       <div className="relative z-10 pt-2 pb-16">
         <div className="max-w-6xl mx-auto px-4">
