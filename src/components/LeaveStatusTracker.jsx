@@ -36,9 +36,9 @@ const LeaveStatusTracker = () => {
 
     return apiLeaves.map((leave) => {
       // Debug: Log the leave data to see what's available
-      console.log("Leave data:", leave);
-      console.log("fromDate:", leave.fromDate);
-      console.log("toDate:", leave.toDate);
+       console.log("Leave data:", leave); 
+      // console.log("fromDate:", leave.fromDate);
+      // console.log("toDate:", leave.toDate);
 
       // Format dates
       const formatDate = (dateString) => {
@@ -63,7 +63,7 @@ const LeaveStatusTracker = () => {
       // Determine current stage based on decisionBy status (faculty → hod → warden)
       const getCurrentStage = (decisionBy) => {
         if (!decisionBy) return "faculty";
-        if (decisionBy.faculty?.status === "pending") return "faculty";
+        if (decisionBy.faculty?.status === "pending"||decisionBy.faculty?.status === "changes_requested") return "faculty";
         if (decisionBy.hod?.status === "pending") return "hod";
         if (decisionBy.warden?.status === "pending") return "warden";
         return "completed";
@@ -72,9 +72,7 @@ const LeaveStatusTracker = () => {
       // Create stages array (faculty → hod → warden)
       const createStages = (decisionBy) => {
         const stages = [];
-        {
-          console.log("hghjgjg", decisionBy.faculty?.decidedAt);
-        }
+    
         // Faculty stage
         stages.push({
           id: "faculty",
@@ -82,8 +80,8 @@ const LeaveStatusTracker = () => {
           status: decisionBy.faculty?.status || "pending",
 
           approvedOn:
-            decisionBy.faculty?.status === "approved" &&
-            decisionBy.faculty?.decidedAt
+            decisionBy.faculty?.status === "approved"|| decisionBy.faculty?.status === "changes_requested"  &&
+            decisionBy?.faculty?.decidedAt
               ? dayjs(decisionBy.faculty?.decidedAt).format(
                   "DD MMMM YYYY, hh:mm A"
                 )
@@ -104,8 +102,10 @@ const LeaveStatusTracker = () => {
           name: "HOD Approval",
           status: decisionBy.hod?.status || "pending",
           approvedOn:
-            decisionBy.hod?.status === "approved" && decisionBy.hod?.date
-              ? formatDate(decisionBy.hod.date)
+            decisionBy?.hod?.status === "approved" && decisionBy?.hod?.decidedAt
+              ? dayjs(decisionBy.hod?.decidedAt).format(
+                  "DD MMMM YYYY, hh:mm A"
+                )
               : undefined,
           approvedBy:
             decisionBy.hod?.status === "approved"

@@ -1,11 +1,11 @@
 // src/components/LeaveTrackerCard.jsx
 import { motion } from "framer-motion";
 import { RiLeafLine } from "react-icons/ri";
-import { FaUserTie, FaShieldAlt, FaUniversity, FaClock, FaCheck } from "react-icons/fa";
+import { FaUserTie, FaShieldAlt, FaUniversity, FaClock, FaCheck,FaEdit } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 
 const LeaveTrackerCard = ({ leaveData }) => {
-  console.log(leaveData)
+
   const getStageIcon = (stage) => {
     switch (stage.id) {
       case "faculty": return <FaUserTie className="text-lg" />;
@@ -17,11 +17,17 @@ const LeaveTrackerCard = ({ leaveData }) => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case "approved": return <FaCheck className="text-green-500" />;
-      case "rejected": return <span className="text-red-500">✕</span>;
-      case "pending": return <IoMdTime className="text-yellow-500" />;
-      default: return <FaClock className="text-gray-400" />;
-    }
+  case "approved":
+    return <FaCheck className="text-green-500" />;
+  case "rejected":
+    return <span className="text-red-500">✕</span>;
+  case "pending":
+    return <IoMdTime className="text-yellow-500" />;
+  case "changes_requested":
+    return <FaEdit className="text-orange-500" />; // icon & color for changes
+  default:
+    return <FaClock className="text-gray-400" />;
+}
   };
 
   return (
@@ -67,10 +73,14 @@ const LeaveTrackerCard = ({ leaveData }) => {
             <div className="absolute left-5 top-0 h-full w-0.5 bg-gray-200"></div>
             <ul className="space-y-8">
               {leaveData.stages.map((stage) => (
+               
                 <li key={stage.id} className="relative">
+                  {console.log(stage)}
                   <div className="flex items-start">
                     <div className={`relative flex items-center justify-center w-10 h-10 rounded-full ${
+
                       stage.status === "approved" ? "bg-green-100 text-green-600" :
+                      stage.status === "changes_requested" ? "bg-orange-100 text-orange-600" :
                       stage.id === leaveData.currentStage ? "bg-blue-100 text-blue-600 animate-pulse" :
                       "bg-gray-100 text-gray-400"
                     }`}>
@@ -81,6 +91,7 @@ const LeaveTrackerCard = ({ leaveData }) => {
                       <div className="flex items-center justify-between">
                         <h3 className={`text-sm font-medium ${
                           stage.status === "approved" ? "text-green-600" :
+                          stage.status === "changes_requested" ? "text-orange-600" :
                           stage.id === leaveData.currentStage ? "text-blue-600" :
                           "text-gray-500"
                         }`}>{stage.name}</h3>
@@ -89,6 +100,7 @@ const LeaveTrackerCard = ({ leaveData }) => {
                           {getStatusIcon(stage.status)}
                           <span className={`ml-1 text-xs capitalize ${
                             stage.status === "approved" ? "text-green-600" :
+                            stage.status === "changes_requested" ? "text-orange-600" :
                             stage.status === "pending" ? "text-yellow-600" :
                             "text-gray-500"
                           }`}>
@@ -98,7 +110,10 @@ const LeaveTrackerCard = ({ leaveData }) => {
                       </div>
 
                       {stage.status === "approved" && (
-                        <p className="mt-1 text-xs text-gray-500">By {stage.approvedBy} on {stage.approvedOn}</p>
+                        <p className="mt-1 text-xs text-gray-500"> on {stage.approvedOn}</p>
+                      )} 
+                      {stage.status === "changes_requested" && (
+                        <p className="mt-1 text-xs text-gray-500"> on {stage.approvedOn}</p>
                       )}
 
                       {stage.status === "pending" && stage.expectedTime && (

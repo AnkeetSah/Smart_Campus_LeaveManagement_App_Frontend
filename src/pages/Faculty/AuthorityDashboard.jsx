@@ -43,7 +43,6 @@ function AuthorityDashboard() {
     // console.log(user);
     if (user.role === "faculty") {
       roomId = `${user.branch}-${user.section}`;
-     
     } else if (user.role === "hod") {
       roomId = `hod-${user.branch}`;
     } else if (user.role === "warden") {
