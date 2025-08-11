@@ -8,6 +8,7 @@ import ApplyLeaveHeader from "../../components/StudentLeaveForm/ApplyLeaveHeader
 import useAuthStore from "../../store/useAuthStore";
 import useLeaveApplicationStore from "../../store/useLeaveApplicationStore";
 import LeaveSummary from "./LeaveSummary";
+import api from "../../services/api";
 const VoiceAgent = ({moveToForm,onClose}) => {
   const { user } = useAuthStore();
   const [conversation, setConversation] = useState([]);
@@ -228,39 +229,32 @@ const VoiceAgent = ({moveToForm,onClose}) => {
     userResponse,
     leaveData = {}
   ) => {
-    try {
-      const res = await fetch("http://localhost:5000/api/voice-agent/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          previousQuestion,
-          userResponse,
-          leaveData,
-          user: {
-            name: user ? user.name : "User",
-            rollNumber: user ? user.rollNumber : "N/A",
-          },
-        }),
-      });
+   try {
+  const res = await api.post("/api/voice-agent/ask", {
+    previousQuestion,
+    userResponse,
+    leaveData,
+    user: {
+      name: user ? user.name : "User",
+      rollNumber: user ? user.rollNumber : "N/A",
+    },
+  });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(
-          `Backend error: ${res.status} ${res.statusText} - ${errorText}`
-        );
-      }
+  if (!res.data || typeof res.data !== "object") {
+    throw new Error("Invalid response format from backend");
+  }
 
-      const data = await res.json();
+  return res.data;
+} catch (error) {
+  console.error(
+    "Backend call failed:",
+    error.response
+      ? `${error.response.status} ${error.response.statusText} - ${error.response.data}`
+      : error.message
+  );
+  throw error;
+}
 
-      if (!data || typeof data !== "object") {
-        throw new Error("Invalid response format from backend");
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Backend call failed:", error);
-      throw error;
-    }
   };
 
   const addMessageToConversation = (speaker, message) => {
