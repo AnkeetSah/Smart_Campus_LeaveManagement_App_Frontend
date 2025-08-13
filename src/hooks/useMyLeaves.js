@@ -1,7 +1,7 @@
 // hooks/useMyLeaves.js
 
 import { useQuery } from "@tanstack/react-query";
-import { getMyLeaves,getAllStudentLeaves } from "../services/leaveService"; // <- your service
+import { getMyLeaves,getAllStudentLeaves,getLeaveById } from "../services/leaveService"; // <- your service
 
 export const useMyLeaves = (status = "") =>
   useQuery({
@@ -21,3 +21,11 @@ export const useAllStudentLeaves = () =>
     refetchOnWindowFocus: true,
     keepPreviousData: true,
   });
+
+export const useLeaveById=(id)=>{
+  return useQuery({
+     queryKey:['leave',id],
+     queryFn:()=>getLeaveById(id),
+     enabled:!!id
+  })
+}

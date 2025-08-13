@@ -8,7 +8,7 @@ const useLeaveApplicationStore = create((set) => ({
     reason: "",
     emergencyContact: "",
     addressDuringLeave: "",
-    attachments: null,
+    documents: null,
     currentAttendance: "",
     attendanceAfterLeave: "", // ✅ now dynamically set
   },

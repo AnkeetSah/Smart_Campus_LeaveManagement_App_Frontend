@@ -35,7 +35,7 @@ function AuthorityDashboard() {
     isError,
     refetch,
   } = useAllStudentLeaves();
-   console.log('isloading value:',isLoading)
+  console.log("isloading value:", isLoading);
   const notify = () => toast("Wow so easy!");
   const [showHostelDetails, setShowHostelDetails] = useState(false);
   useEffect(() => {
@@ -50,7 +50,6 @@ function AuthorityDashboard() {
       setShowHostelDetails(true);
       console.log(roomId);
     }
-    
 
     if (roomId) {
       socket.emit("joinRoom", roomId);
@@ -78,10 +77,18 @@ function AuthorityDashboard() {
       refetch();
     });
 
+    // ✅ 3. For All the Authority: who had requested for updated
+    socket.on("updatedLeave", (leaveData) => {
+      console.log('cdsddsdfs')
+      toast.success(leaveData.message, { position: "top-right" });
+      refetch();
+    });
+
     return () => {
       socket.off("leaveSubmitted");
       socket.off("hodApprovedLeave");
       socket.off("facultyApprovedLeave");
+      socket.off("updatedLeave");
     };
   }, [user?.department, user?.section, user?.role, refetch]);
 
@@ -156,7 +163,6 @@ function AuthorityDashboard() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-      
                 Leave Applications
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -273,11 +279,12 @@ function AuthorityDashboard() {
                 const from = new Date(app.fromDate);
                 const to = new Date(app.toDate);
                 const days = Math.ceil((to - from) / (1000 * 60 * 60 * 24)) + 1;
-             {console.log('app:',app)}
+                {
+                  console.log("app:", app);
+                }
                 return (
                   <div
                     key={app._id}
-                    
                     className="p-6 cursor-pointer hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-200"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -310,9 +317,8 @@ function AuthorityDashboard() {
                         </div>
                         <p className="font-medium dark:text-gray-200">
                           {app.student?.name || "Unnamed Student"}
-                          
                         </p>
-                         <p className="text-gray-500 dark:text-gray-400 mb-1">
+                        <p className="text-gray-500 dark:text-gray-400 mb-1">
                           Roll No:{" "}
                           <span className=" text-gray-500 font-medium dark:text-gray-200">
                             {app.student?.rollNumber || "N/A"}
@@ -322,65 +328,68 @@ function AuthorityDashboard() {
                           Submitted:{" "}
                           {new Date(app.createdAt).toLocaleDateString("en-IN")}
                         </p>
-                        
-                       
                       </div>
 
                       {selectedTab === "pending" ? (
-                      <div className="flex flex-wrap gap-2">
-  {/* Approve Button */}
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={() => {
-      setDecisionType("approved");
-      setSelectedAppId(app._id);
-      setShowModal(true);
-    }}
-    className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-green-600 dark:bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-700 dark:hover:bg-green-800 flex items-center justify-center gap-2"
-  >
-    <FaCheck /> Approve
-  </motion.button>
+                        <div className="flex flex-wrap gap-2">
+                          {/* Approve Button */}
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                              setDecisionType("approved");
+                              setSelectedAppId(app._id);
+                              setShowModal(true);
+                            }}
+                            className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-green-600 dark:bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-700 dark:hover:bg-green-800 flex items-center justify-center gap-2"
+                          >
+                            <FaCheck /> Approve
+                          </motion.button>
 
-  {/* Reject Button */}
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={() => {
-      setDecisionType("rejected");
-      setSelectedAppId(app._id);
-      setShowModal(true);
-    }}
-    className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-red-600 dark:bg-red-700 text-white text-sm font-medium rounded-lg hover:bg-red-700 dark:hover:bg-red-800 flex items-center justify-center gap-2"
-  >
-    <FaTimes /> Reject
-  </motion.button>
+                          {/* Reject Button */}
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                              setDecisionType("rejected");
+                              setSelectedAppId(app._id);
+                              setShowModal(true);
+                            }}
+                            className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-red-600 dark:bg-red-700 text-white text-sm font-medium rounded-lg hover:bg-red-700 dark:hover:bg-red-800 flex items-center justify-center gap-2"
+                          >
+                            <FaTimes /> Reject
+                          </motion.button>
 
-  {/* Request Changes Button */}
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={() => {
-      setDecisionType("changes_requested");
-      setSelectedAppId(app._id);
-      setShowModal(true);
-    }}
-    className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-yellow-500 dark:bg-yellow-600 text-white text-sm font-medium rounded-lg hover:bg-yellow-600 dark:hover:bg-yellow-700 flex items-center justify-center gap-2"
-  >
-    <FaEdit /> Request Changes
-  </motion.button>
+                          {/* Request Changes Button */}
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                              setDecisionType("changes_requested");
+                              setSelectedAppId(app._id);
+                              setShowModal(true);
+                            }}
+                            className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-yellow-500 dark:bg-yellow-600 text-white text-sm font-medium rounded-lg hover:bg-yellow-600 dark:hover:bg-yellow-700 flex items-center justify-center gap-2"
+                          >
+                            <FaEdit /> Request Changes
+                          </motion.button>
 
-  {/* Expand/Collapse Button */}
-  <button
-    className="p-2 text-gray-500 dark:text-gray-400 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
-    onClick={() =>
-      setExpandedAppIndex(expandedAppIndex === index ? null : index)
-    }
-  >
-    {expandedAppIndex === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
-  </button>
-</div>
-
+                          {/* Expand/Collapse Button */}
+                          <button
+                            className="p-2 text-gray-500 dark:text-gray-400 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                            onClick={() =>
+                              setExpandedAppIndex(
+                                expandedAppIndex === index ? null : index
+                              )
+                            }
+                          >
+                            {expandedAppIndex === index ? (
+                              <IoIosArrowUp />
+                            ) : (
+                              <IoIosArrowDown />
+                            )}
+                          </button>
+                        </div>
                       ) : (
                         <div
                           className={`flex items-center gap-2 ${
@@ -473,25 +482,25 @@ function AuthorityDashboard() {
                           <div className="flex gap-4 ">
                             <p className="text-gray-500  dark:text-gray-400 mb-1">
                               Current Attendance{" "}
-                               <p className="font-medium dark:text-gray-200">
-                              {app.currentAttendance}%
-                            </p> 
+                              <p className="font-medium dark:text-gray-200">
+                                {app.currentAttendance}%
+                              </p>
                             </p>
-                           
+
                             <p className="text-gray-500 dark:text-gray-400 mb-1">
-                              Attendance After Leave {" "}
-                               <p className="font-medium dark:text-gray-200">
-                              {app?.attendanceAfterLeave}%
+                              Attendance After Leave{" "}
+                              <p className="font-medium dark:text-gray-200">
+                                {app?.attendanceAfterLeave}%
+                              </p>
                             </p>
-                            </p>
-                           
                           </div>
                           <div className="text-gray-500 dark:text-gray-400 mb-1">
                             Hostel Details:
                             {showHostelDetails && (
                               <p className="text-gray-7 font-medium dark:text-gray-200 mb-1">
-                                {app.student?.hostel.name || "N/A"} -{" "}
-                               Room Number: {app.student?.hostel.roomNumber || "N/A"}
+                                {app.student?.hostel.name || "N/A"} - Room
+                                Number:{" "}
+                                {app.student?.hostel.roomNumber || "N/A"}
                               </p>
                             )}
                           </div>
@@ -541,51 +550,58 @@ function AuthorityDashboard() {
 
       {/* Decision Modal */}
       {showModal && (
-       <div className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 transition-all duration-300 ease-in-out">
-  <div className="bg-white mx-3 md:mx-0 dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-lg space-y-5 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-    
-    {/* Dynamic Modal Title */}
-    <h3 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-2">
-      {decisionType === "approved" && <>✅ Approve Application</>}
-      {decisionType === "rejected" && <>❌ Reject Application</>}
-      {decisionType === "changes_requested" && <>✏️ Request Changes</>}
-    </h3>
+        <div className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 transition-all duration-300 ease-in-out">
+          <div className="bg-white mx-3 md:mx-0 dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-lg space-y-5 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+            {/* Dynamic Modal Title */}
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+              {decisionType === "approved" && <>✅ Approve Application</>}
+              {decisionType === "rejected" && <>❌ Reject Application</>}
+              {decisionType === "changes_requested" && <>✏️ Request Changes</>}
+            </h3>
 
-    {/* Comment Box */}
-    <textarea
-      placeholder="Enter your comment"
-      value={comment}
-      onChange={(e) => setComment(e.target.value)}
-      rows={5}
-      className={`w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-3 text-sm focus:outline-none focus:ring-2 resize-none transition-colors duration-200
+            {/* Comment Box */}
+            <textarea
+              placeholder="Enter your comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              rows={5}
+              className={`w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-3 text-sm focus:outline-none focus:ring-2 resize-none transition-colors duration-200
         ${decisionType === "approved" && "focus:ring-green-500"}
         ${decisionType === "rejected" && "focus:ring-red-500"}
         ${decisionType === "changes_requested" && "focus:ring-yellow-500"}
       `}
-    />
+            />
 
-    {/* Actions */}
-    <div className="flex justify-end gap-3">
-      <button
-        onClick={() => setShowModal(false)}
-        className="px-4 py-2 cursor-pointer text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
-      >
-        Cancel
-      </button>
-      <button
-        onClick={handleDecisionSubmit}
-        className={`px-4 py-2 text-sm font-medium cursor-pointer rounded-md text-white transition shadow-sm
-          ${decisionType === "approved" && "bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"}
-          ${decisionType === "rejected" && "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800"}
-          ${decisionType === "changes_requested" && "bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700"}
+            {/* Actions */}
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 cursor-pointer text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDecisionSubmit}
+                className={`px-4 py-2 text-sm font-medium cursor-pointer rounded-md text-white transition shadow-sm
+          ${
+            decisionType === "approved" &&
+            "bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"
+          }
+          ${
+            decisionType === "rejected" &&
+            "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800"
+          }
+          ${
+            decisionType === "changes_requested" &&
+            "bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700"
+          }
         `}
-      >
-        Submit
-      </button>
-    </div>
-  </div>
-</div>
-
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

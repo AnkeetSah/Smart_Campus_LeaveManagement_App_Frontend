@@ -10,6 +10,11 @@ export const getMyLeaves = async (status = "") => {
   return response.data;
 };
 
+export const getLeaveById=async (id)=>{
+  const res=await api.get(`/api/leaves/${id}`);
+  return res.data
+}
+
 export const getAllStudentLeaves = async () => {
   const res = await api.get("/api/leaves/getAllStudentLeaves");
   return res.data;
@@ -23,6 +28,19 @@ export const submitLeave = async (leaveData) => {
   });
   return res.data;
 };
+
+export const updateLeave = async (id, leaveData) => {
+  const res = await api.put(`/api/leaves/update/${id}`, leaveData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+
+
+
 export const submitLeaveWithAttachments = async (formData) => {
   const data = new FormData();
   console.log(formData)

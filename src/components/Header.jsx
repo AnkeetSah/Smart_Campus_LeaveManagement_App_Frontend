@@ -35,6 +35,11 @@ const ROLE_CONFIG = {
     subtitle: "Leave Application Management",
      profileRoute:"/authority/dashboard/profile"
   },
+  guard: {
+     title: "Guard Dashboard",
+    subtitle: "Leave Application Management",
+     profileRoute:"/authority/dashboard/profile"
+  },
   default: {
     title: "University Leave Portal",
     subtitle: "Academic Year 2024-25",

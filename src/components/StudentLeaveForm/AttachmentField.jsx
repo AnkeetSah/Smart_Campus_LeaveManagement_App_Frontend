@@ -1,10 +1,42 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import useLeaveApplicationStore from "../../store/useLeaveApplicationStore";
 
 const AttachmentField = () => {
-  const { setField } = useLeaveApplicationStore();
+  const { setField, formData } = useLeaveApplicationStore();
   const fileInputRef = useRef(null);
   const [previews, setPreviews] = useState([]);
+
+  // On mount or when documents change, prepare previews for existing URLs
+useEffect(() => {
+  if (Array.isArray(formData.documents) && formData.documents.length > 0) {
+    const existingPreviews = formData.documents.map((doc) => {
+      if (typeof doc === "string") {
+        const isImage = /\.(jpg|jpeg|png)$/i.test(doc);
+        return {
+          name: doc.split("/").pop(),
+          type: isImage ? "image" : "pdf",
+          url: doc,
+          isExisting: true,
+        };
+      } else if (doc instanceof File) {
+        return {
+          name: doc.name,
+          type: doc.type.startsWith("image/") ? "image" : "pdf",
+          url: URL.createObjectURL(doc),
+          isExisting: false,
+          file: doc,
+        };
+      }
+      return null;
+    }).filter(Boolean);
+
+    setPreviews(existingPreviews);
+  } else {
+    // CLEAR previews when no documents in formData
+    setPreviews([]);
+  }
+}, [formData.documents]);
+
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -16,16 +48,47 @@ const AttachmentField = () => {
           name: file.name,
           type: "image",
           url: URL.createObjectURL(file),
+          file, // Store the file object for reference
         };
       } else {
         return {
           name: file.name,
           type: "pdf",
+          file, // Store the file object for reference
         };
       }
     });
 
-    setPreviews(previewList);
+    // Append to existing previews (if editing)
+    setPreviews((prev) => [...prev, ...previewList]);
+  };
+
+  const handleRemoveFile = (index) => {
+    const newPreviews = [...previews];
+    const removedFile = newPreviews.splice(index, 1)[0];
+    
+    // Revoke object URL if it's an image preview
+    if (removedFile.url && !removedFile.isExisting) {
+      URL.revokeObjectURL(removedFile.url);
+    }
+    
+    setPreviews(newPreviews);
+    
+    // Update the form data
+    if (removedFile.isExisting) {
+      // If it's an existing file from the store, we need to track it separately
+      const updatedAttachments = formData.documents.filter(
+        (_, i) => i !== index
+      );
+      setField("documents", updatedAttachments);
+    } else {
+      // If it's a newly uploaded file, update the documents field
+      const currentFiles = Array.isArray(formData.documents) ? formData.documents : [];
+      const updatedFiles = currentFiles.filter(
+        (_, i) => i !== index - (previews.length - newPreviews.length - 1)
+      );
+      setField("documents", updatedFiles);
+    }
   };
 
   const handleAreaClick = () => {
@@ -87,16 +150,33 @@ const AttachmentField = () => {
           {previews.map((file, index) => (
             <div
               key={index}
-              className="border border-gray-200 dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-gray-700 shadow-sm text-sm"
+              className="border border-gray-200 dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-gray-700 shadow-sm text-sm relative"
             >
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveFile(index);
+                }}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 transition-colors"
+                aria-label={`Remove ${file.name}`}
+              >
+                ×
+              </button>
+              
               {file.type === "image" ? (
-                <img
-                  src={file.url}
-                  alt={file.name}
-                  className="w-full h-32 object-cover rounded"
-                />
+                <>
+                  <img
+                    src={file.url}
+                    alt={file.name}
+                    className="w-full h-32 object-cover rounded"
+                  />
+                  <p className="mt-1 text-xs text-gray-600 dark:text-gray-300 truncate">
+                    {file.name}
+                  </p>
+                </>
               ) : (
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200">
+                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200 p-2">
                   <span className="text-indigo-600 dark:text-indigo-400 text-xl">
                     📄
                   </span>

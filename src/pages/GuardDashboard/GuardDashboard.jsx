@@ -148,7 +148,7 @@ const GuardDashboard = () => {
             <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Leave Details</h2>
             <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
               <li><strong className="dark:text-gray-200">Name:</strong> {leaveDetails.student?.name}</li>
-              <li><strong className="dark:text-gray-200">Department:</strong> {leaveDetails.student?.department}</li>
+              <li><strong className="dark:text-gray-200">Department:</strong>  {leaveDetails.student?.program}-{leaveDetails.student?.branch}</li>
               <li><strong className="dark:text-gray-200">Leave Type:</strong> {leaveDetails.leaveType}</li>
               <li><strong className="dark:text-gray-200">From:</strong> {new Date(leaveDetails.fromDate).toLocaleDateString()}</li>
               <li><strong className="dark:text-gray-200">To:</strong> {new Date(leaveDetails.toDate).toLocaleDateString()}</li>

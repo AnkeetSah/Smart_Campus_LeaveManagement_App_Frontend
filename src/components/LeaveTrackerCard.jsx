@@ -1,37 +1,54 @@
 // src/components/LeaveTrackerCard.jsx
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { RiLeafLine } from "react-icons/ri";
-import { FaUserTie, FaShieldAlt, FaUniversity, FaClock, FaCheck,FaEdit } from "react-icons/fa";
+import {
+  FaUserTie,
+  FaShieldAlt,
+  FaUniversity,
+  FaClock,
+  FaCheck,
+  FaEdit,
+} from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 
-const LeaveTrackerCard = ({ leaveData }) => {
-
+const LeaveTrackerCard = ({ setChangesrequired, leaveData,setForm,setLeaveId }) => {
+  
+   const stageWithChanges = leaveData.stages.find(
+    stage => stage.status === "changes_requested"
+  );
+  
+  
   const getStageIcon = (stage) => {
     switch (stage.id) {
-      case "faculty": return <FaUserTie className="text-lg" />;
-      case "warden": return <FaShieldAlt className="text-lg" />;
-      case "hod": return <FaUniversity className="text-lg" />;
-      default: return <FaUserTie className="text-lg" />;
+      case "faculty":
+        return <FaUserTie className="text-lg" />;
+      case "warden":
+        return <FaShieldAlt className="text-lg" />;
+      case "hod":
+        return <FaUniversity className="text-lg" />;
+      default:
+        return <FaUserTie className="text-lg" />;
     }
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-  case "approved":
-    return <FaCheck className="text-green-500" />;
-  case "rejected":
-    return <span className="text-red-500">✕</span>;
-  case "pending":
-    return <IoMdTime className="text-yellow-500" />;
-  case "changes_requested":
-    return <FaEdit className="text-orange-500" />; // icon & color for changes
-  default:
-    return <FaClock className="text-gray-400" />;
-}
+      case "approved":
+        return <FaCheck className="text-green-500" />;
+      case "rejected":
+        return <span className="text-red-500">✕</span>;
+      case "pending":
+        return <IoMdTime className="text-yellow-500" />;
+      case "changes_requested":
+        return <FaEdit className="text-orange-500" />;
+      default:
+        return <FaClock className="text-gray-400" />;
+    }
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="bg-white/80 backdrop-blur-sm border border-white/30 rounded-2xl shadow-lg overflow-hidden mb-8"
@@ -51,10 +68,14 @@ const LeaveTrackerCard = ({ leaveData }) => {
 
       {/* Details */}
       <div className="p-6">
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
+        <div className="grid  gap-6 mb-6">
           <div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Leave Period</h3>
-            <p className="font-medium">{leaveData.fromDate} to {leaveData.toDate}</p>
+            <h3 className="text-sm font-medium text-gray-500 mb-1">
+              Leave Period
+            </h3>
+            <p className="font-medium">
+              {leaveData.fromDate} to {leaveData.toDate}
+            </p>
           </div>
           <div>
             <h3 className="text-sm font-medium text-gray-500 mb-1">Reason</h3>
@@ -68,58 +89,95 @@ const LeaveTrackerCard = ({ leaveData }) => {
 
         {/* Stages */}
         <div>
-          <h2 className="text-lg font-bold text-gray-800 mb-4">Approval Progress</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-4">
+            Approval Progress
+          </h2>
           <div className="relative">
             <div className="absolute left-5 top-0 h-full w-0.5 bg-gray-200"></div>
             <ul className="space-y-8">
               {leaveData.stages.map((stage) => (
-               
                 <li key={stage.id} className="relative">
-                  {console.log(stage)}
                   <div className="flex items-start">
-                    <div className={`relative flex items-center justify-center w-10 h-10 rounded-full ${
-
-                      stage.status === "approved" ? "bg-green-100 text-green-600" :
-                      stage.status === "changes_requested" ? "bg-orange-100 text-orange-600" :
-                      stage.id === leaveData.currentStage ? "bg-blue-100 text-blue-600 animate-pulse" :
-                      "bg-gray-100 text-gray-400"
-                    }`}>
+                    <div
+                      className={`relative flex items-center justify-center w-10 h-10 rounded-full ${
+                        stage.status === "approved"
+                          ? "bg-green-100 text-green-600"
+                          : stage.status === "changes_requested"
+                          ? "bg-orange-100 text-orange-600"
+                          : stage.id === leaveData.currentStage
+                          ? "bg-blue-100 text-blue-600 animate-pulse"
+                          : "bg-gray-100 text-gray-400"
+                      }`}
+                    >
                       {getStageIcon(stage)}
                     </div>
 
                     <div className="ml-4 flex-1">
                       <div className="flex items-center justify-between">
-                        <h3 className={`text-sm font-medium ${
-                          stage.status === "approved" ? "text-green-600" :
-                          stage.status === "changes_requested" ? "text-orange-600" :
-                          stage.id === leaveData.currentStage ? "text-blue-600" :
-                          "text-gray-500"
-                        }`}>{stage.name}</h3>
+                        <h3
+                          className={`text-sm font-medium ${
+                            stage.status === "approved"
+                              ? "text-green-600"
+                              : stage.status === "changes_requested"
+                              ? "text-orange-600"
+                              : stage.id === leaveData.currentStage
+                              ? "text-blue-600"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {stage.name}
+                        </h3>
 
                         <div className="flex items-center">
                           {getStatusIcon(stage.status)}
-                          <span className={`ml-1 text-xs capitalize ${
-                            stage.status === "approved" ? "text-green-600" :
-                            stage.status === "changes_requested" ? "text-orange-600" :
-                            stage.status === "pending" ? "text-yellow-600" :
-                            "text-gray-500"
-                          }`}>
+                          <span
+                            className={`ml-1 text-xs capitalize ${
+                              stage.status === "approved"
+                                ? "text-green-600"
+                                : stage.status === "changes_requested"
+                                ? "text-orange-600"
+                                : stage.status === "pending"
+                                ? "text-yellow-600"
+                                : "text-gray-500"
+                            }`}
+                          >
                             {stage.status}
                           </span>
                         </div>
                       </div>
 
+                      {/* Status-specific content */}
                       {stage.status === "approved" && (
-                        <p className="mt-1 text-xs text-gray-500"> on {stage.approvedOn}</p>
-                      )} 
+                        <div className="mt-2">
+                          
+                          <p className="text-xs text-gray-500">
+                            on {stage.approvedOn}
+                          </p>
+                        </div>
+                      )}
+
                       {stage.status === "changes_requested" && (
-                        <p className="mt-1 text-xs text-gray-500"> on {stage.approvedOn}</p>
+                        <div className="mt-2">
+                          <p className="text-xs text-gray-500 mb-2">
+                            on {stage.approvedOn}
+                          </p>
+                          {stage.comment && (
+                            <div className="bg-orange-50 border border-orange-200 rounded-md p-3 mb-2">
+                              <p className="text-sm text-orange-800">
+                                {stage.comment}
+                              </p>
+                            </div>
+                          )}
+                          <button onClick={() => { setForm(true); setLeaveId(leaveData._id); setChangesrequired(stageWithChanges.comment) }} className="text-xs cursor-pointer bg-orange-100 hover:bg-orange-200 text-orange-700 px-3 py-1 rounded-md transition-colors">
+                            Update Application
+                          </button>
+                        </div>
                       )}
 
                       {stage.status === "pending" && stage.expectedTime && (
-                        <div className="mt-1 text-xs text-yellow-600 flex items-center">
+                        <div className="mt-2 text-xs text-yellow-600 flex items-center">
                           <IoMdTime className="mr-1" />
-                          <span>{stage.expectedTime}</span>
+                          <span>Expected: {stage.expectedTime}</span>
                         </div>
                       )}
                     </div>

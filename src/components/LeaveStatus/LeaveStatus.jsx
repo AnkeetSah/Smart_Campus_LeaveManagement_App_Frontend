@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { RiLeafLine } from "react-icons/ri";
 import { FaChevronLeft, FaChevronRight as FaChevronNext } from "react-icons/fa";
-import LeaveTrackerCard from "../components/LeaveTrackerCard";
-import useLeaveFormStore from "../store/useLeaveFormStore";
-import { useMyLeaves } from "../hooks/useMyLeaves";
-import socket from "../socket";
+import LeaveTrackerCard from "../LeaveTrackerCard";
+import useLeaveFormStore from "../../store/useLeaveFormStore";
+import { useMyLeaves } from '../../hooks/useMyLeaves'
+import socket from "../../socket";
 import dayjs from "dayjs";
-
+import UpdateForm from "./UpdateForm";
 const LeaveStatusTracker = () => {
+  const [form,setForm]=useState(false)
+  const [leaveId,setLeaveId]=useState('')
+  const [changesRequired,setChangesrequired]=useState('')
   const { closeLeaveStatus } = useLeaveFormStore();
   const { data: leaves, isLoading, isError, refetch } = useMyLeaves("pending");
 
@@ -16,6 +19,9 @@ const LeaveStatusTracker = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 2;
 
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
   useEffect(() => {
     const handleLeaveStatusUpdated = () => {
       console.log("🔄 Leave status updated, refetching...");
@@ -260,9 +266,13 @@ const LeaveStatusTracker = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 font-sans relative overflow-hidden">
-      {/* Header */}
+     {
+        form?(<UpdateForm changesRequired={changesRequired} setForm={setForm} leaveId={leaveId}/>):(<>
+        {/* Header */}
       <header className="relative z-10 py-4 px-6 flex items-center">
         <motion.button
           onClick={closeLeaveStatus}
@@ -302,7 +312,7 @@ const LeaveStatusTracker = () => {
         {/* Leave Cards */}
         {currentLeaves.length > 0 ? (
           currentLeaves.map((leave, i) => (
-            <LeaveTrackerCard key={leave._id} leaveData={leave} />
+            <LeaveTrackerCard setChangesrequired={setChangesrequired} setForm={setForm} setLeaveId={setLeaveId} key={leave._id} leaveData={leave} />
           ))
         ) : (
           <div className="text-center text-gray-500 mt-12">
@@ -337,6 +347,8 @@ const LeaveStatusTracker = () => {
           </div>
         )}
       </main>
+        </>)
+     }
     </div>
   );
 };

@@ -8,7 +8,7 @@ import useLeaveFormStore from "../../store/useLeaveFormStore";
 import { useMyLeaves } from "../../hooks/useMyLeaves";
 import ActionCards from "./ActionCards";
 import useAuthStore from "../../store/useAuthStore";
-import LeaveStatusTracker from "../../components/LeaveStatusTracker";
+import LeaveStatusTracker from "../../components/LeaveStatus/LeaveStatus";
 import socket from "../../socket"; // ✅ import the shared socket
 import { toast } from "react-toastify";
 import ApplicationMethodSelector from "../../components/StudentLeaveForm/ApplicationMethodSelector";

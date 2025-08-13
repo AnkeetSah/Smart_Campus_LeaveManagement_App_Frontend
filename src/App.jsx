@@ -109,7 +109,7 @@ function App() {
                 element={<MyProfile />}
               />
             </Route>
-               <Route path="/admin" element={<VoiceAgent/>} />
+               
             <Route
               element={
                 <ProtectedRoute allowedRoles={["faculty", "hod", "warden"]} />
