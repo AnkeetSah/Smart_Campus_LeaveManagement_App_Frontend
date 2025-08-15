@@ -7,12 +7,12 @@ import {
   FaUserShield,
 } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
-
+import PreviewDoc from "./PreviewDoc";
 const LeaveExpandedDetails = ({
   leave,
   setSelectedLeave,
   renderStatusIcon,
-  setExpandedLeave
+  setExpandedLeave,
 }) => {
   const containerVariants = {
     hidden: { opacity: 0, height: 0 },
@@ -59,7 +59,7 @@ const LeaveExpandedDetails = ({
           transition={{ staggerChildren: 0.05, delayChildren: 0.1 }}
         >
           {/* Left Column */}
-          <div className="space-y-4">
+          <div className="space-y-4 ">
             <motion.div
               variants={itemVariants}
               className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-xs border border-gray-100 dark:border-gray-700"
@@ -95,8 +95,12 @@ const LeaveExpandedDetails = ({
               variants={itemVariants}
               className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-xs border border-gray-100 dark:border-gray-700"
             >
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">REASON</h3>
-              <p className="text-gray-800 dark:text-gray-200 font-medium">"{leave.reason}"</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                REASON
+              </h3>
+              <p className="text-gray-800 dark:text-gray-200 font-medium">
+                "{leave.reason}"
+              </p>
             </motion.div>
 
             {leave.documents.length > 0 && (
@@ -108,20 +112,7 @@ const LeaveExpandedDetails = ({
                   ATTACHMENTS
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {leave.documents.map((doc, i) => (
-                    <motion.span
-                      key={i}
-                      className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-100 dark:border-blue-800"
-                      whileHover={{ y: -2 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 10,
-                      }}
-                    >
-                      {doc}
-                    </motion.span>
-                  ))}
+                 <PreviewDoc leave={leave}/>
                 </div>
               </motion.div>
             )}
@@ -153,7 +144,9 @@ const LeaveExpandedDetails = ({
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-center">
-                      <h4 className="font-medium text-gray-700 dark:text-gray-200">Faculty</h4>
+                      <h4 className="font-medium text-gray-700 dark:text-gray-200">
+                        Faculty
+                      </h4>
                       <div className="flex items-center">
                         {renderStatusIcon(leave.decisionBy.faculty.status)}
                         <span
@@ -165,7 +158,9 @@ const LeaveExpandedDetails = ({
                               : "text-yellow-600 dark:text-yellow-400"
                           }`}
                         >
-                          {leave.decisionBy.faculty.status.charAt(0).toUpperCase() +
+                          {leave.decisionBy.faculty.status
+                            .charAt(0)
+                            .toUpperCase() +
                             leave.decisionBy.faculty.status.slice(1)}
                         </span>
                       </div>
@@ -198,7 +193,9 @@ const LeaveExpandedDetails = ({
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-center">
-                      <h4 className="font-medium text-gray-700 dark:text-gray-200">HOD</h4>
+                      <h4 className="font-medium text-gray-700 dark:text-gray-200">
+                        HOD
+                      </h4>
                       <div className="flex items-center">
                         {renderStatusIcon(leave.decisionBy.hod.status)}
                         <span
@@ -243,7 +240,9 @@ const LeaveExpandedDetails = ({
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-center">
-                      <h4 className="font-medium text-gray-700 dark:text-gray-200">Warden</h4>
+                      <h4 className="font-medium text-gray-700 dark:text-gray-200">
+                        Warden
+                      </h4>
                       <div className="flex items-center">
                         {renderStatusIcon(leave.decisionBy.warden.status)}
                         <span
@@ -255,7 +254,9 @@ const LeaveExpandedDetails = ({
                               : "text-yellow-600 dark:text-yellow-400"
                           }`}
                         >
-                          {leave.decisionBy.warden.status.charAt(0).toUpperCase() +
+                          {leave.decisionBy.warden.status
+                            .charAt(0)
+                            .toUpperCase() +
                             leave.decisionBy.warden.status.slice(1)}
                         </span>
                       </div>
@@ -324,7 +325,9 @@ const LeaveExpandedDetails = ({
                   </span>
                 </div>
                 <motion.button
-                  onClick={() => { setSelectedLeave(leave), setExpandedLeave(null) }}
+                  onClick={() => {
+                    setSelectedLeave(leave), setExpandedLeave(null);
+                  }}
                   className="text-xs cursor-pointer bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 px-2 py-1 rounded border border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

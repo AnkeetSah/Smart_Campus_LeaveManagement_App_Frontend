@@ -375,10 +375,10 @@ const VoiceAgent = ({moveToForm,onClose}) => {
      {/* <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-20 px-5 md:pt-4 pt-2 flex flex-col"> */}
         <ApplyLeaveHeader content={"Choose Another Method"} onClose={onClose} />  
       <header className="text-center mb-3 md:mb-8">
-        <h1 className="text-xl md:text-3xl font-bold text-blue-800 mb-2">
+        <h1 className="text-xl md:text-3xl font-bold text-blue-800 dark:text-blue-300 mb-2">
           AI Leave Application Assistant
         </h1>
-        <p className="text-blue-600 text-sm md:text-base">
+        <p className="text-blue-600 dark:text-blue-200  text-sm md:text-base">
           Hello, I'm here to assist you with your leave application
         </p>
       </header>
@@ -388,7 +388,7 @@ const VoiceAgent = ({moveToForm,onClose}) => {
         <div className="flex flex-col md:flex-row gap-4 mb-4 md:mb-8">
           {/* AI Agent Card */}
           <div className="w-full md:w-1/2">
-            <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 text-center border-l-4 border-blue-500 hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-white dark:bg-gray-800/90 rounded-xl shadow-lg p-4 md:p-6 text-center border-l-4 border-blue-500 hover:shadow-xl transition-shadow duration-300">
               <div className="relative">
                 <motion.div 
                   className="relative w-24 h-24 md:w-32 md:h-32 mx-auto"
@@ -433,10 +433,10 @@ const VoiceAgent = ({moveToForm,onClose}) => {
                 )}
               </div>
 
-              <h2 className="text-lg md:text-xl font-semibold text-blue-700 mt-3 md:mt-4">
+              <h2 className="text-lg md:text-xl font-semibold text-blue-700 dark:text-blue-400 mt-3 md:mt-4">
                 Hi, I am Sarah
               </h2>
-              <p className="text-blue-500 text-sm md:text-base mt-1 md:mt-2">
+              <p className="text-blue-500 dark:text-blue-300 text-sm md:text-base mt-1 md:mt-2">
                 AI Leave Application Assistant
               </p>
               <div className="mt-3 md:mt-4 flex justify-center items-center">
@@ -454,7 +454,7 @@ const VoiceAgent = ({moveToForm,onClose}) => {
 
           {/* User Card */}
           <div className="w-full md:w-1/2">
-            <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 text-center border-r-4 border-indigo-400 hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-white dark:bg-gray-800/90 rounded-xl shadow-lg p-4 md:p-6 text-center border-r-4 border-indigo-400 hover:shadow-xl transition-shadow duration-300">
               <motion.div 
                 className="relative w-24 h-24 md:w-32 md:h-32 mx-auto"
                 initial={false}
@@ -510,10 +510,10 @@ const VoiceAgent = ({moveToForm,onClose}) => {
         {(status || error) && (
           <div className="mb-4">
             <div
-              className={`p-3 rounded-lg text-center text-sm md:text-base font-medium ${
+              className={`p-3 rounded-lg dark:border-blue-800 text-center text-sm md:text-base font-medium ${
                 error
                   ? "bg-red-100 text-red-700 border border-red-200"
-                  : "bg-blue-100 text-blue-700 border border-blue-200"
+                  : "bg-blue-100 dark:bg-blue-900/50  text-blue-700 dark:text-gray-200 border border-blue-200"
               }`}
             >
               {error || status}
@@ -522,119 +522,116 @@ const VoiceAgent = ({moveToForm,onClose}) => {
         )}
 
         {/* Conversation Panel */}
-        <div className="flex-1 bg-white rounded-xl shadow-lg p-4 md:p-6 mb-4 border-t-4 border-blue-400">
-          <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between mb-3 md:mb-4 pb-2 border-b border-blue-100">
-              <h3 className="text-base md:text-lg font-semibold text-blue-800 flex items-center">
-                <RiRobot2Line className="mr-2" />
-                Conversation
-              </h3>
-              {isActive && (
-                <div className="flex items-center text-green-600 text-sm">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                  Live
-                </div>
-              )}
-            </div>
-
-            <div className="flex-1 overflow-y-auto space-y-3 md:space-y-4 max-h-[40vh] md:max-h-[50vh] scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-100">
-              {conversation.length === 0 && !isTyping ? (
-                <div className="text-center text-gray-400 py-8">
-                  <RiRobot2Line className="mx-auto text-4xl mb-2" />
-                  <p>
-                    No conversation yet. Start by clicking the button below.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  {conversation.map((item, index) => (
-                    <div
-                      key={item.id || index}
-                      className={`flex ${
-                        item.speaker === "user" ? "justify-end" : ""
-                      } animate-fadeIn`}
-                    >
-                      {item.speaker === "agent" && (
-                        <div className="mr-3 md:mr-4 flex-shrink-0">
-                          <img
-                            src="/OG/agent.png"
-                            alt="AI Assistant Avatar"
-                            className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-blue-100"
-                          />
-                        </div>
-                      )}
-                      <div
-                        className={`rounded-lg p-3 md:p-4 max-w-[80%] shadow-sm ${
-                          item.speaker === "agent"
-                            ? "bg-blue-50 text-blue-800 border border-blue-100"
-                            : "bg-indigo-50 text-indigo-800 border border-indigo-100"
-                        }`}
-                      >
-                        <p className="text-sm md:text-base leading-relaxed">
-                          {item.message}
-                        </p>
-                        <p
-                          className={`text-xs mt-2 ${
-                            item.speaker === "agent"
-                              ? "text-blue-400"
-                              : "text-indigo-400 text-right"
-                          }`}
-                        >
-                          {item.time}
-                        </p>
-                      </div>
-                      {item.speaker === "user" && (
-                        <div className="ml-3 md:ml-4 flex-shrink-0">
-                          <img
-                            src="/OG/user.png"
-                            alt="User Avatar"
-                            className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-indigo-100"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  {/* Typing Indicator */}
-                  {isTyping && (
-                    <div className="flex animate-fadeIn">
-                      <div className="mr-3 md:mr-4 flex-shrink-0">
-                        <img
-                          src="/OG/user.png"
-                          alt="AI Assistant Avatar"
-                          className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-blue-100"
-                        />
-                      </div>
-                      <div className="bg-blue-50 text-blue-800 border border-blue-100 rounded-lg p-3 md:p-4 max-w-[80%] shadow-sm">
-                        <p className="text-sm md:text-base leading-relaxed">
-                          {typingText.substring(0, currentTypingIndex)}
-                          <span className="animate-pulse">|</span>
-                        </p>
-                        <div className="flex items-center mt-2">
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                            <div
-                              className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
-                              style={{ animationDelay: "0.1s" }}
-                            ></div>
-                            <div
-                              className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
-                              style={{ animationDelay: "0.2s" }}
-                            ></div>
-                          </div>
-                          <span className="text-xs text-blue-400 ml-2">
-                            Sarah is typing...
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-              <div ref={conversationEndRef} />
-            </div>
-          </div>
+<div className="flex-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 mb-4 border-t-4 border-blue-400 dark:border-blue-600 transition-colors duration-300">
+  <div className="h-full flex flex-col">
+    <div className="flex items-center justify-between mb-3 md:mb-4 pb-2 border-b border-blue-100 dark:border-blue-700">
+      <h3 className="text-base md:text-lg font-semibold text-blue-800 dark:text-blue-400 flex items-center">
+        <RiRobot2Line className="mr-2" />
+        Conversation
+      </h3>
+      {isActive && (
+        <div className="flex items-center text-green-600 text-sm">
+          <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+          Live
         </div>
+      )}
+    </div>
+
+    <div className="flex-1 overflow-y-auto space-y-3 md:space-y-4 max-h-[40vh] md:max-h-[50vh] scrollbar-thin scrollbar-thumb-blue-200 dark:scrollbar-thumb-blue-700 scrollbar-track-gray-100 dark:scrollbar-track-gray-700 transition-colors duration-300">
+      {conversation.length === 0 && !isTyping ? (
+        <div className="text-center text-gray-400 dark:text-gray-400 py-8">
+          <RiRobot2Line className="mx-auto text-4xl mb-2" />
+          <p>
+            No conversation yet. Start by clicking the button below.
+          </p>
+        </div>
+      ) : (
+        <>
+          {conversation.map((item, index) => (
+            <div
+              key={item.id || index}
+              className={`flex ${item.speaker === "user" ? "justify-end" : ""} animate-fadeIn`}
+            >
+              {item.speaker === "agent" && (
+                <div className="mr-3 md:mr-4 flex-shrink-0">
+                  <img
+                    src="/OG/agent.png"
+                    alt="AI Assistant Avatar"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-blue-100 dark:border-blue-700"
+                  />
+                </div>
+              )}
+              <div
+                className={`rounded-lg p-3 md:p-4 max-w-[80%] shadow-sm ${
+                  item.speaker === "agent"
+                    ? "bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-100 dark:border-blue-700"
+                    : "bg-indigo-50 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-700"
+                }`}
+              >
+                <p className="text-sm md:text-base leading-relaxed">
+                  {item.message}
+                </p>
+                <p
+                  className={`text-xs mt-2 ${
+                    item.speaker === "agent"
+                      ? "text-blue-400 dark:text-blue-300"
+                      : "text-indigo-400 dark:text-indigo-300 text-right"
+                  }`}
+                >
+                  {item.time}
+                </p>
+              </div>
+              {item.speaker === "user" && (
+                <div className="ml-3 md:ml-4 flex-shrink-0">
+                  <img
+                    src="/OG/user.png"
+                    alt="User Avatar"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-indigo-100 dark:border-indigo-700"
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Typing Indicator */}
+          {isTyping && (
+            <div className="flex animate-fadeIn">
+              <div className="mr-3 md:mr-4 flex-shrink-0">
+                <img
+                  src="/OG/agent.png"
+                  alt="AI Assistant Avatar"
+                  className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-blue-100 dark:border-blue-700"
+                />
+              </div>
+              <div className="bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-100 dark:border-blue-700 rounded-lg p-3 md:p-4 max-w-[80%] shadow-sm">
+                <p className="text-sm md:text-base leading-relaxed">
+                  {typingText.substring(0, currentTypingIndex)}
+                  <span className="animate-pulse">|</span>
+                </p>
+                <div className="flex items-center mt-2">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-blue-400 dark:bg-blue-300 rounded-full animate-bounce"></div>
+                    <div
+                      className="w-2 h-2 bg-blue-400 dark:bg-blue-300 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-blue-400 dark:bg-blue-300 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+      <div ref={conversationEndRef} />
+    </div>
+  </div>
+</div>
+
 
         {/* Final Data Display */}
         {finalData && (
@@ -643,28 +640,28 @@ const VoiceAgent = ({moveToForm,onClose}) => {
         
 
         {/* Call Controls */}
-        <div className="bg-white rounded-xl shadow-lg px-4 py-3 flex justify-center items-center sticky bottom-0 z-10 border-t-4 border-blue-400">
-          {!isActive ? (
-            <button
-              onClick={startConversation}
-              disabled={!!error}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-8 md:py-4 md:px-10 rounded-full shadow-lg transition duration-300 flex items-center text-sm md:text-base transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
-            >
-              <FaMicrophone className="mr-2 text-lg" />
-              Start Conversation
-              <IoSparkles className="ml-2 text-lg" />
-            </button>
-          ) : (
-            <button
-              onClick={stopConversation}
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-8 md:py-4 md:px-10 rounded-full shadow-lg transition duration-300 flex items-center text-sm md:text-base transform hover:scale-105"
-            >
-              <FaMicrophoneSlash className="mr-2 text-lg" />
-              Stop Conversation
-            </button>
-          )}
-          
-        </div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg px-4 py-3 flex justify-center items-center sticky bottom-0 z-10 border-t-4 border-blue-400 dark:border-blue-600 transition-colors duration-300">
+  {!isActive ? (
+    <button
+      onClick={startConversation}
+      disabled={!!error}
+      className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 dark:disabled:from-gray-600 dark:disabled:to-gray-700 text-white font-semibold py-3 px-8 md:py-4 md:px-10 rounded-full shadow-lg transition duration-300 flex items-center text-sm md:text-base transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
+    >
+      <FaMicrophone className="mr-2 text-lg" />
+      Start Conversation
+      <IoSparkles className="ml-2 text-lg" />
+    </button>
+  ) : (
+    <button
+      onClick={stopConversation}
+      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 dark:from-red-500 dark:to-red-600 dark:hover:from-red-600 dark:hover:to-red-700 text-white font-semibold py-3 px-8 md:py-4 md:px-10 rounded-full shadow-lg transition duration-300 flex items-center text-sm md:text-base transform hover:scale-105"
+    >
+      <FaMicrophoneSlash className="mr-2 text-lg" />
+      Stop Conversation
+    </button>
+  )}
+</div>
+
       </div>
 
       <style jsx>{`

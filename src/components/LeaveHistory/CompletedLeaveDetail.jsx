@@ -14,6 +14,7 @@ import {
 import { RiLeafLine } from "react-icons/ri";
 import { useEffect } from "react";
 import useQRCode from "../../hooks/useQRCode";
+import PreviewDoc from "./PreviewDoc";
 
 const CompletedLeaveDetail = ({
   selectedLeave,
@@ -597,14 +598,7 @@ const CompletedLeaveDetail = ({
                 ATTACHED DOCUMENTS
               </h3>
               <div className="flex flex-wrap gap-2">
-                {leave.documents.map((doc, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex line-clamp-1 items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400"
-                  >
-                    {doc}
-                  </span>
-                ))}
+                <PreviewDoc leave={leave}/>
               </div>
             </div>
           )}

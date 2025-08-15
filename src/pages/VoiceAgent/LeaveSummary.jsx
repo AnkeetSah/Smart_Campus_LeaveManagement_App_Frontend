@@ -19,11 +19,9 @@ function LeaveSummary({ finalData, moveToForm }) {
     attendanceAfterLeave: 80,
   };
 
-  // On mount or finalData change, merge attachments from existing formData
   useEffect(() => {
     const baseData = !finalData || Object.keys(finalData).length === 0 ? mockData : finalData;
 
-    // Merge attachments from current formData if exist to avoid overwriting
     const mergedData = {
       ...baseData,
       attachments: formData?.attachments || null,
@@ -34,7 +32,7 @@ function LeaveSummary({ finalData, moveToForm }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await submitLeaveWithAttachments(formData); // submit full formData incl. attachments
+      const response = await submitLeaveWithAttachments(formData);
       console.log("Leave submitted successfully:", response);
       alert("Leave application submitted successfully!");
     } catch (error) {
@@ -61,13 +59,13 @@ function LeaveSummary({ finalData, moveToForm }) {
   };
 
   return (
-    <div className="bg-green-50 border border-green-300 w-full rounded-xl p-6 mb-6 shadow-md mx-auto ">
-      <h4 className="text-green-900 font-bold mb-4 flex items-center text-lg">
-        <BsStars className="mr-2 text-green-600" />
+    <div className="bg-green-50 dark:bg-gray-900 border border-green-300 dark:border-gray-700 w-full rounded-xl p-6 mb-6 shadow-md mx-auto">
+      <h4 className="text-green-900 dark:text-green-400 font-bold mb-4 flex items-center text-lg">
+        <BsStars className="mr-2 text-green-600 dark:text-green-300" />
         Leave Application Summary
       </h4>
 
-      <div className="space-y-3 text-green-800 text-sm mb-6">
+      <div className="space-y-3 text-green-800 dark:text-green-200 text-sm mb-6">
         <div><strong>Leave Type:</strong> {leaveType || "-"}</div>
         <div><strong>From Date:</strong> {formatDate(fromDate)}</div>
         <div><strong>To Date:</strong> {formatDate(toDate)}</div>
@@ -78,7 +76,7 @@ function LeaveSummary({ finalData, moveToForm }) {
         <div><strong>Expected Attendance After Leave:</strong> {attendanceAfterLeave ?? "-"}</div>
       </div>
 
-      <label className="flex items-center mb-4">
+      <label className="flex items-center mb-4 text-green-800 dark:text-green-200">
         <input
           type="checkbox"
           checked={addAttachments}
@@ -92,11 +90,8 @@ function LeaveSummary({ finalData, moveToForm }) {
 
       <div className="flex justify-between gap-4 mt-6">
         <button
-          onClick={() => {
-            moveToForm("manual");
-            // No need to setFormData here because already synced in useEffect
-          }}
-          className="flex-1 py-2 px-4 bg-white border border-green-600 text-green-600 rounded-lg hover:bg-green-100 transition"
+          onClick={() => moveToForm("manual")}
+          className="flex-1 py-2 px-4 bg-white dark:bg-gray-800 border border-green-600 dark:border-green-400 text-green-600 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-gray-700 transition"
           type="button"
         >
           Modify Leave
@@ -104,7 +99,7 @@ function LeaveSummary({ finalData, moveToForm }) {
 
         <button
           onClick={handleSubmit}
-          className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          className="flex-1 py-2 px-4 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition"
           type="button"
         >
           Submit Leave

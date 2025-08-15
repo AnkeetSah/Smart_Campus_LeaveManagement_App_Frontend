@@ -184,7 +184,7 @@ const LeaveStatusTracker = () => {
               <RiLeafLine className="text-white text-xl" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Leave Status</h1>
+              <h1 className="text-xl font-bold text-gray-900">Leave  Status</h1>
               <p className="text-xs text-gray-600">
                 Track all your leave applications
               </p>

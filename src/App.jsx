@@ -72,14 +72,21 @@ function App() {
   }, [user]); // 👈 re-run when `user` is set
 
   //dark mode feature
-  const [darkMode, setDarkMode] = useState(false);
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  });
+  const [darkMode, setDarkMode] = useState(() => {
+  // Load from localStorage on first render
+  const savedMode = localStorage.getItem("darkMode");
+  return savedMode === "true"; // converts string to boolean
+});
+
+useEffect(() => {
+  if (darkMode) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+  // Save to localStorage whenever darkMode changes
+  localStorage.setItem("darkMode", darkMode);
+}, [darkMode]);
 
   return (
     <Router>
@@ -112,7 +119,7 @@ function App() {
                
             <Route
               element={
-                <ProtectedRoute allowedRoles={["faculty", "hod", "warden"]} />
+                <ProtectedRoute allowedRoles={["faculty", "hod", "warden","guard"]} />
               }
             >
               <Route
