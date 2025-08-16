@@ -179,28 +179,31 @@ function Header({ footerRef, setDarkMode, darkMode }) {
      
     () =>
       shouldHideSupport && (
-        <motion.button
-          whileHover={buttonHover}
-          onClick={()=>navigate("/dashboard/student/notification")}
-          whileTap={buttonTap}
-          className={`relative p-1 cursor-pointer sm:p-2 transition-colors ${
-            isActive
-              ? "text-blue-600 dark:text-blue-400"
-              : "text-gray-600 hover:text-blue-600 dark:hover:text-blue-400"
-          }`}
-          aria-label={`Notifications${
-            notificationCount > 0 ? ` (${notificationCount})` : ""
-          }`}
+      // Current Notification button
+<motion.button
+  whileHover={buttonHover}
+  onClick={() =>
+    navigate("/dashboard/student/notification", {
+      state: { from: location.pathname }, // pass current page
+      replace: false, // don't replace, we want it in history
+    })
+  }
+  whileTap={buttonTap}
+  className={`relative p-1 cursor-pointer sm:p-2 transition-colors ${
+    isActive
+      ? "text-blue-600 dark:text-blue-400"
+      : "text-gray-600 hover:text-blue-600 dark:hover:text-blue-400"
+  }`}
+  aria-label={`Notifications${notificationCount > 0 ? ` (${notificationCount})` : ""}`}
+>
+  <FaBell className="text-lg sm:text-xl dark:text-gray-300" />
+  {notificationCount > 0 && (
+    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
+      {notificationCount > 99 ? "99+" : notificationCount}
+    </span>
+  )}
+</motion.button>
 
-        >
-          
-          <FaBell className="text-lg sm:text-xl dark:text-gray-300" />
-          {notificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">
-              {notificationCount > 99 ? "99+" : notificationCount}
-            </span>
-          )}
-        </motion.button>
       ),
     [shouldHideSupport, notificationCount]
   );
