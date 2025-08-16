@@ -5,10 +5,9 @@ const PublicRoute = ({ children }) => {
   const { user, loading } = useAuthStore();
 
   if (loading) {
-    // Show a blank screen or spinner while checking user
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <span className="text-gray-600 dark:text-gray-300">Loading...</span>
+      <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
