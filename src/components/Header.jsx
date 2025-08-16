@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { RiLeafLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import socket from "../socket";
 import { FaHeadset, FaBell, FaUserCircle, FaCog } from "react-icons/fa";
 import {
@@ -75,7 +77,7 @@ function Header({ footerRef, setDarkMode, darkMode }) {
   const location = useLocation();
   const profileRef = useRef(null);
   const [loggingOut, setLoggingOut] = useState(false);
-
+  const navigate=useNavigate()
 
   const [profileView, setProfileView] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
@@ -99,11 +101,21 @@ function Header({ footerRef, setDarkMode, darkMode }) {
     footerRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [footerRef]);
 
- const handleLogout = useCallback(() => {
-    setLoggingOut(true); // trigger animation
-    logoutUser();     // perform logout
-    setProfileView(false); // hide dropdown
-    setLoggingOut(false); // reset after action (optional)
+ const handleLogout = useCallback(async () => {
+    try {
+        setLoggingOut(true);  // Start logout animation
+        setProfileView(false); // Hide dropdown immediately
+        
+        await logoutUser();   // Wait for logout to complete
+        
+        // Optional: Only remove if you want the loading screen to show again after next login
+        // localStorage.removeItem('initialLoadComplete');
+    } catch (error) {
+        console.error('Logout failed:', error);
+        // Optionally show error to user
+    } finally {
+        setLoggingOut(false); // Always stop animation
+    }
 }, [logoutUser]);
 
   const toggleDarkMode = useCallback(() => {
@@ -162,18 +174,26 @@ function Header({ footerRef, setDarkMode, darkMode }) {
     ),
     [darkMode, toggleDarkMode]
   );
-
+    const isActive = location.pathname === "/dashboard/student/notification";
   const NotificationBell = useMemo(
+     
     () =>
       shouldHideSupport && (
         <motion.button
           whileHover={buttonHover}
+          onClick={()=>navigate("/dashboard/student/notification")}
           whileTap={buttonTap}
-          className="relative p-1 sm:p-2 text-gray-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          className={`relative p-1 cursor-pointer sm:p-2 transition-colors ${
+            isActive
+              ? "text-blue-600 dark:text-blue-400"
+              : "text-gray-600 hover:text-blue-600 dark:hover:text-blue-400"
+          }`}
           aria-label={`Notifications${
             notificationCount > 0 ? ` (${notificationCount})` : ""
           }`}
+
         >
+          
           <FaBell className="text-lg sm:text-xl dark:text-gray-300" />
           {notificationCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] h-5 flex items-center justify-center">

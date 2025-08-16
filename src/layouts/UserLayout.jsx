@@ -3,32 +3,48 @@ import Footer from "../components/Footer";
 import { Outlet, useLocation } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EnhancedLoadingScreen from "./EnhancedLoadingScreen";
 
 export default function UserLayout({ darkMode, setDarkMode, footerRef }) {
   const location = useLocation();
   const { loading, user } = useAuthStore();
-  const [loaderCompleted, setLoaderCompleted] = useState(false);
+  const [sessionLoadComplete, setSessionLoadComplete] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
-  // Show loader until both conditions are met:
-  // 1. Authentication loading is complete
-  // 2. Loading screen animation has completed
-  const showLoader = loading || !loaderCompleted;
+  useEffect(() => {
+    const hasLoaded = sessionStorage.getItem('sessionLoadComplete');
+    
+    if (!hasLoaded) {
+      sessionStorage.setItem('sessionLoadComplete', 'true');
+      setShowContent(false); // Hide content until loading completes
+    } else {
+      setSessionLoadComplete(true);
+      setShowContent(true); // Show content immediately if already loaded
+    }
+  }, []);
+
+  const handleLoaderComplete = () => {
+    setSessionLoadComplete(true);
+    setShowContent(true); // Reveal content only after loading completes
+  };
+
+  const showLoader = !sessionLoadComplete && !loading;
 
   return (
     <>
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {showLoader ? (
           <EnhancedLoadingScreen 
-            onComplete={() => setLoaderCompleted(true)}
+            onComplete={handleLoaderComplete}
             key="loader"
           />
-        ) : (
+        ) : showContent ? (
           <motion.div
             key="content"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
             <Header darkMode={darkMode} setDarkMode={setDarkMode} footerRef={footerRef} />
@@ -41,7 +57,7 @@ export default function UserLayout({ darkMode, setDarkMode, footerRef }) {
               </div>
             )}
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   );
