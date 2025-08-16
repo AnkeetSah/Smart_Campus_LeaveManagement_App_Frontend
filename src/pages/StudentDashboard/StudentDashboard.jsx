@@ -13,6 +13,7 @@ import socket from "../../socket"; // ✅ import the shared socket
 import { toast } from "react-toastify";
 import LeaveActions from "./LeaveActions";
 import ApplicationMethodSelector from "../../components/StudentLeaveForm/ApplicationMethodSelector";
+import { Link } from "react-router-dom";
 function StudentDashboard() {
   const { showForm, openForm } = useLeaveFormStore();
   const {
@@ -105,13 +106,12 @@ function StudentDashboard() {
     rejected: statusCount.rejected || 0,
   };
 
-  if (showForm) return <ApplicationMethodSelector/>;
+  if (showForm) return <ApplicationMethodSelector />;
   if (showLeaveFormHistory) return <LeaveHistory />;
   if (showLeaveStatus) return <LeaveStatusTracker />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
-  
       {/* Floating Blobs - Light Mode Only */}
       <div className="fixed dark:hidden inset-0 pointer-events-none overflow-hidden z-0">
         {[0, 20, 40].map((delay, index) => (
@@ -152,10 +152,10 @@ function StudentDashboard() {
 
         {/* Action Cards */}
         <LeaveActions
-  openForm={openForm}
-  openLeaveStatus={openLeaveStatus}
-  openLeaveHistoryForm={openLeaveHistoryForm}
-/>
+          openForm={openForm}
+          openLeaveStatus={openLeaveStatus}
+          openLeaveHistoryForm={openLeaveHistoryForm}
+        />
         {/* Recent Activity Section */}
         {/* { <motion.div
           initial={{ opacity: 0, y: 30 }}

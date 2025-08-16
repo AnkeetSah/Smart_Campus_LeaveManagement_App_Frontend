@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { RiLeafLine } from "react-icons/ri";
 import socket from "../socket";
+import { useNavigate } from "react-router-dom";
 import {
   FaChevronLeft,
-  FaCalendarAlt,
+
   FaCheck,
   FaTimes,
   FaRegFileAlt,
@@ -20,13 +21,14 @@ import LeaveExpandedDetails from "./LeaveHistory/LeaveExpandedDetails";
 import LeaveListItem from "./LeaveHistory/LeaveListItem";
 
 function LeaveHistory() {
+  const navigate=useNavigate()
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
   const [expandedLeave, setExpandedLeave] = useState(null);
   const [leaveHistoryStatus, setLeaveHistoryStatus] = useState("approved");
   const [selectedLeave, setSelectedLeave] = useState(null);
-  const { closeLeaveHistoryForm } = useLeaveFormStore();
+  
   const {
     data: leaves = [],
     isLoading,
@@ -107,8 +109,8 @@ function LeaveHistory() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={closeLeaveHistoryForm}
-          className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+          onClick={()=>navigate("/dashboard/student/")}
+          className="mr-4 p-2 cursor-pointer rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
         >
           <FaChevronLeft className="text-gray-600 dark:text-gray-300" />
         </motion.button>

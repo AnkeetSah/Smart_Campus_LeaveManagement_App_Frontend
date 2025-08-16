@@ -228,7 +228,7 @@ const LeaveStatusTracker = () => {
       ) : (
         <>
           {/* Header */}
-        <ApplyLeaveHeader onClose={closeLeaveStatus} content={' Leave Status'} subpart={' Track all your leave applications'} />
+        <ApplyLeaveHeader url={'/dashboard/student'} content={' Leave Status'} subpart={' Track all your leave applications'} />
 
           {/* Main Content */}
           <main className="relative z-10 container mx-auto px-4 py-8 max-w-4xl">

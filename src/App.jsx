@@ -1,5 +1,10 @@
 import { useRef, useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import axios from "axios";
 
 import LandingPage from "./pages/LandingPage/LandingPage";
@@ -10,7 +15,7 @@ import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import Unauthorized from "./pages/Unauthorized";
 
 import ScrollToTop from "./components/ScrollToTop";
-
+import PublicRoute from "./components/PublicRoute";
 import GuardDashboard from "./pages/GuardDashboard/GuardDashboard";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 // Dummy dashboard components for now
@@ -26,7 +31,10 @@ import { subscribeToPush } from "./utils/subscribeToPush";
 import useAddSubscription from "./hooks/useAddSubscription";
 import FacultyProfile from "./pages/profile/faculty/FacultyProfile";
 import ApplicationMethodSelector from "./components/StudentLeaveForm/ApplicationMethodSelector";
-import VoiceAgent from "./components/voiceAgent/VoiceAgent";
+import VoiceAgent from "./pages/VoiceAgent/VoiceAgent";
+import LeaveStatusTracker from "./components/LeaveStatus/LeaveStatus";
+import LeaveHistory from "./components/LeaveHistory";
+import CreateLeaveApplication from "./components/CreateLeaveApplication";
 const API_BASE = import.meta.env.VITE_API_URL;
 function App() {
   const footerRef = useRef(null);
@@ -73,20 +81,20 @@ function App() {
 
   //dark mode feature
   const [darkMode, setDarkMode] = useState(() => {
-  // Load from localStorage on first render
-  const savedMode = localStorage.getItem("darkMode");
-  return savedMode === "true"; // converts string to boolean
-});
+    // Load from localStorage on first render
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode === "true"; // converts string to boolean
+  });
 
-useEffect(() => {
-  if (darkMode) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-  // Save to localStorage whenever darkMode changes
-  localStorage.setItem("darkMode", darkMode);
-}, [darkMode]);
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    // Save to localStorage whenever darkMode changes
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
   return (
     <Router>
@@ -107,19 +115,56 @@ useEffect(() => {
               />
             }
           >
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login/:userType" element={<LoginPage />} />
+            // Landing page
+            <Route
+              path="/"
+              element={
+                <PublicRoute>
+                  <LandingPage />
+                </PublicRoute>
+              }
+            />
+            // Login page
+            <Route
+              path="/login/:userType"
+              element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              }
+            />
             <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
               <Route path="/dashboard/student" element={<StudentDashboard />} />
               <Route
                 path="/dashboard/student/profile"
                 element={<MyProfile />}
               />
+              <Route
+                path="/dashboard/student/apply-leave"
+                element={<ApplicationMethodSelector />}
+              />
+              <Route
+                path="/dashboard/student/apply-leave/manual"
+                element={<CreateLeaveApplication />}
+              />
+              <Route
+                path="/dashboard/student/apply-leave/voice"
+                element={<VoiceAgent />}
+              />
+              <Route
+                path="/dashboard/student/leave-status"
+                element={<LeaveStatusTracker />}
+              />
+              <Route
+                path="/dashboard/student/leave-history"
+                element={<LeaveHistory />}
+              />
             </Route>
-               
             <Route
               element={
-                <ProtectedRoute allowedRoles={["faculty", "hod", "warden","guard"]} />
+                <ProtectedRoute
+                  allowedRoles={["faculty", "hod", "warden", "guard"]}
+                />
               }
             >
               <Route
@@ -142,9 +187,7 @@ useEffect(() => {
           <Route element={<AdminLayout />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<UserManagement />} />
-
           </Route>
-                   
         </Routes>
       </div>
     </Router>
