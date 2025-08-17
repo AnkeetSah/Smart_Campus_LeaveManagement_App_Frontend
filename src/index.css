@@ -8,15 +8,7 @@ html, body, #root, .app, .main {
   min-height: 100% !important;
 }
 
-/* Light mode background */
-body {
-  background-color: white;
-}
 
-/* Dark mode background */
-html.dark body {
-  background-color: black;
-}
 
 /* Hide scrollbars */
 ::-webkit-scrollbar {
