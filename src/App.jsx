@@ -120,9 +120,9 @@ function App() {
             <Route
               path="/"
               element={
-                <PublicRoute>
+               
                   <LandingPage />
-                </PublicRoute>
+              
               }
             />
             // Login page
