@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { RiLeafLine } from "react-icons/ri";
 import { FaChevronLeft, FaChevronRight as FaChevronNext } from "react-icons/fa";
+import { RiHistoryLine } from "react-icons/ri";
 import LeaveTrackerCard from "../LeaveTrackerCard";
 import useLeaveFormStore from "../../store/useLeaveFormStore";
 import { useMyLeaves } from "../../hooks/useMyLeaves";
@@ -11,7 +12,9 @@ import UpdateForm from "./UpdateForm";
 import ApplyLeaveHeader from "../StudentLeaveForm/ApplyLeaveHeader";
 import LeaveLoader from "./LeaveLoader";
 import LeaveError from "./LeaveError";
+import { useNavigate } from "react-router-dom";
 const LeaveStatusTracker = () => {
+  const navigate=useNavigate()
   const [form, setForm] = useState(false);
   const [leaveId, setLeaveId] = useState("");
   const [changesRequired, setChangesrequired] = useState("");
@@ -262,11 +265,36 @@ const LeaveStatusTracker = () => {
                 />
               ))
             ) : (
-              <div className="text-center text-gray-500 mt-12">
-                {transformedLeaves.length === 0
-                  ? "No leave applications found."
-                  : "No matching leave found."}
-              </div>
+               <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+    className="flex flex-col items-center justify-center p-8 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 mt-8 max-w-md mx-auto"
+  >
+    <RiLeafLine className="w-12 h-12 text-blue-500 dark:text-blue-400 mb-4 opacity-90" />
+    
+    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">
+      {transformedLeaves.length === 0
+        ? "No Active Leave Requests"
+        : "No Matching Leaves Found"}
+    </h3>
+    
+    <p className="text-center text-gray-600 dark:text-gray-400 mb-4">
+      {transformedLeaves.length === 0
+        ? "You don't have any pending leave applications at the moment."
+        : "Try adjusting your search criteria"}
+    </p>
+    
+    {transformedLeaves.length === 0 && (
+      <button
+        onClick={() => navigate('/dashboard/student/leave-history')} // Adjust to your navigation
+        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2 text-sm"
+      >
+        <RiHistoryLine className="w-4 h-4" />
+        View Leave History
+      </button>
+    )}
+  </motion.div>
             )}
 
             {/* Pagination Controls */}

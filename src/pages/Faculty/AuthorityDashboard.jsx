@@ -50,6 +50,7 @@ function AuthorityDashboard() {
       setShowHostelDetails(true);
       console.log(roomId);
     }
+    console.log(user)
 
     if (roomId) {
       socket.emit("joinRoom", roomId);

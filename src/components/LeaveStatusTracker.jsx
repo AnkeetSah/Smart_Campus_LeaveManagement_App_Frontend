@@ -305,11 +305,40 @@ const LeaveStatusTracker = () => {
             <LeaveTrackerCard key={leave._id} leaveData={leave} />
           ))
         ) : (
-          <div className="text-center text-gray-500 mt-12">
-            {transformedLeaves.length === 0
-              ? "No leave applications found."
-              : "No matching leave found."}
-          </div>
+         <div className="flex flex-col items-center justify-center mt-12 p-6 bg-gray-50 rounded-lg shadow-sm max-w-md mx-auto">
+  <svg 
+    className="w-12 h-12 text-gray-400 mb-4" 
+    fill="none" 
+    stroke="currentColor" 
+    viewBox="0 0 24 24" 
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      strokeWidth={1.5} 
+      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+    />
+  </svg>
+  <h3 className="text-lg font-medium text-gray-700 mb-2">
+    {transformedLeaves.length === 0
+      ? "You don't have any active leave requests"
+      : "No matching leave found"}
+  </h3>
+  <p className="text-gray-500 mb-4">
+    {transformedLeaves.length === 0
+      ? "Please check your leave history for past requests"
+      : "Try adjusting your search criteria"}
+  </p>
+  {transformedLeaves.length === 0 && (
+    <button 
+      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+      onClick={() => navigateToLeaveHistory()} // Replace with your actual navigation function
+    >
+      View Leave History
+    </button>
+  )}
+</div>
         )}
 
         {/* Pagination Controls */}
