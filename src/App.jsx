@@ -35,7 +35,7 @@ import VoiceAgent from "./pages/VoiceAgent/VoiceAgent";
 import LeaveStatusTracker from "./components/LeaveStatus/LeaveStatus";
 import LeaveHistory from "./components/LeaveHistory";
 import CreateLeaveApplication from "./components/CreateLeaveApplication";
-import Notification from "./pages/Notification";
+import Notification from "./pages/notification/Notification";
 const API_BASE = import.meta.env.VITE_API_URL;
 function App() {
   const footerRef = useRef(null);
@@ -117,14 +117,7 @@ function App() {
             }
           >
             // Landing page
-            <Route
-              path="/"
-              element={
-               
-                  <LandingPage />
-              
-              }
-            />
+            <Route path="/" element={<LandingPage />} />
             // Login page
             <Route
               path="/login/:userType"
@@ -160,9 +153,10 @@ function App() {
                 path="/dashboard/student/leave-history"
                 element={<LeaveHistory />}
               />
-              <Route path="/dashboard/student/notification"
-                element={<Notification/>}
-                />
+              <Route
+                path="/dashboard/student/notification"
+                element={<Notification />}
+              />
             </Route>
             <Route
               element={
