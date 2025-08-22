@@ -30,8 +30,9 @@
 ### 🔍 The Challenge We Solve
 
 Traditional leave management suffers from:
+
 - **Manual paperwork** leading to lost applications and processing delays
-- **Lack of transparency** in approval status and workflow stages  
+- **Lack of transparency** in approval status and workflow stages
 - **Administrative overhead** from manual tracking and follow-ups
 - **No audit trail** for compliance and accountability
 - **Poor user experience** for both applicants and approvers
@@ -39,6 +40,7 @@ Traditional leave management suffers from:
 ### 💡 Our Innovation
 
 LeaveFlow introduces:
+
 - **Digital-first workflow** with automated routing and notifications
 - **Multi-stakeholder dashboards** tailored for each role
 - **Real-time status tracking** with complete transparency
@@ -50,13 +52,15 @@ LeaveFlow introduces:
 ## ✨ Key Features & Capabilities
 
 ### 👥 Role-Based Access Control
+
 - **🎓 Student/Employee Dashboard** - Apply for leave, track status, view history
-- **👨‍🏫 Faculty Interface** - Review and approve/reject student requests  
+- **👨‍🏫 Faculty Interface** - Review and approve/reject student requests
 - **🏢 HOD Portal** - Department-level oversight and approvals
 - **🏠 Warden Dashboard** - Hostel-specific leave management
 - **⚙️ Admin Console** - User management, system configuration, analytics
 
 ### 🔄 Intelligent Approval Workflow
+
 - **Multi-tier approval chain**: Faculty → HOD → Warden (configurable)
 - **Smart routing** based on leave type and institutional hierarchy
 - **Status tracking** with real-time updates: Pending → In Review → Approved/Rejected
@@ -64,12 +68,14 @@ LeaveFlow introduces:
 - **Automated escalations** for overdue approvals
 
 ### 📬 Advanced Notification System
+
 - **📧 Email notifications** for all stakeholder actions and status changes
 - **🔔 Push notifications** via progressive web app technology
 - **📱 Multi-channel alerts** ensuring no missed communications
 - **📋 Digest reports** for administrators and approvers
 
 ### 🎯 Smart Administration
+
 - **📊 Bulk user onboarding** via Excel import with data validation
 - **🔐 OTP-secured authentication** for enhanced security
 - **📈 Usage analytics** and reporting dashboards
@@ -80,8 +86,9 @@ LeaveFlow introduces:
 ## 🛠️ Technology Stack
 
 ### Frontend Architecture
+
 ```
-React.js 18+ with TypeScript
+React.js 19
 ├── UI Framework: Tailwind CSS + Headless UI
 ├── Animations: Framer Motion
 ├── State Management: Zustand
@@ -90,7 +97,8 @@ React.js 18+ with TypeScript
 └── PWA Support: Service Workers + Workbox
 ```
 
-### Backend Infrastructure  
+### Backend Infrastructure
+
 ```
 Node.js + Express.js
 ├── Database: MongoDB with Mongoose ODM
@@ -102,6 +110,7 @@ Node.js + Express.js
 ```
 
 ### Deployment & DevOps
+
 ```
 Frontend: Vercel/Netlify with CDN
 Backend: AWS/Railway/Render with auto-scaling
@@ -118,16 +127,17 @@ Experience LeaveFlow with our comprehensive demo environment:
 
 ### 🔑 Demo Credentials
 
-| Role | Email | Password | Access Level |
-|------|-------|----------|--------------|
-| 🎓 **Student** | student.demo@leaveflow.com | demo2024 | Apply & track leaves |
+| Role           | Email                      | Password | Access Level             |
+| -------------- | -------------------------- | -------- | ------------------------ |
+| 🎓 **Student** | student.demo@leaveflow.com | demo2024 | Apply & track leaves     |
 | 👨‍🏫 **Faculty** | faculty.demo@leaveflow.com | demo2024 | Approve student requests |
-| 🏢 **HOD** | hod.demo@leaveflow.com | demo2024 | Department oversight |
-| 🏠 **Warden** | warden.demo@leaveflow.com | demo2024 | Hostel management |
-| ⚙️ **Admin** | admin.demo@leaveflow.com | demo2024 | Full system access |
+| 🏢 **HOD**     | hod.demo@leaveflow.com     | demo2024 | Department oversight     |
+| 🏠 **Warden**  | warden.demo@leaveflow.com  | demo2024 | Hostel management        |
+| ⚙️ **Admin**   | admin.demo@leaveflow.com   | demo2024 | Full system access       |
 
 ### 🌐 Live Demo
-**[🚀 Launch LeaveFlow Demo](YOUR_DEPLOYED_LINK)**
+
+**[🚀 Launch LeaveFlow Demo](https://leaveflow.netlify.app/)**
 
 > **Want personalized access?** Contact us with your email, name, and preferred role for custom demo credentials.
 
@@ -136,19 +146,27 @@ Experience LeaveFlow with our comprehensive demo environment:
 ## 📸 System Screenshots
 
 ### 🔐 Secure Authentication
-*Modern OTP-based login with role selection*
+
+_Modern OTP-based login with role selection_
+
 > [Login Interface Screenshot - Coming Soon]
 
-### 📊 Intuitive Dashboards  
-*Role-specific interfaces optimized for each user type*
+### 📊 Intuitive Dashboards
+
+_Role-specific interfaces optimized for each user type_
+
 > [Dashboard Screenshots - Coming Soon]
 
 ### 📝 Streamlined Application Flow
-*Step-by-step leave application with real-time validation*
+
+_Step-by-step leave application with real-time validation_
+
 > [Application Flow Screenshots - Coming Soon]
 
 ### 📬 Smart Notifications
-*Multi-channel notification system with status updates*
+
+_Multi-channel notification system with status updates_
+
 > [Notification System Screenshots - Coming Soon]
 
 ---
@@ -156,13 +174,15 @@ Experience LeaveFlow with our comprehensive demo environment:
 ## 🌟 Competitive Advantages
 
 ### 🏆 Market Differentiation
+
 - **🚫 Paper-free transformation** - Completely eliminates manual processes
-- **⚡ Real-time operations** - Instant notifications and status updates  
+- **⚡ Real-time operations** - Instant notifications and status updates
 - **🏗️ Enterprise architecture** - Production-ready scalability and security
 - **🎯 Institution-specific** - Purpose-built for educational and corporate environments
 - **🤖 AI-ready foundation** - Prepared for future ML integrations
 
 ### 📈 Future Roadmap
+
 - **📊 Advanced Analytics** - Leave pattern analysis and predictive insights
 - **🗣️ AI Leave Assistant** - Conversational leave requests via Gemini API
 - **📱 Mobile Applications** - Native iOS/Android apps with offline support
@@ -177,7 +197,7 @@ LeaveFlow isn't just a project—it's a **production-ready enterprise solution**
 
 - **💰 Cost Reduction** - Eliminates paper, printing, and manual processing costs
 - **⏱️ Time Savings** - Reduces leave processing time by 80%+
-- **📈 Scalability** - Handles thousands of users and requests seamlessly  
+- **📈 Scalability** - Handles thousands of users and requests seamlessly
 - **🔒 Security** - Enterprise-grade data protection and audit trails
 - **📊 Insights** - Data-driven decision making with comprehensive analytics
 - **✅ Compliance** - Automated record-keeping for regulatory requirements
@@ -189,7 +209,8 @@ LeaveFlow isn't just a project—it's a **production-ready enterprise solution**
 <div align="center">
 
 ### 👨‍💻 **Ankeet Kumar Sah**
-*Full-Stack Developer & System Architect*
+
+_Full-Stack Developer & System Architect_
 
 [![Email](https://img.shields.io/badge/Email-ankeetkumarsah%40gmail.com-red?style=for-the-badge&logo=gmail)](mailto:ankeetkumar7777@gmail.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Ankeet%20Kumar%20Sah-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/ankeet-kumar-sah/)
@@ -198,6 +219,7 @@ LeaveFlow isn't just a project—it's a **production-ready enterprise solution**
 </div>
 
 ### 🤝 Collaboration Opportunities
+
 - **🏢 Enterprise Deployment** - Custom implementation for your institution
 - **🔧 Feature Development** - Additional modules and integrations
 - **📈 Scaling Consultation** - Architecture optimization and performance tuning
@@ -208,20 +230,21 @@ LeaveFlow isn't just a project—it's a **production-ready enterprise solution**
 ## 📋 Technical Documentation & Access
 
 ### 🔐 Source Code Policy
+
 The complete source code is **proprietary and patent-pending**. This strategic approach protects the intellectual property while we pursue:
 
 - **📜 Patent filing** for the innovative workflow algorithms
-- **💼 Commercial licensing** opportunities  
+- **💼 Commercial licensing** opportunities
 - **🏢 Enterprise partnerships** and implementations
 
 ### 🛠️ Access Levels Available
 
-| Access Type | What's Included | Suitable For |
-|-------------|-----------------|--------------|
-| **🎯 Demo Access** | Full UI/UX experience with sample data | Evaluation and assessment |
-| **📋 Technical Overview** | Architecture documentation and API specs | Technical evaluation |
-| **🤝 Partnership Access** | Source code review and collaboration | Serious implementation partners |
-| **💼 Enterprise License** | Full source code and deployment rights | Organizations ready to implement |
+| Access Type               | What's Included                          | Suitable For                     |
+| ------------------------- | ---------------------------------------- | -------------------------------- |
+| **🎯 Demo Access**        | Full UI/UX experience with sample data   | Evaluation and assessment        |
+| **📋 Technical Overview** | Architecture documentation and API specs | Technical evaluation             |
+| **🤝 Partnership Access** | Source code review and collaboration     | Serious implementation partners  |
+| **💼 Enterprise License** | Full source code and deployment rights   | Organizations ready to implement |
 
 ---
 
@@ -230,8 +253,9 @@ The complete source code is **proprietary and patent-pending**. This strategic a
 **LeaveFlow represents more than technological innovation—it's a paradigm shift toward intelligent, user-centric institutional management.**
 
 By digitizing and optimizing leave management, we're:
+
 - **🎓 Enhancing student experience** with transparent, efficient processes
-- **👨‍🏫 Empowering educators** with streamlined administrative tools  
+- **👨‍🏫 Empowering educators** with streamlined administrative tools
 - **🏢 Modernizing institutions** with future-ready digital infrastructure
 - **🌱 Promoting sustainability** through paperless operations
 - **📊 Enabling data-driven** institutional decision-making
@@ -244,7 +268,7 @@ By digitizing and optimizing leave management, we're:
 
 **[🚀 Request Demo](mailto:ankeetkumarsah@gmail.com?subject=LeaveFlow%20Demo%20Request)** • **[💼 Enterprise Inquiry](mailto:ankeetkumarsah@gmail.com?subject=LeaveFlow%20Enterprise%20Partnership)** • **[🤝 Collaboration](mailto:ankeetkumarsah@gmail.com?subject=LeaveFlow%20Technical%20Collaboration)**
 
-*LeaveFlow - Where efficiency meets innovation in institutional management*
+_LeaveFlow - Where efficiency meets innovation in institutional management_
 
 </div>
 
