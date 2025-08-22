@@ -18,7 +18,7 @@ const useAuthStore = create((set) => ({
       set({ user: null, loading: false });
     }
   },
-
+ 
   logoutUser: async () => {
     try {
       await api.post("/api/auth/logout");
