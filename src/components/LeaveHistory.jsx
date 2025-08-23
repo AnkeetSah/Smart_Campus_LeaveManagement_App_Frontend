@@ -148,35 +148,49 @@ function LeaveHistory() {
             </h2>
           </div>
 
-          {isLoading ? (
-            <div className="p-6 flex justify-center items-center">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
-              {leaves.map((leave, index) => (
-                <div
-                  key={leave._id}
-                  className="p-6 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-200"
-                >
-                  <LeaveListItem
-                    leave={leave}
-                    index={index}
-                    expandedLeave={expandedLeave}
-                    setExpandedLeave={setExpandedLeave}
-                  />
-                  {expandedLeave === index && (
-                    <LeaveExpandedDetails
-                      leave={leave}
-                      setSelectedLeave={setSelectedLeave}
-                      renderStatusIcon={renderStatusIcon}
-                      setExpandedLeave={setExpandedLeave}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+         {isLoading ? (
+  <div className="p-6 flex justify-center items-center">
+    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+) : leaves.length === 0 ? (
+  <div className="p-10 flex flex-col items-center justify-center text-center text-gray-600 dark:text-gray-400">
+    <RiLeafLine className="text-5xl text-blue-500 dark:text-blue-400 mb-4" />
+    <p className="text-lg font-medium">
+      You don’t have any{" "}
+      {leaveHistoryStatus === "approved"
+        ? "approved"
+        : leaveHistoryStatus === "rejected"
+        ? "rejected"
+        : "pending"}{" "}
+      leave requests.
+    </p>
+  </div>
+) : (
+  <div className="divide-y divide-gray-200 dark:divide-gray-700">
+    {leaves.map((leave, index) => (
+      <div
+        key={leave._id}
+        className="p-6 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-200"
+      >
+        <LeaveListItem
+          leave={leave}
+          index={index}
+          expandedLeave={expandedLeave}
+          setExpandedLeave={setExpandedLeave}
+        />
+        {expandedLeave === index && (
+          <LeaveExpandedDetails
+            leave={leave}
+            setSelectedLeave={setSelectedLeave}
+            renderStatusIcon={renderStatusIcon}
+            setExpandedLeave={setExpandedLeave}
+          />
+        )}
+      </div>
+    ))}
+  </div>
+)}
+
         </motion.div>
       </main>
     </div>
