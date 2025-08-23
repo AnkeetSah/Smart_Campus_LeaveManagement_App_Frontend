@@ -1,13 +1,19 @@
 // src/store/useAuthStore.js
 import { create } from "zustand";
-import api from "../services/api"; // Ensure this has baseURL and withCredentials configured
+import api from "../services/api"; 
 
 const useAuthStore = create((set) => ({
-  user: null,
+   user: JSON.parse(localStorage.getItem("user")) || null,
   loading: true,
 
-  setUser: (user) => set({ user, loading: false }),
-  clearUser: () => set({ user: null, loading: false }),
+  setUser: (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+    set({ user, loading: false });
+  },
+  clearUser: () => {
+    localStorage.removeItem("user");
+    set({ user: null, loading: false });
+  },
 
   fetchUser: async () => {
     try {
