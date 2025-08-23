@@ -1,6 +1,5 @@
 export default async () => {
-  // 👇 Use your env variable for backend URL
-  const url = process.env.VITE_API_URL + "/"; // hitting root endpoint
+  const url = process.env.VITE_API_URL + "/"; // ping your backend root
 
   try {
     const res = await fetch(url);
@@ -8,16 +7,12 @@ export default async () => {
 
     console.log("✅ Keep-alive ping successful:", text);
 
-    return {
-      statusCode: 200,
-      body: "Pinged backend successfully",
-    };
+    // ✅ Return a proper Response object
+    return new Response("Pinged backend successfully", { status: 200 });
   } catch (err) {
     console.error("❌ Ping failed:", err);
-    return {
-      statusCode: 500,
-      body: "Ping failed",
-    };
+
+    return new Response("Ping failed", { status: 500 });
   }
 };
 
