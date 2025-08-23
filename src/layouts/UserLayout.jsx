@@ -12,7 +12,6 @@ import { HeartHandshake } from "lucide-react";
 function Loader() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:bg-gray-900">
-      
       <motion.div
         className="flex justify-center items-center gap-2 bg-gradient-to-r from-blue-100 to-blue-200 rounded-2xl py-3 px-6 shadow-xl"
         animate={{ y: [0, -12, 0] }}
@@ -40,23 +39,27 @@ function Loader() {
   );
 }
 
-// User Layout with minimum 1 second loader
+// User Layout with session-based loader logic
 export default function UserLayout({ darkMode, setDarkMode, footerRef }) {
   const location = useLocation();
   const { loading, user } = useAuthStore();
-  const [showLoader, setShowLoader] = useState(true);
+  const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
-    // Ensure loader shows for at least 1 second
-    const timer = setTimeout(() => {
-      setShowLoader(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    // Check if loader was already shown in this tab session
+    const loaderShown = sessionStorage.getItem("loaderShown");
+    if (!loaderShown) {
+      setShowLoader(true);
+      const timer = setTimeout(() => {
+        setShowLoader(false);
+        sessionStorage.setItem("loaderShown", "true"); // mark as shown in this tab
+      }, 1000); // minimum 1 second display
+      return () => clearTimeout(timer);
+    }
   }, []);
 
-  // Show loader while loading or minimum 1 second not passed
-  if (loading || showLoader) {
+  // Show loader if app is loading or first-time loader active
+  if ( showLoader) {
     return <Loader />;
   }
 
