@@ -36,6 +36,7 @@ import LeaveStatusTracker from "./components/LeaveStatus/LeaveStatus";
 import LeaveHistory from "./components/LeaveHistory";
 import CreateLeaveApplication from "./components/CreateLeaveApplication";
 import Notification from "./pages/notification/Notification";
+import NotFound from "./pages/NotFound";
 const API_BASE = import.meta.env.VITE_API_URL;
 function App() {
   const footerRef = useRef(null);
@@ -117,7 +118,15 @@ function App() {
             }
           >
             // Landing page
-            <Route path="/" element={<LandingPage />} />
+             <Route
+  path="/"
+  element={
+    <PublicRoute>
+      <LandingPage />
+    </PublicRoute>
+  }
+/>
+          
             // Login page
             <Route
               path="/login/:userType"
@@ -129,6 +138,9 @@ function App() {
             />
             <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
               <Route path="/dashboard/student" element={<StudentDashboard />} />
+            
+
+
               <Route
                 path="/dashboard/student/profile"
                 element={<MyProfile />}
@@ -186,6 +198,8 @@ function App() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<UserManagement />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>

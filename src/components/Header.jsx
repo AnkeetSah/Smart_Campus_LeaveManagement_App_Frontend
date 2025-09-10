@@ -3,9 +3,9 @@ import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { RiLeafLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
 import socket from "../socket";
-import { FaHeadset, FaBell, FaUserCircle, FaCog } from "react-icons/fa";
+import { FaHeadset, FaBell, FaUserCircle, FaCog, FaHome } from "react-icons/fa";
 import {
   MdDarkMode,
   MdLightMode,
@@ -266,47 +266,82 @@ function Header({ footerRef, setDarkMode, darkMode }) {
                   </p>
                 </div>
 
-                <nav className="py-1" role="none">
-                  <Link
-                    to={profileRoute}
-                    className="block"
-                    onClick={closeProfileView}
-                    role="menuitem"
-                  >
-                    <motion.div
-                      whileHover={{
-                        backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
-                      }}
-                      className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 flex items-center transition-colors"
-                    >
-                      <FaUserCircle className="mr-2 text-blue-500" />
-                      My Profile
-                    </motion.div>
-                  </Link>
+               
+<nav className="py-1" role="none">
+  {/* Home */}
+  <NavLink
+    to="/dashboard/student"
+    end
+    onClick={closeProfileView}
+    role="menuitem"
+    className="block"
+  >
+    {({ isActive }) => (
+      <motion.div
+        whileHover={{
+          backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
+        }}
+        className={`px-4 py-2 text-sm flex items-center transition-colors rounded-md
+          ${
+            isActive
+              ? "text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-900/40"
+              : "text-gray-700 dark:text-gray-200"
+          }`}
+      >
+        <FaHome
+          className={`mr-2 ${
+            isActive ? "text-blue-600 dark:text-blue-400" : "text-blue-500"
+          }`}
+        />
+        Home
+      </motion.div>
+    )}
+  </NavLink>
 
-                  <motion.button
-                    whileHover={{
-                      backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
-                    }}
-                    className="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 flex items-center transition-colors text-left"
-                    role="menuitem"
-                  >
-                    <FaCog className="mr-2 text-blue-500" />
-                    Settings
-                  </motion.button>
+  {/* My Profile */}
+  <NavLink
+    to={profileRoute}
+    onClick={closeProfileView}
+    role="menuitem"
+    className="block"
+  >
+    {({ isActive }) => (
+      <motion.div
+        whileHover={{
+          backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
+        }}
+        className={`px-4 py-2 text-sm flex items-center transition-colors rounded-md
+          ${
+            isActive
+              ? "text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-900/40"
+              : "text-gray-700 dark:text-gray-200"
+          }`}
+      >
+        <FaUserCircle
+          className={`mr-2 ${
+            isActive ? "text-blue-600 dark:text-blue-400" : "text-blue-500"
+          }`}
+        />
+        My Profile
+      </motion.div>
+    )}
+  </NavLink>
 
-                  <motion.button
-                    whileHover={{
-                      backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
-                    }}
-                    className="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 flex items-center transition-colors text-left"
-                    onClick={handleLogout}
-                    role="menuitem"
-                  >
-                    <MdLogout className="mr-2 text-blue-500" />
-                    Logout
-                  </motion.button>
-                </nav>
+
+
+  {/* Logout (not a route, stays button) */}
+  <motion.button
+    whileHover={{
+      backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
+    }}
+    className="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 flex items-center transition-colors text-left rounded-md"
+    onClick={handleLogout}
+    role="menuitem"
+  >
+    <MdLogout className="mr-2 text-blue-500" />
+    Logout
+  </motion.button>
+</nav>
               </motion.div>
             )}
           </AnimatePresence>

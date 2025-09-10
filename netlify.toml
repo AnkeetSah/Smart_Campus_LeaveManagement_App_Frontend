@@ -5,3 +5,9 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild" # recommended for speed
+
+
+
+
+
+
