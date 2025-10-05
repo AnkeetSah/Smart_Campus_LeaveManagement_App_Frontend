@@ -7,7 +7,7 @@ import {
   FaChevronRight,
   FaUserCog,
   FaQrcode,
-  FaUserShield
+  FaUserShield,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -59,21 +59,20 @@ const Users = () => {
       description: "Scan QR to verify leave passes",
       icon: <FaQrcode className="text-white text-3xl" />,
       color: "from-yellow-500 to-yellow-600",
-        hoverColor: "hover:from-yellow-600 hover:to-yello-700",
-      bgLight: "bg-yellow-50 dark:bg-gray-800/20",
-      borderColor: "border-gray-200 dark:border-gray-700",
+      hoverColor: "hover:from-yellow-600 hover:to-yellow-700", // ✅ fixed typo
+      bgLight: "bg-yellow-50 dark:bg-yellow-900/20", // ✅ consistent dark mode
+      borderColor: "border-yellow-200 dark:border-yellow-800", // ✅ consistent dark mode
     },
     {
-  id: "admin",
-  title: "Admin Portal",
-  description: "Supervise and manage all users and leave workflows",
-  icon: <FaUserShield className="text-white text-3xl" />,
-  color: "from-red-500 to-red-600",
-  hoverColor: "hover:from-red-600 hover:to-red-700",
-  bgLight: "bg-red-50 dark:bg-red-900/20",
-  borderColor: "border-red-200 dark:border-red-800",
-}
-
+      id: "admin",
+      title: "Admin Portal",
+      description: "Supervise and manage all users and leave workflows",
+      icon: <FaUserShield className="text-white text-3xl" />,
+      color: "from-red-500 to-red-600",
+      hoverColor: "hover:from-red-600 hover:to-red-700",
+      bgLight: "bg-red-50 dark:bg-red-900/20",
+      borderColor: "border-red-200 dark:border-red-800",
+    },
   ];
 
   return (
@@ -81,20 +80,25 @@ const Users = () => {
       {userTypes.map((user) => (
         <div
           key={user.id}
-          className={`relative ${user.bgLight}  backdrop-blur-sm border ${user.borderColor} shadow-sm rounded-2xl overflow-hidden transition-colors duration-300`}
+          className={`relative ${user.bgLight} backdrop-blur-sm border ${user.borderColor} shadow-sm rounded-2xl overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1`}
         >
           <div className="p-8 pt-10">
+            {/* Icon */}
             <div
               className={`w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r ${user.color} flex items-center justify-center shadow-md`}
             >
               {user.icon}
             </div>
 
+            {/* Title & Description */}
             <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               {user.title}
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">{user.description}</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              {user.description}
+            </p>
 
+            {/* Button */}
             <Link to={`/login/${user.id}`}>
               <div
                 className={`w-full py-3 rounded-xl bg-gradient-to-r ${user.color} ${user.hoverColor} text-white text-lg font-medium flex items-center justify-center space-x-2 hover:scale-105 transition`}
