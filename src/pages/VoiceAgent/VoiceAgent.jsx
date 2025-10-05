@@ -371,7 +371,11 @@ const VoiceAgent = ({moveToForm,onClose}) => {
   }, []);
 
   return (
-  <div className="min-h-screen bg-gradient-to-br  pb-10   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative  transition-all duration-500">
+  <div className="min-h-screen
+   bg-gradient-to-br 
+from-blue-200 via-sky-200 to-indigo-300 
+dark:from-gray-950 dark:via-gray-900 dark:to-indigo-900 
+   font-sans relative  transition-all duration-500">
      {/* <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-20 px-5 md:pt-4 pt-2 flex flex-col"> */}
         <ApplyLeaveHeader content={"Choose Another Method"} url={'/dashboard/student/apply-leave'} />  
       <header className="text-center mb-3 md:mb-8">

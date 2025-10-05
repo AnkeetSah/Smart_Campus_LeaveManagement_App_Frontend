@@ -44,7 +44,11 @@ function CreateLeaveApplication({onClose}) {
 };
 
   return (
- <div className="min-h-screen bg-gradient-to-br   from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
+ <div className="min-h-screen 
+ bg-gradient-to-br 
+from-blue-200 via-sky-200 to-indigo-300 
+dark:from-gray-950 dark:via-gray-900 dark:to-indigo-900 
+  font-sans relative overflow-hidden transition-all duration-500">
   
       {/* Floating Blobs Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 dark:hidden">
