@@ -3,11 +3,11 @@ import { BsStars } from "react-icons/bs";
 import useLeaveApplicationStore from "../../store/useLeaveApplicationStore";
 import { submitLeaveWithAttachments } from "../../services/leaveService";
 import AttachmentField from "../../components/StudentLeaveForm/AttachmentField";
-
-function LeaveSummary({ finalData, moveToForm }) {
+import { useNavigate } from "react-router-dom";
+function LeaveSummary({ finalData}) {
   const { setFormData, formData } = useLeaveApplicationStore();
   const [addAttachments, setAddAttachments] = useState(false);
-
+  const navigate=useNavigate()
   const mockData = {
     leaveType: "medical",
     fromDate: "2025-08-12",
@@ -90,12 +90,12 @@ function LeaveSummary({ finalData, moveToForm }) {
 
       <div className="flex justify-between gap-4 mt-6">
         <button
-          onClick={() => moveToForm("manual")}
-          className="flex-1 py-2 px-4 bg-white dark:bg-gray-800 border border-green-600 dark:border-green-400 text-green-600 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-gray-700 transition"
-          type="button"
-        >
-          Modify Leave
-        </button>
+      onClick={() => navigate("/dashboard/student/apply-leave/manual")}
+      className="flex-1 py-2 px-4 bg-white dark:bg-gray-800 border border-green-600 dark:border-green-400 text-green-600 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-gray-700 transition"
+      type="button"
+    >
+      Modify Leave
+    </button>
 
         <button
           onClick={handleSubmit}

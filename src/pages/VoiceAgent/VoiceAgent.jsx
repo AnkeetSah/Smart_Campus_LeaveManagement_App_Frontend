@@ -1,3 +1,4 @@
+// only work on stopping the conversattion when the conversation syop button is cliked 
 import React, { useEffect, useState, useRef } from "react";
 import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
 import { RiRobot2Line } from "react-icons/ri";
@@ -9,7 +10,8 @@ import useAuthStore from "../../store/useAuthStore";
 import useLeaveApplicationStore from "../../store/useLeaveApplicationStore";
 import LeaveSummary from "./LeaveSummary";
 import api from "../../services/api";
-const VoiceAgent = ({moveToForm,onClose}) => {
+
+const VoiceAgent = () => {
   const { user } = useAuthStore();
   const [conversation, setConversation] = useState([]);
   const [finalData, setFinalData] = useState(null);
@@ -25,6 +27,8 @@ const VoiceAgent = ({moveToForm,onClose}) => {
   const typingTimeoutRef = useRef(null);
   const conversationEndRef = useRef(null);
   const notificationSoundRef = useRef(null);
+  const speechRecognitionRef = useRef(null); // Add ref for speech recognition
+  const isStoppingRef = useRef(false); // Add ref to track stopping state
    const { formData, resetForm, setErrors,  setIsSubmitting,setFormData} =
     useLeaveApplicationStore();
    
@@ -44,11 +48,16 @@ const VoiceAgent = ({moveToForm,onClose}) => {
     if (!("speechSynthesis" in window)) {
       setError("Speech synthesis not supported in this browser.");
     }
+
+    // Cleanup on unmount
+    return () => {
+      stopAllProcesses();
+    };
   }, []);
 
   // Play notification when AI stops speaking
   useEffect(() => {
-    if (!isSpeaking && isActive && notificationSoundRef.current) {
+    if (!isSpeaking && isActive && notificationSoundRef.current && !isStoppingRef.current) {
       // notificationSoundRef.current.currentTime = 0;
       // notificationSoundRef.current.play().catch(e => console.log("Sound play prevented:", e));
     }
@@ -56,7 +65,7 @@ const VoiceAgent = ({moveToForm,onClose}) => {
 
   // Typing animation effect
   useEffect(() => {
-    if (isTyping && typingText && currentTypingIndex < typingText.length) {
+    if (isTyping && typingText && currentTypingIndex < typingText.length && !isStoppingRef.current) {
       const estimatedSpeechDuration = (typingText.length / 12) * 1000;
       const typingSpeed = Math.max(20, estimatedSpeechDuration / typingText.length);
 
@@ -72,7 +81,39 @@ const VoiceAgent = ({moveToForm,onClose}) => {
     };
   }, [isTyping, typingText, currentTypingIndex]);
 
+  const stopAllProcesses = () => {
+    isStoppingRef.current = true;
+    
+    // Stop speech synthesis
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+
+    // Stop speech recognition
+    if (speechRecognitionRef.current) {
+      try {
+        speechRecognitionRef.current.stop();
+      } catch (e) {
+        console.log("Speech recognition already stopped");
+      }
+    }
+
+    // Clear typing timeouts
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Reset states
+    setIsTyping(false);
+    setTypingText("");
+    setCurrentTypingIndex(0);
+    setIsUserSpeaking(false);
+    setIsSpeaking(false);
+  };
+
   const startTypingAndSpeaking = (text, onComplete) => {
+    if (isStoppingRef.current) return;
+    
     setIsTyping(true);
     setTypingText(text);
     setCurrentTypingIndex(0);
@@ -80,7 +121,7 @@ const VoiceAgent = ({moveToForm,onClose}) => {
   };
 
   const speakText = (text, onDone) => {
-    if (!window.speechSynthesis) {
+    if (!window.speechSynthesis || isStoppingRef.current) {
       setError("Speech synthesis not available");
       return;
     }
@@ -111,10 +152,16 @@ const VoiceAgent = ({moveToForm,onClose}) => {
     }
 
     utterance.onstart = () => {
+      if (isStoppingRef.current) {
+        synth.cancel();
+        return;
+      }
       setStatus("🔊 Speaking...");
       setIsSpeaking(true);
     };
     utterance.onend = () => {
+      if (isStoppingRef.current) return;
+      
       setStatus("🎤 Ready to listen...");
       setIsTyping(false);
       setTypingText("");
@@ -124,6 +171,8 @@ const VoiceAgent = ({moveToForm,onClose}) => {
       if (onDone) setTimeout(onDone, 100);
     };
     utterance.onerror = (e) => {
+      if (isStoppingRef.current) return;
+      
       console.error("Speech synthesis error:", e);
       setStatus("Speech error occurred");
       setIsTyping(false);
@@ -132,11 +181,18 @@ const VoiceAgent = ({moveToForm,onClose}) => {
       if (onDone) onDone();
     };
 
-    setTimeout(() => synth.speak(utterance), 100);
+    if (!isStoppingRef.current) {
+      setTimeout(() => synth.speak(utterance), 100);
+    }
   };
 
   const listenOnce = () => {
     return new Promise((resolve, reject) => {
+      if (isStoppingRef.current) {
+        resolve("");
+        return;
+      }
+
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -146,6 +202,7 @@ const VoiceAgent = ({moveToForm,onClose}) => {
       }
 
       const recognition = new SpeechRecognition();
+      speechRecognitionRef.current = recognition; // Store for stopping
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = "en-US";
@@ -170,6 +227,11 @@ const VoiceAgent = ({moveToForm,onClose}) => {
       };
 
       recognition.onresult = (event) => {
+        if (isStoppingRef.current) {
+          recognition.stop();
+          return;
+        }
+
         let interimTranscript = "";
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -195,6 +257,10 @@ const VoiceAgent = ({moveToForm,onClose}) => {
       };
 
       recognition.onstart = () => {
+        if (isStoppingRef.current) {
+          recognition.stop();
+          return;
+        }
         setStatus("🎤 Listening... (speak now)");
         setIsUserSpeaking(false);
         resetTimeout();
@@ -203,6 +269,12 @@ const VoiceAgent = ({moveToForm,onClose}) => {
       recognition.onend = () => {
         clearTimeout(silenceTimeout);
         setIsUserSpeaking(false);
+        
+        if (isStoppingRef.current) {
+          resolve("");
+          return;
+        }
+        
         setStatus("Processing...");
         resolve(finalTranscript.trim());
       };
@@ -211,6 +283,12 @@ const VoiceAgent = ({moveToForm,onClose}) => {
         console.error("Speech recognition error:", e.error);
         clearTimeout(silenceTimeout);
         setIsUserSpeaking(false);
+        
+        if (isStoppingRef.current) {
+          resolve("");
+          return;
+        }
+        
         setStatus(`Recognition error: ${e.error}`);
         resolve("");
       };
@@ -273,6 +351,8 @@ const VoiceAgent = ({moveToForm,onClose}) => {
   };
 
  const runVoiceStep = async (prevQ = "", prevA = "", dataSoFar = {}) => {
+  if (isStoppingRef.current) return;
+  
   try {
     setStatus("🤖 Thinking...");
     setIsSpeaking(false);
@@ -280,6 +360,9 @@ const VoiceAgent = ({moveToForm,onClose}) => {
     // 1️⃣ Ask Gemini
     const { nextQuestion, leaveData, isComplete, smallTalk } =
       await sendToGemini(prevQ, prevA, dataSoFar);
+
+    // Check if stopped during API call
+    if (isStoppingRef.current) return;
 
     // Store the user's last answer in conversation
     if (prevQ && prevA) addMessageToConversation("user", prevA);
@@ -298,6 +381,7 @@ const VoiceAgent = ({moveToForm,onClose}) => {
       }`;
 
       startTypingAndSpeaking(finalMessage, () => {
+        if (isStoppingRef.current) return;
         addMessageToConversation("agent", finalMessage);
         setIsActive(false);
       });
@@ -310,17 +394,21 @@ const VoiceAgent = ({moveToForm,onClose}) => {
     const questionToAsk = `${smallTalk ? smallTalk + " " : ""}${nextQuestion}`;
 
     startTypingAndSpeaking(questionToAsk, async () => {
+      if (isStoppingRef.current) return;
+      
       addMessageToConversation("agent", questionToAsk);
 
       const userResponse = (await listenOnce()).trim();
-      if (userResponse) {
+      if (userResponse && !isStoppingRef.current) {
         await runVoiceStep(nextQuestion, userResponse, leaveData || dataSoFar);
-      } else {
+      } else if (!isStoppingRef.current) {
         setStatus("I didn't catch that. Let me ask again...");
         await runVoiceStep(nextQuestion, "", leaveData || dataSoFar);
       }
     });
   } catch (error) {
+    if (isStoppingRef.current) return;
+    
     console.error("Voice step error:", error);
     setError(`Error: ${error.message}`);
     setStatus("Error occurred");
@@ -334,37 +422,66 @@ const VoiceAgent = ({moveToForm,onClose}) => {
     setFinalData(null);
     setConversation([]);
     setIsActive(true);
+    isStoppingRef.current = false; // Reset stopping flag
 
     const welcomeMessage =
       "Hello! I am Sarah, I'll be helping you with your leave application today. Just a moment while I get everything ready...";
 
     startTypingAndSpeaking(welcomeMessage, () => {
+      if (isStoppingRef.current) return;
       addMessageToConversation("agent", welcomeMessage);
       setTimeout(() => {
-        runVoiceStep();
+        if (!isStoppingRef.current) {
+          runVoiceStep();
+        }
       }, 500);
     });
   };
 
-  const stopConversation = () => {
-    setIsActive(false);
-    setStatus("Stopped");
-    setIsTyping(false);
-    setTypingText("");
-    setCurrentTypingIndex(0);
-    setIsUserSpeaking(false);
+ const stopConversation = () => {
+  console.log("Stopping conversation...");
 
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
+  // Set stopping flag first
+  isStoppingRef.current = true;
 
-    const stopMessage =
-      "Alright, I've stopped the process. You can come back anytime to continue your leave application.";
+  // Stop all processes
+  stopAllProcesses();
 
-    startTypingAndSpeaking(stopMessage, () => {
-      addMessageToConversation("agent", stopMessage);
-    });
-  };
+  // Update UI states
+  setIsActive(false);
+  setStatus("Stopped");
+
+  const stopMessage =
+    "Alright, I've stopped the process. You can come back anytime to continue your leave application.";
+
+  // Add stop message to conversation
+  addMessageToConversation("agent", stopMessage);
+
+  // Speak the stop message in girly voice
+  if (window.speechSynthesis) {
+    const synth = window.speechSynthesis;
+    synth.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(stopMessage);
+    utterance.lang = "en-US";
+    utterance.rate = 0.95;
+    utterance.pitch = 1.05;
+    utterance.volume = 0.9;
+
+    // 🔑 Force "girly" voice for stop message only
+    const voices = synth.getVoices();
+    const preferred = voices.find(
+      (v) =>
+        v.name.includes("Google US English") ||
+        v.name.includes("Microsoft Zira") ||
+        v.name.includes("Samantha")
+    );
+    if (preferred) utterance.voice = preferred;
+
+    synth.speak(utterance);
+  }
+};
+
 
    useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -639,7 +756,7 @@ dark:from-gray-950 dark:via-gray-900 dark:to-indigo-900
 
         {/* Final Data Display */}
         {finalData && (
-          <LeaveSummary moveToForm={moveToForm} finalData={finalData} />
+          <LeaveSummary finalData={finalData} />
 )}
         
 

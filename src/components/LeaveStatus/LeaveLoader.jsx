@@ -3,7 +3,10 @@ import { RiLeafLine } from "react-icons/ri";
 import { FaChevronLeft } from "react-icons/fa";
 const LeaveLoader = ({closeLeaveStatus}) => {
   return (
-    <div className="min-h-screen font-sans relative overflow-hidden">
+    <div className="min-h-screen   bg-gradient-to-br 
+from-blue-200 via-sky-200 to-indigo-300 
+dark:from-gray-950 dark:via-gray-900 dark:to-indigo-900 
+font-sans relative overflow-hidden">
       <header className="relative z-10 py-4 px-6 flex items-center">
         <motion.button
           onClick={closeLeaveStatus}

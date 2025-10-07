@@ -387,7 +387,7 @@ const VoiceAgent = () => {
               <h2 className='text-lg md:text-xl font-medium text-blue-700 mt-3 md:mt-4'>Ankeet Kumar Sah</h2>
               <p className='text-blue-500 text-sm md:text-base mt-1 md:mt-2'>Employee ID: E12345</p>
               <div className='mt-2 md:mt-4'>
-                <span className='text-xs md:text-sm text-gray-500'>Ready to assist you</span>
+                <span className='text-xs md:text-sm text-gray-500'>Ready kto assist you</span>
               </div>
             </div>
           </div>
