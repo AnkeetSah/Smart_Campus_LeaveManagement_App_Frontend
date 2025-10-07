@@ -86,7 +86,10 @@ const Notification = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 font-sans relative overflow-hidden transition-all duration-500">
+    <div className="min-h-screen 
+   bg-gradient-to-br 
+from-blue-200 via-sky-200 to-indigo-300 
+dark:from-gray-950 dark:via-gray-900 dark:to-indigo-900  font-sans relative overflow-hidden transition-all duration-500">
       {/* Header */}
       <header className="sticky top-0 z-10">
         <div className="relative py-6 px-6 flex items-center justify-center max-w-5xl mx-auto">

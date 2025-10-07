@@ -12,40 +12,41 @@ const useLogin = (role) => {
   return useMutation({
     mutationFn: ({ email, password }) => loginUser({ email, password, role }),
 
-    onSuccess: (data) => {
-      setUser(data.user);
-      console.log("Login success:", data);
+   onSuccess: (data) => {
+  setUser(data.user);
+  console.log("Login success:", data);
+  console.log('use data ', data.user.firstLogin);
 
-      const userRole = data.user.role;
+  // Always prioritize first login redirect
+  if (data.user.firstLogin) {
+    // Use setTimeout to ensure navigation happens after state updates
+    setTimeout(() => {
+      navigate("/change-password");
+    }, 0);
+    return; // stop further execution
+  }
 
-      if (data.user.firstLogin == "true") {
-        navigate("/change-password");
-        return;
-      }
+  // Navigation based on role
+  switch (data.user.role) {
+    case "student":
+      navigate("/dashboard/student");
+      break;
+    case "faculty":
+    case "hod":
+    case "warden":
+      navigate("/authority/dashboard");
+      break;
+    case "admin":
+      navigate("/dashboard/admin");
+      break;
+    case "guard":
+      navigate("/dashboard/guard");
+      break;
+    default:
+      navigate("/unauthorized");
+  }
+}
 
-
-
-
-      // Navigation based on role
-      switch (userRole) {
-        case "student":
-          navigate("/dashboard/student");
-          break;
-        case "faculty":
-        case "hod":
-        case "warden":
-          navigate("/authority/dashboard");
-          break;
-        case "admin":
-          navigate("/dashboard/admin");
-          break;
-        case "guard":
-          navigate("/dashboard/guard");
-          break;
-        default:
-          navigate("/unauthorized");
-      }
-    }
     ,
 
     onError: (error) => {

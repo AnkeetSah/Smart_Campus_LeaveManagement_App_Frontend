@@ -14,8 +14,11 @@ const ProtectedRoute = ({ allowedRoles }) => {
 
   if (!user) return <Navigate to="/" replace />;
 
+  // ✅ Prevent access if firstLogin is true
+  if (user.firstLogin) return <Navigate to="/change-password" replace />;
+
+  // Check role permissions
   const userRole = user.role;
-  console.log(allowedRoles, userRole);
   return allowedRoles.includes(userRole) ? (
     <Outlet />
   ) : (

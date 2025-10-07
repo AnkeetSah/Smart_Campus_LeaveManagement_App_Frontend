@@ -1,7 +1,6 @@
 import { useReducer, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { Check, AlertTriangle, Key } from "lucide-react";
+import { AlertTriangle, Key } from "lucide-react";
 import PasswordField from "./PasswordField";
 import SecurityTips from "./SecurityTips";
 import StrengthGuide from "./StrengthGuide";
@@ -29,12 +28,9 @@ function reducer(state, action) {
   }
 }
 
-function ChangePassword({ onSuccess }) {
+function ChangePassword() {
   const navigate = useNavigate();
-
-  const { user } = useAuthStore();
-  console.log(user);
-
+  const { user, setUser } = useAuthStore();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -56,9 +52,16 @@ function ChangePassword({ onSuccess }) {
     mutationFn: ({ oldPassword, newPassword }) =>
       api.post("/api/change/password", { oldPassword, newPassword }),
     onSuccess: () => {
-      dispatch({ type: "SET_FIELD", field: "oldPassword", value: "" });
-      dispatch({ type: "SET_FIELD", field: "newPassword", value: "" });
-      if (onSuccess) setTimeout(onSuccess, 1500);
+      // Reset form
+      dispatch({ type: "RESET" });
+
+      // Update store immediately
+      setUser({ ...user, firstLogin: false });
+
+      // Navigate based on role
+      if (user.role === "student") navigate("/dashboard/student");
+      else if (user.role === "guard") navigate("/dashboard/guard");
+      else navigate("/authority/dashboard");
     },
   });
 
@@ -96,27 +99,13 @@ function ChangePassword({ onSuccess }) {
     if (strength <= 4) return "Good";
     return "Strong";
   };
-  console.log({
-    isPending: mutation.isPending,
-    isLoading: mutation.isLoading,
-    isSuccess: mutation.isSuccess,
-    isError: mutation.isError,
-    data: mutation.data,
-    error: mutation.error,
-  });
-
-  if (mutation.isSuccess) {
-    if (user.role == "student") {
-      navigate("/dashboard/student");
-    } else if (user.role == "guard") {
-      navigate("/dashboard/guard");
-    } else {
-      navigate("/authority/dashboard");
-    }
-  }
 
   return (
-    <div className="min-h-screen flex pb-20 items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-900">
+    <div className="min-h-screen flex pb-20 items-center justify-center p-4
+    bg-gradient-to-br 
+from-blue-200 via-sky-200 to-indigo-300 
+dark:from-gray-950 dark:via-gray-900 dark:to-indigo-900 
+     ">
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 w-full max-w-lg animate-fade-in-up">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -146,19 +135,12 @@ function ChangePassword({ onSuccess }) {
             label="Current Password"
             value={state.oldPassword}
             onChange={(e) =>
-              dispatch({
-                type: "SET_FIELD",
-                field: "oldPassword",
-                value: e.target.value,
-              })
+              dispatch({ type: "SET_FIELD", field: "oldPassword", value: e.target.value })
             }
             error={validationErrors.oldPassword}
             showPassword={state.showOldPassword}
             setShowPassword={() =>
-              dispatch({
-                type: "TOGGLE_PASSWORD_VISIBILITY",
-                field: "showOldPassword",
-              })
+              dispatch({ type: "TOGGLE_PASSWORD_VISIBILITY", field: "showOldPassword" })
             }
             placeholder="Enter your current password"
           />
@@ -167,19 +149,12 @@ function ChangePassword({ onSuccess }) {
             label="New Password"
             value={state.newPassword}
             onChange={(e) =>
-              dispatch({
-                type: "SET_FIELD",
-                field: "newPassword",
-                value: e.target.value,
-              })
+              dispatch({ type: "SET_FIELD", field: "newPassword", value: e.target.value })
             }
             error={validationErrors.newPassword}
             showPassword={state.showNewPassword}
             setShowPassword={() =>
-              dispatch({
-                type: "TOGGLE_PASSWORD_VISIBILITY",
-                field: "showNewPassword",
-              })
+              dispatch({ type: "TOGGLE_PASSWORD_VISIBILITY", field: "showNewPassword" })
             }
             placeholder="Create a new password"
           />
@@ -211,7 +186,7 @@ function ChangePassword({ onSuccess }) {
               <StrengthGuide checks={checks} />
             </div>
           )}
-          {console.log(mutation.isPending)}
+
           <button
             onClick={handlePasswordChange}
             disabled={mutation.isPending || strength < 3}

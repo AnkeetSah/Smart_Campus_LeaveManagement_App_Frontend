@@ -37,6 +37,9 @@ import LeaveHistory from "./components/LeaveHistory";
 import CreateLeaveApplication from "./components/CreateLeaveApplication";
 import Notification from "./pages/notification/Notification";
 import NotFound from "./pages/NotFound";
+import FirstLoginRoute from "./components/FirstLoginRoute";
+import { studentRoutes } from "./routes/StudentRoutes";
+import { authorityRoutes } from "./routes/AuthorityRoutes";
 const API_BASE = import.meta.env.VITE_API_URL;
 function App() {
   const footerRef = useRef(null);
@@ -50,7 +53,7 @@ function App() {
     const fetchUser = async () => {
       try {
         const res = await api.get("/api/me");
-        console.log("ghgyugyuguyg", user);
+
         setUser(res.data);
       } catch (err) {
         console.log("⚠️ User not authenticated");
@@ -118,15 +121,14 @@ function App() {
             }
           >
             // Landing page
-             <Route
-  path="/"
-  element={
-    <PublicRoute>
-      <LandingPage />
-    </PublicRoute>
-  }
-/>
-          
+            <Route
+              path="/"
+              element={
+                <PublicRoute>
+                  <LandingPage />
+                </PublicRoute>
+              }
+            />
             // Login page
             <Route
               path="/login/:userType"
@@ -136,62 +138,17 @@ function App() {
                 </PublicRoute>
               }
             />
-            <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
-              <Route path="/dashboard/student" element={<StudentDashboard />} />
-            
-
-
-              <Route
-                path="/dashboard/student/profile"
-                element={<MyProfile />}
-              />
-              <Route
-                path="/dashboard/student/apply-leave"
-                element={<ApplicationMethodSelector />}
-              />
-              <Route
-                path="/dashboard/student/apply-leave/manual"
-                element={<CreateLeaveApplication />}
-              />
-              <Route
-                path="/dashboard/student/apply-leave/voice"
-                element={<VoiceAgent />}
-              />
-              <Route
-                path="/dashboard/student/leave-status"
-                element={<LeaveStatusTracker />}
-              />
-              <Route
-                path="/dashboard/student/leave-history"
-                element={<LeaveHistory />}
-              />
-              <Route
-                path="/dashboard/student/notification"
-                element={<Notification />}
-              />
-            </Route>
-            <Route
-              element={
-                <ProtectedRoute
-                  allowedRoles={["faculty", "hod", "warden", "guard"]}
-                />
-              }
-            >
-              <Route
-                path="/authority/dashboard"
-                element={<AuthorityDashboard />}
-              />
-              <Route
-                path="/authority/dashboard/profile"
-                element={<FacultyProfile />}
-              />
-            </Route>
+            {/* ✅ Spread student routes */}
+            {studentRoutes}
+            {authorityRoutes}
             <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
               <Route path="/dashboard/guard" element={<GuardDashboard />} />
             </Route>
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route element={<FirstLoginRoute />}>
+              <Route path="/change-password" element={<ChangePassword />} />
+            </Route>
           </Route>
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* 🔸 Admin Layout */}
           <Route element={<AdminLayout />}>

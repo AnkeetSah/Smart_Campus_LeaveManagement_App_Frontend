@@ -1,15 +1,18 @@
 // src/store/useAuthStore.js
 import { create } from "zustand";
-import api from "../services/api"; 
+import api from "../services/api";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
-const useAuthStore = create((set) => ({
-   user: JSON.parse(localStorage.getItem("user")) || null,
+const useAuthStore = create((set, get) => ({
+  user: JSON.parse(localStorage.getItem("user")) || null,
   loading: true,
 
   setUser: (user) => {
     localStorage.setItem("user", JSON.stringify(user));
     set({ user, loading: false });
   },
+
   clearUser: () => {
     localStorage.removeItem("user");
     set({ user: null, loading: false });
@@ -24,11 +27,18 @@ const useAuthStore = create((set) => ({
       set({ user: null, loading: false });
     }
   },
- 
+
   logoutUser: async () => {
     try {
+      // Call backend logout
       await api.post("/api/auth/logout");
-      set({ user: null, loading: false });
+
+      // Clear user from Zustand
+      get().clearUser();
+
+      // Clear all React Query caches
+      const queryClient = useQueryClient();
+      queryClient.clear(); // removes all cached queries
     } catch (err) {
       console.error("Logout failed:", err);
     }
