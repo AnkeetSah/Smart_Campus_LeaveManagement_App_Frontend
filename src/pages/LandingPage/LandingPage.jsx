@@ -4,10 +4,19 @@ import { motion } from "framer-motion";
 import { FaUniversity } from "react-icons/fa";
 import Users from "./Users";
 import GuidelineCard from "./GuidelineCard";
-
+import Footer from "../../components/Footer";
 function LandingPage() {
-    return (
-     <div className="min-h-screen
+  //move to the bottom when help is cliked
+  const footerRef = useRef(null);
+  
+  const handleHelpClick = () => {
+    footerRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+
+
+  return (
+    <div className="min-h-screen
       bg-gradient-to-br   from-slate-100 via-blue-100 to-indigo-200 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 
       font-sans relative overflow-hidden transition-all duration-500">
        {/* Floating Blobs */}
@@ -115,6 +124,11 @@ function LandingPage() {
           </motion.div>
         </div>
       </main>
+      <div ref={footerRef}>
+        <Footer onHelpClick={handleHelpClick} />
+      </div>
+      
+      
     </div>
   );
 }

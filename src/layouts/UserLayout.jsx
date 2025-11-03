@@ -13,11 +13,7 @@ export default function UserLayout({ darkMode, setDarkMode, footerRef }) {
       <main className="flex-grow pt-16 sm:pt-20">
         <Outlet />
       </main>
-      {location.pathname === "/" && !user && (
-        <div ref={footerRef}>
-          <Footer />
-        </div>
-      )}
+      
     </div>
   );
 }
