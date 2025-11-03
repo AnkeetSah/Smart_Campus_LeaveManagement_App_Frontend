@@ -4,21 +4,19 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import axios from "axios";
-
 import LandingPage from "./pages/LandingPage/LandingPage";
 import LoginPage from "./pages/Login/LoginPage";
 import useAuthStore from "./store/useAuthStore";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import Unauthorized from "./pages/Unauthorized";
-
 import ScrollToTop from "./components/ScrollToTop";
 import PublicRoute from "./components/PublicRoute";
 import GuardDashboard from "./pages/GuardDashboard/GuardDashboard";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
-// Dummy dashboard components for now
 import AuthorityDashboard from "./pages/Faculty/AuthorityDashboard";
 import api from "./services/api";
 import UserLayout from "./layouts/UserLayout";
@@ -40,55 +38,14 @@ import NotFound from "./pages/NotFound";
 import FirstLoginRoute from "./components/FirstLoginRoute";
 import { studentRoutes } from "./routes/StudentRoutes";
 import { authorityRoutes } from "./routes/AuthorityRoutes";
+
 const API_BASE = import.meta.env.VITE_API_URL;
+
 function App() {
-  const footerRef = useRef(null);
-  const user = useAuthStore((state) => state.user);
-  const mutation = useAddSubscription();
-  const setUser = useAuthStore((state) => state.setUser);
-  const clearUser = useAuthStore((state) => state.clearUser);
-  const loading = useAuthStore((state) => state.loading);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get("/api/me");
-         console.log(res)
-        setUser(res.data);
-      } catch (err) {
-        console.log("⚠️ User not authenticated");
-        clearUser();
-      }
-    };
-
-    fetchUser();
-  }, [setUser, clearUser]);
-
-  useEffect(() => {
-    if (!user) return; // Don't run if user is not set
-
-    const setupServiceWorker = async () => {
-      const registration = await registerServiceWorker();
-      if (registration) {
-        const payload = await subscribeToPush(registration, user);
-        if (payload) {
-          mutation.mutate(payload, {
-            onSuccess: () => console.log("✅ Subscription sent to server"),
-            onError: (err) =>
-              console.error("❌ Failed to send subscription", err),
-          });
-        }
-      }
-    };
-
-    setupServiceWorker();
-  }, [user]); // 👈 re-run when `user` is set
-
   //dark mode feature
   const [darkMode, setDarkMode] = useState(() => {
-    // Load from localStorage on first render
     const savedMode = localStorage.getItem("darkMode");
-    return savedMode === "true"; // converts string to boolean
+    return savedMode === "true";
   });
 
   useEffect(() => {
@@ -97,72 +54,139 @@ function App() {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    // Save to localStorage whenever darkMode changes
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
   return (
     <Router>
       <ScrollToTop />
-      <div
-        className={`min-h-screen w-full transition-all duration-500 ${
-          darkMode ? "dark" : "light"
-        }`}
-      >
-        <Routes>
-          {/* 🔹 User Layout */}
-          <Route
-            element={
-              <UserLayout
-                darkMode={darkMode}
-                setDarkMode={setDarkMode}
-                footerRef={footerRef}
-              />
-            }
-          >
-            // Landing page
-            <Route
-              path="/"
-              element={
-                 <PublicRoute>
-                  <LandingPage />
-                 </PublicRoute>
-                  
-
-                
-              }
-            />
-            // Login page
-            <Route
-              path="/login/:userType"
-              element={
-                
-                  <LoginPage />
-                
-              }
-            />
-            {/* ✅ Spread student routes */}
-            {studentRoutes}
-            {authorityRoutes}
-            <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
-              <Route path="/dashboard/guard" element={<GuardDashboard />} />
-            </Route>
-            <Route element={<FirstLoginRoute />}>
-              <Route path="/change-password" element={<ChangePassword />} />
-            </Route>
-          </Route>
-          <Route path="/unauthorized" element={<Unauthorized />} />
-
-          {/* 🔸 Admin Layout */}
-          <Route element={<AdminLayout />}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={<UserManagement />} />
-          </Route>
-
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
+      <AppRoutes darkMode={darkMode} setDarkMode={setDarkMode} />
     </Router>
+  );
+}
+
+// ✅ All hooks that need Router (like useNavigate) go here
+function AppRoutes({ darkMode, setDarkMode }) {
+  const footerRef = useRef(null);
+  const user = useAuthStore((state) => state.user);
+  const mutation = useAddSubscription();
+  const setUser = useAuthStore((state) => state.setUser);
+  const clearUser = useAuthStore((state) => state.clearUser);
+  const navigate = useNavigate();
+
+  // Step 1: Fetch user on load
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/api/me");
+        setUser(res.data);
+      } catch {
+        console.log("⚠️ User not authenticated");
+        clearUser();
+      }
+    };
+    fetchUser();
+  }, [setUser, clearUser]);
+
+  // Step 2: Auto navigate to dashboard if user already logged in
+  useEffect(() => {
+    if (!user) return;
+
+    switch (user.role) {
+      case "student":
+        navigate("/dashboard/student");
+        break;
+      case "faculty":
+        navigate("/dashboard/faculty");
+        break;
+      case "guard":
+        navigate("/dashboard/guard");
+        break;
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      default:
+        navigate("/");
+    }
+  }, [user, navigate]);
+
+  // Step 3: Setup push notifications
+  useEffect(() => {
+    if (!user) return;
+
+    const setupServiceWorker = async () => {
+      const registration = await registerServiceWorker();
+      if (registration) {
+        const payload = await subscribeToPush(registration, user);
+        if (payload) {
+          mutation.mutate(payload, {
+            onSuccess: () => console.log("✅ Subscription sent to server"),
+            onError: (err) => console.error("❌ Failed to send subscription", err),
+          });
+        }
+      }
+    };
+
+    setupServiceWorker();
+  }, [user]);
+
+  return (
+    <div
+      className={`min-h-screen w-full transition-all duration-500 ${
+        darkMode ? "dark" : "light"
+      }`}
+    >
+      <Routes>
+        {/* 🔹 User Layout */}
+        <Route
+          element={
+            <UserLayout
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+              footerRef={footerRef}
+            />
+          }
+        >
+          {/* Landing page */}
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <LandingPage />
+              </PublicRoute>
+            }
+          />
+          {/* Login page */}
+          <Route path="/login/:userType" element={<LoginPage />} />
+
+          {/* ✅ Student & Authority Routes */}
+          {studentRoutes}
+          {authorityRoutes}
+
+          {/* Guard Route */}
+          <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
+            <Route path="/dashboard/guard" element={<GuardDashboard />} />
+          </Route>
+
+          {/* First Login Route */}
+          <Route element={<FirstLoginRoute />}>
+            <Route path="/change-password" element={<ChangePassword />} />
+          </Route>
+        </Route>
+
+        {/* Unauthorized */}
+        <Route path="/unauthorized" element={<Unauthorized />} />
+
+        {/* 🔸 Admin Layout */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+        </Route>
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   );
 }
 
