@@ -126,7 +126,7 @@ function App() {
               element={
                 
                   <LandingPage />
-                  
+
                 
               }
             />
@@ -134,9 +134,9 @@ function App() {
             <Route
               path="/login/:userType"
               element={
-                <PublicRoute>
+                
                   <LoginPage />
-                </PublicRoute>
+                
               }
             />
             {/* ✅ Spread student routes */}
