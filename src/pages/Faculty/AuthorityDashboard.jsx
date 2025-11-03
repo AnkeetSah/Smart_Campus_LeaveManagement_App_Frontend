@@ -567,14 +567,13 @@ function AuthorityDashboard() {
                             </p>
                           </div>
                           <div className="text-gray-500 dark:text-gray-400 mb-1">
-                            Hostel Details:
-                            {showHostelDetails && (
+                            Hostel Details: 
                               <p className="text-gray-7 font-medium dark:text-gray-200 mb-1">
                                 {app.student?.hostel.name || "N/A"} - Room
                                 Number:{" "}
                                 {app.student?.hostel.roomNumber || "N/A"}
                               </p>
-                            )}
+                          
                           </div>
                         </div>
 

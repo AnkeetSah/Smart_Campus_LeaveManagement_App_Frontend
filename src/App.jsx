@@ -36,10 +36,10 @@ import CreateLeaveApplication from "./components/CreateLeaveApplication";
 import Notification from "./pages/notification/Notification";
 import NotFound from "./pages/NotFound";
 import FirstLoginRoute from "./components/FirstLoginRoute";
-import { studentRoutes } from "./routes/StudentRoutes";
+import { StudentRoutes } from "./routes/StudentRoutes";
 import { authorityRoutes } from "./routes/AuthorityRoutes";
 
-const API_BASE = import.meta.env.VITE_API_URL;
+
 
 function App() {
   //dark mode feature
@@ -90,25 +90,36 @@ function AppRoutes({ darkMode, setDarkMode }) {
 
   // Step 2: Auto navigate to dashboard if user already logged in
   useEffect(() => {
-    if (!user) return;
+  if (!user) return;
 
+  const currentPath = window.location.pathname;
+
+  // ✅ Only redirect to dashboard if on a public route
+  const isPublic =
+    currentPath === "/" ||
+    currentPath.startsWith("/login") ||
+    currentPath.startsWith("/change-password");
+
+  if (isPublic) {
     switch (user.role) {
       case "student":
-        navigate("/dashboard/student");
+        navigate("/dashboard/student", { replace: true });
         break;
       case "faculty":
-        navigate("/dashboard/faculty");
+        navigate("/dashboard/faculty", { replace: true });
         break;
       case "guard":
-        navigate("/dashboard/guard");
+        navigate("/dashboard/guard", { replace: true });
         break;
       case "admin":
-        navigate("/admin/dashboard");
+        navigate("/admin/dashboard", { replace: true });
         break;
       default:
-        navigate("/");
+        navigate("/", { replace: true });
     }
-  }, [user, navigate]);
+  }
+}, [user, navigate]);
+
 
   // Step 3: Setup push notifications
   useEffect(() => {
@@ -160,7 +171,7 @@ function AppRoutes({ darkMode, setDarkMode }) {
           <Route path="/login/:userType" element={<LoginPage />} />
 
           {/* ✅ Student & Authority Routes */}
-          {studentRoutes}
+          {StudentRoutes()}
           {authorityRoutes}
 
           {/* Guard Route */}
