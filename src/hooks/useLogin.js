@@ -15,37 +15,34 @@ const useLogin = (role) => {
    onSuccess: (data) => {
   setUser(data.user);
   console.log("Login success:", data);
-  console.log('use data ', data.user.firstLogin);
 
-  // Always prioritize first login redirect
+  // ✅ If first login, redirect only to change-password
   if (data.user.firstLogin) {
-    // Use setTimeout to ensure navigation happens after state updates
-    setTimeout(() => {
-      navigate("/change-password");
-    }, 0);
-    return; // stop further execution
+    navigate("/change-password", { replace: true });
+    return; // Stop further navigation
   }
 
   // Navigation based on role
   switch (data.user.role) {
     case "student":
-      navigate("/dashboard/student");
+      navigate("/dashboard/student", { replace: true });
       break;
     case "faculty":
     case "hod":
     case "warden":
-      navigate("/authority/dashboard");
+      navigate("/authority/dashboard", { replace: true });
       break;
     case "admin":
-      navigate("/dashboard/admin");
+      navigate("/dashboard/admin", { replace: true });
       break;
     case "guard":
-      navigate("/dashboard/guard");
+      navigate("/dashboard/guard", { replace: true });
       break;
     default:
-      navigate("/unauthorized");
+      navigate("/unauthorized", { replace: true });
   }
 }
+
 
     ,
 

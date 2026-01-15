@@ -49,21 +49,7 @@ const Topbar = ({ onMenuClick,isSidebarOpen }) => {
           <div className="absolute inset-0 bg-amber-400/20 rounded-lg scale-0 group-hover:scale-100 transition duration-300 -z-10"></div>
         </button>
 
-        {/* Notification Bell */}
-        {/* <div className="relative group">
-          <button
-            onClick={() => setNotificationCount(Math.max(0, notificationCount - 1))}
-            className="relative text-gray-500 hover:text-red-500 p-2 rounded-lg transition hover:bg-red-50"
-          >
-            <FaBell className="text-xl group-hover:animate-pulse" />
-            <div className="absolute inset-0 bg-red-400/20 rounded-lg scale-0 group-hover:scale-100 transition duration-300 -z-10"></div>
-          </button>
-          {notificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-medium shadow">
-              {notificationCount}
-            </span>
-          )}
-        </div> */}
+        
 
         {/* User Info */}
         <div className="md:flex items-center gap-3 pl-4 border-l hidden border-gray-200 group cursor-pointer hover:bg-indigo-50 rounded-lg px-3 py-2 transition">

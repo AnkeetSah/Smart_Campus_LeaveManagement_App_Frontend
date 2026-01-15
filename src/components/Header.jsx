@@ -21,32 +21,39 @@ const ROLE_CONFIG = {
     title: "Student Dashboard",
     subtitle: "Welcome to your leave portal",
     profileRoute: "/dashboard/student/profile",
+    homeRoute: "/dashboard/student",
   },
   faculty: {
     title: "Faculty Portal",
     subtitle: "Leave Application Management",
     profileRoute: "/authority/dashboard/profile",
+    homeRoute: "/authority/dashboard",
   },
   hod: {
     title: "HOD Dashboard",
     subtitle: "Leave Application Management",
-    profileRoute:"/authority/dashboard/profile"
+    profileRoute:"/authority/dashboard/profile",
+    homeRoute: "/authority/dashboard",
   },
   warden: {
     title: "Warden Dashboard",
     subtitle: "Leave Application Management",
-     profileRoute:"/authority/dashboard/profile"
+    profileRoute:"/authority/dashboard/profile",
+    homeRoute: "/authority/dashboard",
   },
   guard: {
-     title: "Guard Dashboard",
+    title: "Guard Dashboard",
     subtitle: "Leave Application Management",
-     profileRoute:"/authority/dashboard/profile"
+    profileRoute:"/dashboard/guard/profile",
+    homeRoute: "/dashboard/guard",
   },
   default: {
     title: "University Leave Portal",
     subtitle: "Academic Year 2024-25",
+    homeRoute: "/",
   },
 };
+
 
 const DASHBOARD_ROUTES = [
   "/authority/dashboard",
@@ -93,13 +100,14 @@ function Header({ footerRef, setDarkMode, darkMode }) {
     [location.pathname]
   );
 
-  const { title, subtitle,profileRoute } = useMemo(() => {
-    const userRole = user?.role;
-    if (location.pathname.includes("student")) {
-      return ROLE_CONFIG.student;
-    }
-    return ROLE_CONFIG[userRole] || ROLE_CONFIG.default;
-  }, [location.pathname, user?.role]);
+const { title, subtitle, profileRoute, homeRoute } = useMemo(() => {
+  const userRole = user?.role;
+  if (location.pathname.includes("student")) {
+    return ROLE_CONFIG.student;
+  }
+  return ROLE_CONFIG[userRole] || ROLE_CONFIG.default;
+}, [location.pathname, user?.role]);
+
 
   // Optimized event handlers with useCallback
   const handleSupportClick = useCallback(() => {
@@ -275,33 +283,30 @@ function Header({ footerRef, setDarkMode, darkMode }) {
 <nav className="py-1" role="none">
   {/* Home */}
   <NavLink
-    to="/dashboard/student"
-    end
-    onClick={closeProfileView}
-    role="menuitem"
-    className="block"
-  >
-    {({ isActive }) => (
-      <motion.div
-        whileHover={{
-          backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF",
-        }}
-        className={`px-4 py-2 text-sm flex items-center transition-colors rounded-md
-          ${
-            isActive
-              ? "text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-900/40"
-              : "text-gray-700 dark:text-gray-200"
-          }`}
-      >
-        <FaHome
-          className={`mr-2 ${
-            isActive ? "text-blue-600 dark:text-blue-400" : "text-blue-500"
-          }`}
-        />
-        Home
-      </motion.div>
-    )}
-  </NavLink>
+  to={homeRoute}  // <-- use dynamic homeRoute
+  end
+  onClick={closeProfileView}
+  role="menuitem"
+  className="block"
+>
+  {({ isActive }) => (
+    <motion.div
+      whileHover={{ backgroundColor: darkMode ? "#1E40AF" : "#EFF6FF" }}
+      className={`px-4 py-2 text-sm flex items-center transition-colors rounded-md
+        ${
+          isActive
+            ? "text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-900/40"
+            : "text-gray-700 dark:text-gray-200"
+        }`}
+    >
+      <FaHome
+        className={`mr-2 ${isActive ? "text-blue-600 dark:text-blue-400" : "text-blue-500"}`}
+      />
+      Home
+    </motion.div>
+  )}
+</NavLink>
+
 
   {/* My Profile */}
   <NavLink

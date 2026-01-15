@@ -1,6 +1,4 @@
-import {
-  Route
-} from "react-router-dom";
+import { Route } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import StudentDashboard from "../pages/StudentDashboard/StudentDashboard";
 import MyProfile from "../pages/profile/studentProfile/MyProfile";

@@ -2,28 +2,27 @@ import { Navigate, Outlet } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const { user, loading } = useAuthStore();
+  // ✅ Subscribe to store updates
+  const user = useAuthStore((state) => state.user);
+  const loading = useAuthStore((state) => state.loading);
 
+  // Loading spinner while fetching user
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-lg font-semibold text-gray-800 dark:text-gray-200 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 transition-all duration-500">
+      <div className="flex items-center justify-center min-h-screen text-lg font-semibold">
         Checking permissions...
       </div>
     );
   }
 
+  // If user not logged in → redirect to landing/login
   if (!user) return <Navigate to="/" replace />;
 
-  // ✅ Prevent access if firstLogin is true
+  // If first login → force change password
   if (user.firstLogin) return <Navigate to="/change-password" replace />;
 
   // Check role permissions
-  const userRole = user.role;
-  return allowedRoles.includes(userRole) ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/unauthorized" replace />
-  );
+  return allowedRoles.includes(user.role) ? <Outlet /> : <Navigate to="/unauthorized" replace />;
 };
 
 export default ProtectedRoute;

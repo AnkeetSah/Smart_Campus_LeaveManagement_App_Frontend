@@ -38,7 +38,7 @@ import NotFound from "./pages/NotFound";
 import FirstLoginRoute from "./components/FirstLoginRoute";
 import { StudentRoutes } from "./routes/StudentRoutes";
 import { authorityRoutes } from "./routes/AuthorityRoutes";
-
+import GuardProfile from "./components/GuardProfile";
 
 
 function App() {
@@ -79,6 +79,7 @@ function AppRoutes({ darkMode, setDarkMode }) {
     const fetchUser = async () => {
       try {
         const res = await api.get("/api/me");
+        console.log(res.data)
         setUser(res.data);
       } catch {
         console.log("⚠️ User not authenticated");
@@ -92,9 +93,12 @@ function AppRoutes({ darkMode, setDarkMode }) {
   useEffect(() => {
   if (!user) return;
 
+  // ✅ If first login, do not auto-navigate
+  if (user.firstLogin) return;
+
   const currentPath = window.location.pathname;
 
-  // ✅ Only redirect to dashboard if on a public route
+  // Only redirect to dashboard if on a public route
   const isPublic =
     currentPath === "/" ||
     currentPath.startsWith("/login") ||
@@ -177,12 +181,12 @@ function AppRoutes({ darkMode, setDarkMode }) {
           {/* Guard Route */}
           <Route element={<ProtectedRoute allowedRoles={["guard"]} />}>
             <Route path="/dashboard/guard" element={<GuardDashboard />} />
+            <Route path="/dashboard/guard/profile" element={<GuardProfile />} />
           </Route>
 
-          {/* First Login Route */}
-          <Route element={<FirstLoginRoute />}>
+          
             <Route path="/change-password" element={<ChangePassword />} />
-          </Route>
+        
         </Route>
 
         {/* Unauthorized */}
